@@ -10,6 +10,7 @@ import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.miscellaneous.PerFieldAnalyzerWrapper;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
+import org.apache.lucene.search.Sort;
 import org.bidtime.utils.comm.CaseInsensitiveHashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,21 +36,24 @@ public class FieldHeadMagnt {
 //	public void setWrapper(PerFieldAnalyzerWrapper wrapper) {
 //		this.wrapper = wrapper;
 //	}
+	
+	public FieldHeadMagnt() {
+	}
 
-	public FieldHeadMagnt(String[] arHeads, String[] arDataTypes, 
-			String[] arIndexs, String[] arTokenized, String[] arStoreTypes)
-					throws Exception {
-		doHeads(arHeads, arDataTypes, 
-				arIndexs, arTokenized, arStoreTypes);
-	}
+//	public FieldHeadMagnt(String[] arHeads, String[] arDataTypes, 
+//			String[] arIndexs, String[] arTokenized, String[] arStoreTypes)
+//					throws Exception {
+//		doHeads(arHeads, arDataTypes, 
+//				arIndexs, arTokenized, arStoreTypes);
+//	}
 	
-	private void doHeads(String[] arHeads, String[] arDataTypes, 
-			String[] arIndexs, String[] arTokenized, String[] arStoreTypes)
-				throws Exception {
-		doIt(arHeads, arDataTypes, arIndexs, arTokenized, arStoreTypes);
-	}
+//	private void doHeads(String[] arHeads, String[] arDataTypes, 
+//			String[] arIndexs, String[] arTokenized, String[] arStoreTypes)
+//				throws Exception {
+//		doIt(arHeads, arDataTypes, arIndexs, arTokenized, arStoreTypes);
+//	}
 	
-	private void doIt(String[] arHeads, String[] arDataTypes, 
+	public void setProps(String[] arHeads, String[] arDataTypes, 
 			String[] arIndexs, String[] arTokenized, String[] arStoreTypes) {
 		for (int i=0; i<arHeads.length; i++) {
 			String head = arHeads[i];
@@ -189,6 +193,28 @@ public class FieldHeadMagnt {
 		}
 		return list;
 	}
+	
+	public Sort getSortOfField(String fld, boolean reverse) throws Exception {
+		FieldHeadProp o = get(fld);
+		if (o == null) {
+			throw new Exception(fld + "field is null.");
+		}
+		return o.getSort(reverse);
+	}
+	
+//	public Sort getSortOfField(String[] fld) throws Exception {
+//		SortField[] fields = new SortField[fld.length];
+//		for (int i=0; i<fld.length; i++) {
+//			FieldHeadProp o = get(fld[i]);
+//			if (o == null) {
+//				throw new Exception(fld[i] + "field is null.");
+//			}
+//			fields[i] = o.getSortField();
+//		}
+//		Sort sort = new Sort(new SortField[] { new SortField( "date", Type.INT, true ),
+//				new SortField("ename", Type.STRING, false ) } );
+//		return sort;
+//	}
 
 //	@SuppressWarnings({ "rawtypes", "unchecked" })
 //	public List<Field> mapToFields_(Map map) throws Exception{

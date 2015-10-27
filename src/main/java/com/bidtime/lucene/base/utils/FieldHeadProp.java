@@ -4,16 +4,58 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.document.DoubleField;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.FieldType;
+import org.apache.lucene.document.FieldType.NumericType;
 import org.apache.lucene.document.FloatField;
 import org.apache.lucene.document.IntField;
 import org.apache.lucene.document.LongField;
 import org.apache.lucene.document.StoredField;
 import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
+import org.apache.lucene.search.Sort;
+import org.apache.lucene.search.SortField;
 
 public class FieldHeadProp {
 	
 	Integer recNo;
+	String head;
+	String dataType;
+	Integer pyType;		//pinyinType:0/1/2 ->	HANZI/PINYIN/SHOUZIMU
+	String pyHead;		//>=1, 为拼音对应的中文字段名
+	FieldType fieldType;
+	//SortField sortField;
+	SortField.Type sfType;
+	
+	public String getPYHead() {
+		return pyHead;
+	}
+	
+	public Integer getPYType() {
+		return pyType;
+	}
+	
+	public boolean isPYType() {
+		return pyType > 0 ? true : false;
+	}
+
+	public String getHead() {
+		return head;
+	}
+
+	public void setHead(String head) {
+		this.head = head;
+	}
+
+	public String getDataType() {
+		return dataType;
+	}
+	
+	public FieldType getFieldType() {
+		return fieldType;
+	}
+
+	public void setFieldType(FieldType fieldType) {
+		this.fieldType = fieldType;
+	}
 
 	public Integer getRecNo() {
 		return recNo;
@@ -23,10 +65,14 @@ public class FieldHeadProp {
 		this.recNo = recNo;
 	}
 
-	String head;
-	String dataType;
-	Integer pyType;		//pinyinType:0/1/2 ->	HANZI/PINYIN/SHOUZIMU
-	String pyHead;		//>=1, 为拼音对应的中文字段名
+	public SortField getSortField(boolean reverse) {
+		return new SortField(head, sfType, reverse);
+	}
+	
+	public Sort getSort(boolean reverse) {
+		SortField sf = new SortField(head, sfType, reverse);
+		return new Sort(sf);
+	}
 	
 	private boolean leftEqualIgnoreCase(String s1, String s2) {
 		s1 = s1.trim();
@@ -70,46 +116,44 @@ public class FieldHeadProp {
 		return field;
 	}
 	
-	public String getPYHead() {
-		return pyHead;
+	private NumericType getNumericTypeOfDataType(String head) {
+		NumericType nt = null;
+		if (leftEqualIgnoreCase("int", dataType)) {
+			nt = FieldType.NumericType.INT;
+		} else if (leftEqualIgnoreCase("double", dataType)) {
+			nt = FieldType.NumericType.DOUBLE;
+		} else if (leftEqualIgnoreCase("float", dataType)) {
+			nt = FieldType.NumericType.FLOAT;
+		} else if (leftEqualIgnoreCase("long", dataType)) {
+			nt = FieldType.NumericType.LONG;
+		}
+		return nt;
 	}
 	
-	public Integer getPYType() {
-		return pyType;
-	}
-	
-	public boolean isPYType() {
-		return pyType > 0 ? true : false;
-	}
-
-	public String getHead() {
-		return head;
-	}
-
-	public void setHead(String head) {
-		this.head = head;
-	}
-
-	public String getDataType() {
-		return dataType;
-	}
-	
-	FieldType fieldType;
-	
-	public FieldType getFieldType() {
-		return fieldType;
-	}
-
-	public void setFieldType(FieldType fieldType) {
-		this.fieldType = fieldType;
+	private SortField.Type getStoreFieldOfHead(String head) {
+		SortField.Type sfType = null;
+		if (leftEqualIgnoreCase("int", dataType)) {
+			sfType = SortField.Type.INT;
+		} else if (leftEqualIgnoreCase("double", dataType)) {
+			sfType = SortField.Type.DOUBLE;
+		} else if (leftEqualIgnoreCase("float", dataType)) {
+			sfType = SortField.Type.FLOAT;
+		} else if (leftEqualIgnoreCase("long", dataType)) {
+			sfType = SortField.Type.LONG;
+		} else if (leftEqualIgnoreCase("string", dataType)) {
+			sfType = SortField.Type.STRING;
+		} else if (leftEqualIgnoreCase("text", dataType)) {
+			sfType = SortField.Type.STRING;
+		}
+		return sfType;
 	}
 
 	public FieldHeadProp(Integer recNo, String head, String dataType, 
 			String index, String tokenized, String storeType) {
 		this.recNo = recNo;
 		this.head = head;
+		parseDataType(dataType);
 		this.fieldType = arrayToFieldType(index, tokenized, storeType);
-		doDataType(dataType);
 	}
 	
 	private FieldType arrayToFieldType(String index, String tokenized, String storeType) {
@@ -133,14 +177,20 @@ public class FieldHeadProp {
 		boolean bStoreType = (storeType != null && 
 				!storeType.equalsIgnoreCase("Store.YES")) ? false : true;
 		ft.setStored(bStoreType);
-		//return
+		
+		NumericType nt = getNumericTypeOfDataType(this.dataType);
+		if (nt != null) {
+			ft.setNumericType(nt);
+		}
+		
+		sfType = getStoreFieldOfHead(this.dataType);
 		return ft;
 	}
 	
 	/*
 	 * string/PINYIN/carTypeName
 	 */
-	public void doDataType(String dataType) {
+	private void parseDataType(String dataType) {
 		String[] dataTypes = dataType.split("/");
 		this.dataType = dataTypes[0];
 		if ( dataTypes.length > 1 ) {

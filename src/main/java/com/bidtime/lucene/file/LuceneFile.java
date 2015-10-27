@@ -48,9 +48,9 @@ public class LuceneFile extends LuceneIndexRoot {
 	}
 
 	public static void main(String[] args) throws Exception {
-		//testCreateIndex();
-		String key = "name_shouzimu:zgr";//"id:" + 5;
-		searchIt(key);
+		testCreateIndex();
+		//String key = "*:*";//"name_shouzimu:";//"id:" + 5;
+		//searchIt(key);
 	}
 
 	public static void testIndexCarType(String key, boolean bCreateIndex) {
@@ -81,9 +81,9 @@ public class LuceneFile extends LuceneIndexRoot {
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public void addToDoc() {
 		Map map = new SimpleHashMap();
-		map.put("id", 5);
-		map.put("code", "05");
-		map.put("name", "我是中国人");
+		map.put("id", 6);
+		map.put("code", "06");
+		map.put("name", "你是俄国人");
 		try {
 			this.createIndex(map);
 		} catch (Exception e) {
@@ -91,18 +91,21 @@ public class LuceneFile extends LuceneIndexRoot {
 		}
 	}
 
+	@SuppressWarnings("rawtypes")
 	public static void testCreateIndex() {
 		LuceneFile m = new LuceneFile();
 		try {
 			// IKAnalyzer中文分词
 			Analyzer analyzer = null;
 			analyzer = new IKAnalyzer4PinYin(false);
-			m.setOpenMode(true);
+			m.setOpenMode(false);
 			m.setAnalyzer(analyzer);
 			m.setFileSource("D:/DATA/lucene/source/raw.txt");
 			m.setIndexFileDir("D:/DATA/lucene/index/");
 			m.initial();
-			m.addToDoc();
+			ResultDTO dto = m.search("*:*", 0, 10, "id", false);
+			System.out.println(dto.toString());
+			//m.addToDoc();
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 		}
@@ -120,9 +123,9 @@ public class LuceneFile extends LuceneIndexRoot {
 			e.printStackTrace();
 		}
 		LuceneSearch ls = new LuceneSearch(indexDir, analyzer);
-		String[] resultFields = null;	//new String[]{"name", "allNameIds"};
+		//String[] resultFields = null;	//new String[]{"name", "allNameIds"};
 		//String head = "name";
-		ResultDTO dto = ls.search(keyName, resultFields, 10);
+		ResultDTO dto = ls.search(keyName, 0, 10);
 //		ResultDTO dto = ls.search(KeyWordsUtils.bracketWords(
 //				head, key), resultFields, 10);
 		System.out.println(dto.toString());
