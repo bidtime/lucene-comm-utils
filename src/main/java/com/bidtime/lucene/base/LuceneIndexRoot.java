@@ -1,6 +1,6 @@
 package com.bidtime.lucene.base;
 
-import java.util.Map;
+import java.util.Set;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
@@ -38,7 +38,7 @@ public class LuceneIndexRoot {
 		this.extName = extName;
 	}
 
-	protected Integer marginLines = 5;
+	protected Integer marginLines = 6;
 	protected Boolean openMode = false;
 	
 	public Boolean getOpenMode() {
@@ -116,45 +116,71 @@ public class LuceneIndexRoot {
 				+ s + " file not exists." );
 	}
 	
-	@SuppressWarnings("rawtypes")
-	public void createIndex(Map map) throws Exception {
-		indexCreate.createIndexMap(map);
+	public void createIndex(Object d) throws Exception {
+		indexCreate.createIndex(d);
+	}
+	
+	public void updateIndex(Object d) throws Exception {
+		indexCreate.updateIndex(d);
+	}
+	
+	public void updateNumericDocValue(Object pkVal, Object fld,
+			Object val) throws Exception {
+		indexCreate.updateNumericDocValue(pkVal, fld, val);
+	}
+	
+	public void updateNumericDocValue(Object o) throws Exception {
+		indexCreate.updateNumericDocValue(o);
 	}
 	
 	@SuppressWarnings("rawtypes")
 	public ResultDTO search(String words, Integer pageIdx, Integer pageSize,
 			String[] head) throws Exception {
+		Set<String> setDateTime = indexCreate.getMapDateTime();
 		return indexSearch.search(words, pageIdx, pageSize,
-				head);
+				setDateTime, head);
 	}
 
 	@SuppressWarnings("rawtypes")
 	public ResultDTO search(String words, Integer pageIdx, Integer pageSize,
 			Sort sort, String[] head) throws Exception {
+		Set<String> setDateTime = indexCreate.getMapDateTime();
 		return indexSearch.search(words, pageIdx, pageSize,
-				sort, head);
+				sort, setDateTime, head);
 	}
 
 	@SuppressWarnings("rawtypes")
 	public ResultDTO search(String words, Integer pageIdx, Integer pageSize,
 			Sort sort) throws Exception {
+		Set<String> setDateTime = indexCreate.getMapDateTime();
 		return indexSearch.search(words, pageIdx, pageSize,
-				sort);
+				sort, setDateTime);
 	}
 
 	@SuppressWarnings("rawtypes")
 	public ResultDTO search(String words, Integer pageIdx, Integer pageSize)
 			throws Exception {
-		return indexSearch.search(words, pageIdx, pageSize);
+		Set<String> setDateTime = indexCreate.getMapDateTime();
+		return indexSearch.search(words, pageIdx, pageSize, setDateTime);
 	}
 
 	@SuppressWarnings("rawtypes")
 	public ResultDTO search(String words, Integer pageIdx, Integer pageSize,
 			String sortFld, boolean reverse) throws Exception {
 		Sort sort = indexCreate.getSortOfField(sortFld, reverse);
-		return indexSearch.search(words, pageIdx, pageSize,	sort);
+		Set<String> setDateTime = indexCreate.getMapDateTime();
+		return indexSearch.search(words, pageIdx, pageSize,	sort, 
+				setDateTime);
 	}
-		
+	
+	public void deleteIndex(Object pkVal) throws Exception {
+		indexCreate.deleteIndex(pkVal);
+	}
+	
+	public void deleteIndex(Object[] pkVal) throws Exception {
+		indexCreate.deleteIndex(pkVal);
+	}
+	
 //	protected void createDirsIndex(String s) throws Exception {
 //		File file = new File(s);
 //		if (!file.exists()) {

@@ -13,7 +13,6 @@ import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.IndexWriterConfig.OpenMode;
 import org.apache.lucene.index.Term;
-import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
@@ -23,8 +22,6 @@ import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.store.RAMDirectory;
 import org.apache.lucene.util.Version;
-
-import com.bidtime.lucene.utils.SearchUtils;
 
 public class SearchTester {
 
@@ -98,30 +95,17 @@ public class SearchTester {
 		}
 	}
 	
-	@SuppressWarnings("deprecation")
-	public void search2(String field, String word, short nPageSize)
-			throws Exception {
-		QueryParser parser = new QueryParser(Version.LUCENE_CURRENT, field, analyzer);
-		Query query = parser.parse(word);
-		TopDocs score = searcher.search(query, nPageSize);
-		System.out.println(field+":"+word);
-		//System.out.println("\t HITS:" + score.totalHits);
-		
-		SearchUtils.topDocsToDTO(searcher, word, score, (String[])null);
-//		for (int i = 0; i < score.; i++) {
-//			Document doc = searcher.doc(score[i].doc);
-//			List<IndexableField> listFld = doc.getFields();
-//			Object[] obj = new Object[listFld.size()];
-//			for (int j=0; j<listFld.size(); j++) {
-//				obj[j] = doc.get(listFld.get(j).name());
-//			}
-//		}
-//		for (int i = 0; i < docs.totalHits-1; i++) {
-//			ScoreDoc s_doc = docs.scoreDocs[i];
-//			Document doc = searcher.doc(s_doc.doc);
-//			System.out.println(doc);
-//		}
-	}
+//	@SuppressWarnings("deprecation")
+//	public void search2(String field, String word, short nPageSize)
+//			throws Exception {
+//		QueryParser parser = new QueryParser(Version.LUCENE_CURRENT, field, analyzer);
+//		Query query = parser.parse(word);
+//		TopDocs score = searcher.search(query, nPageSize);
+//		System.out.println(field+":"+word);
+//		//System.out.println("\t HITS:" + score.totalHits);
+//		
+//		SearchUtils.topDocsToDTO(searcher, word, score, (String[])null);
+//	}
 	
 //	@SuppressWarnings("deprecation")
 //	private GsonEbRst search3(String field, String words, short nPageSize) throws Exception {
@@ -190,7 +174,6 @@ public class SearchTester {
 					doc.add(new Field("name", "这是大修包一个测试", Field.Store.YES,
 							Field.Index.ANALYZED));
 				}
-				//System.out.println(doc);
 				writer.addDocument(doc);
 			}
 			writer.close();

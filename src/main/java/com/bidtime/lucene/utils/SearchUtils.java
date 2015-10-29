@@ -1,9 +1,11 @@
 package com.bidtime.lucene.utils;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.document.Document;
@@ -16,7 +18,7 @@ import org.apache.lucene.search.Sort;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.util.Version;
 import org.bidtime.dbutils.gson.ResultDTO;
-import org.bidtime.utils.comm.CaseInsensitiveLinkedHashMap;
+import org.bidtime.utils.comm.CaseInsensitiveHashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,7 +29,7 @@ public class SearchUtils {
 
 	@SuppressWarnings("rawtypes")
 	private static ResultDTO scoreDocToDTO(IndexSearcher searcher,
-			String words, int totalHits, ScoreDoc[] score, String[] head)
+			String words, int totalHits, ScoreDoc[] score, Set<String> mapDataTime, String[] head)
 			throws Exception {
 		StringBuilder sb = null;
 		if (logger.isDebugEnabled()) {
@@ -41,8 +43,8 @@ public class SearchUtils {
 		List<Object> list = new ArrayList<Object>();
 		if (head != null && head.length > 0) {
 			for (int i = 0; i < score.length; i++) {
-				CaseInsensitiveLinkedHashMap<Object> map = 
-						new CaseInsensitiveLinkedHashMap<Object>();
+				CaseInsensitiveHashMap<Object> map = 
+						new CaseInsensitiveHashMap<Object>();
 				Document doc = searcher.doc(score[i].doc);
 				if (logger.isDebugEnabled()) {
 					sb.append("\r");
@@ -51,7 +53,13 @@ public class SearchUtils {
 					sb.append(doc.toString());
 				}
 				for (int n = 0; n < head.length; n++) {
-					map.put(head[n], doc.get(head[n]));
+					String keyField = head[n];
+					Object v = doc.get(keyField);
+					if (mapDataTime.contains(keyField)) {
+						map.put(head[n], new Date((Long)v));
+					} else {
+						map.put(head[n], v);
+					}
 				}
 				list.add(map);
 			}
@@ -68,7 +76,12 @@ public class SearchUtils {
 				List<IndexableField> listFld = doc.getFields();
 				for (int j = 0; j < listFld.size(); j++) {
 					String keyField = listFld.get(j).name();
-					map.put(keyField, doc.get(keyField));
+					Object v = doc.get(keyField);
+					if (mapDataTime.contains(keyField)) {
+						map.put(keyField, new Date((Long)v));						
+					} else {
+						map.put(keyField, v);
+					}
 				}
 				list.add(map);
 			}
@@ -86,7 +99,7 @@ public class SearchUtils {
 
 	@SuppressWarnings("rawtypes")
 	public static ResultDTO topDocsToDTO(IndexSearcher searcher, String words,
-			TopDocs topDocs, String[] head) throws Exception {
+			TopDocs topDocs, Set<String> mapDataTime, String[] head) throws Exception {
 		if (topDocs.totalHits == 0) {
 			ResultDTO dto = ResultDTO.error("没有搜索到相关内容");
 			// GsonEbRst rst = GsonEbUtils.toGsonEbRstSuccess("");
@@ -104,7 +117,7 @@ public class SearchUtils {
 			return dto;
 		} else {
 			ResultDTO rst = SearchUtils.scoreDocToDTO(searcher, words,
-					topDocs.totalHits, topDocs.scoreDocs, head);
+					topDocs.totalHits, topDocs.scoreDocs, mapDataTime, head);
 			return rst;
 		}
 	}
@@ -121,7 +134,7 @@ public class SearchUtils {
     
 	@SuppressWarnings({ "rawtypes" })
 	public static ResultDTO search(IndexSearcher searcher, Query query,
-			String words, Integer pageIdx, Integer pageSize, Sort sort, String[] head)
+			String words, Integer pageIdx, Integer pageSize, Sort sort, Set<String> mapDataTime, String[] head)
 			throws Exception {
 		/*
 		 * TopScoreDocCollector topCollector = TopScoreDocCollector.create( 100,
@@ -147,69 +160,69 @@ public class SearchUtils {
 				topDocs = searcher.search(query, Integer.MAX_VALUE);				
 			}
 		}
-		return SearchUtils.topDocsToDTO(searcher, words, topDocs, head);
+		return SearchUtils.topDocsToDTO(searcher, words, topDocs, mapDataTime, head);
 	}
     
 	@SuppressWarnings({ "rawtypes" })
 	public static ResultDTO search(IndexSearcher searcher, Query query,
-			String words, Integer pageIdx, Integer pageSize, String[] head)
+			String words, Integer pageIdx, Integer pageSize, Set<String> mapDataTime, String[] head)
 			throws Exception {
 		TopDocs topDocs = null;
 		if (pageSize != null) {
 			//topDocs = searcher.search(query, pageSize);
-			ScoreDoc scoreDoc = null;
-			getLastScoreDoc(pageIdx, pageSize, query, searcher);
+			ScoreDoc scoreDoc = getLastScoreDoc(pageIdx, pageSize, query, searcher);
 			topDocs = searcher.searchAfter(scoreDoc, query, pageSize);
 		} else {
 			topDocs = searcher.search(query, Integer.MAX_VALUE);
 		}
-		return SearchUtils.topDocsToDTO(searcher, words, topDocs, head);
+		return SearchUtils.topDocsToDTO(searcher, words, topDocs, mapDataTime, head);
 	}
 	
 	@SuppressWarnings({ "deprecation", "rawtypes" })
 	public static ResultDTO search(IndexSearcher searcher, Analyzer analyzer,
 			String field, String words, Integer pageIdx, Integer pageSize,
-			String[] head) throws Exception {
+			Set<String> mapDataTime, String[] head) throws Exception {
 		QueryParser parser = new QueryParser(Version.LUCENE_CURRENT, field,
 				analyzer);
 		Query query = parser.parse(words);
-		return search(searcher, query, words, pageIdx, pageSize, head);
+		return search(searcher, query, words, pageIdx, pageSize, mapDataTime, head);
 	}
 	
 	@SuppressWarnings({ "deprecation", "rawtypes" })
 	public static ResultDTO search(IndexSearcher searcher, Analyzer analyzer,
 			String field, String words, Integer pageIdx, Integer pageSize, 
-			Sort sort, String[] head) throws Exception {
+			Sort sort, Set<String> mapDataTime, String[] head) throws Exception {
 		QueryParser parser = new QueryParser(Version.LUCENE_CURRENT, field,
 				analyzer);
 		Query query = parser.parse(words);
-		return search(searcher, query, words, pageIdx, pageSize, sort, head);
+		return search(searcher, query, words, pageIdx, pageSize, sort, mapDataTime, head);
 	}
 
 	@SuppressWarnings("rawtypes")
 	public static ResultDTO search(IndexSearcher searcher, Analyzer analyzer,
-			String words, Integer pageIdx, Integer pageSize, String[] head)
+			String words, Integer pageIdx, Integer pageSize, Set<String> mapDataTime, String[] head)
 			throws Exception {
-		return search(searcher, analyzer, null, words, pageIdx, pageSize, head);
+		return search(searcher, analyzer, null, words, pageIdx, pageSize, mapDataTime, head);
 	}
 
 	@SuppressWarnings("rawtypes")
 	public static ResultDTO search(IndexSearcher searcher, Analyzer analyzer,
-			String words, Integer pageIdx, Integer pageSize) throws Exception {
-		return search(searcher, analyzer, null, words, pageIdx, pageSize, null);
+			String words, Integer pageIdx, Integer pageSize, Set<String> mapDataTime) throws Exception {
+		return search(searcher, analyzer, null, words, pageIdx, pageSize, mapDataTime, null);
 	}
 
 	@SuppressWarnings("rawtypes")
 	public static ResultDTO search(IndexSearcher searcher, Analyzer analyzer,
-			String words, Integer pageIdx, Integer pageSize, Sort sort, String[] head)
+			String words, Integer pageIdx, Integer pageSize, Sort sort,
+			Set<String> mapDataTime, String[] head)
 			throws Exception {
-		return search(searcher, analyzer, null, words, pageIdx, pageSize, sort, head);
+		return search(searcher, analyzer, null, words, pageIdx, pageSize, sort, mapDataTime, head);
 	}
 
 	@SuppressWarnings("rawtypes")
 	public static ResultDTO search(IndexSearcher searcher, Analyzer analyzer,
-			String words, Integer pageIdx, Integer pageSize, Sort sort) throws Exception {
-		return search(searcher, analyzer, null, words, pageIdx, pageSize, sort, null);
+			String words, Integer pageIdx, Integer pageSize, Sort sort, Set<String> mapDataTime) throws Exception {
+		return search(searcher, analyzer, null, words, pageIdx, pageSize, sort, mapDataTime, null);
 	}
 
 //	@SuppressWarnings("rawtypes")

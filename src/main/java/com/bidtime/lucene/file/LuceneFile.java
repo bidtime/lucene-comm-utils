@@ -1,11 +1,10 @@
 package com.bidtime.lucene.file;
 
 import java.io.File;
-import java.io.IOException;
+import java.util.Date;
 import java.util.Map;
 
 import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.bidtime.dbutils.gson.ResultDTO;
 import org.bidtime.utils.comm.SimpleHashMap;
@@ -14,7 +13,6 @@ import org.slf4j.LoggerFactory;
 import org.wltea4pinyin.analyzer.lucene.IKAnalyzer4PinYin;
 
 import com.bidtime.lucene.base.LuceneIndexRoot;
-import com.bidtime.lucene.base.LuceneSearch;
 
 public class LuceneFile extends LuceneIndexRoot {
 
@@ -48,7 +46,7 @@ public class LuceneFile extends LuceneIndexRoot {
 	}
 
 	public static void main(String[] args) throws Exception {
-		testCreateIndex();
+		testCreateIndex(true);
 		//String key = "*:*";//"name_shouzimu:";//"id:" + 5;
 		//searchIt(key);
 	}
@@ -83,6 +81,7 @@ public class LuceneFile extends LuceneIndexRoot {
 		Map map = new SimpleHashMap();
 		map.put("id", 6);
 		map.put("code", "06");
+		map.put("tmCreate", new Date());
 		map.put("name", "你是俄国人");
 		try {
 			this.createIndex(map);
@@ -92,42 +91,42 @@ public class LuceneFile extends LuceneIndexRoot {
 	}
 
 	@SuppressWarnings("rawtypes")
-	public static void testCreateIndex() {
+	public static void testCreateIndex(boolean create) {
 		LuceneFile m = new LuceneFile();
 		try {
 			// IKAnalyzer中文分词
 			Analyzer analyzer = null;
 			analyzer = new IKAnalyzer4PinYin(false);
-			m.setOpenMode(false);
+			m.setOpenMode(create);
 			m.setAnalyzer(analyzer);
 			m.setFileSource("D:/DATA/lucene/source/raw.txt");
 			m.setIndexFileDir("D:/DATA/lucene/index/");
 			m.initial();
+			if (create) {
+				m.addToDoc();
+			}
 			ResultDTO dto = m.search("*:*", 0, 10, "id", false);
 			System.out.println(dto.toString());
-			//m.addToDoc();
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 		}
 	}
 	
-	@SuppressWarnings("rawtypes")
-	public static void searchIt(String keyName) throws Exception {
-		Analyzer analyzer = null;
-		analyzer = new IKAnalyzer4PinYin(false);
-		String s = "D:/DATA/lucene/index/";
-		Directory indexDir = null;
-		try {
-			indexDir = FSDirectory.open(new File(s));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		LuceneSearch ls = new LuceneSearch(indexDir, analyzer);
-		//String[] resultFields = null;	//new String[]{"name", "allNameIds"};
-		//String head = "name";
-		ResultDTO dto = ls.search(keyName, 0, 10);
-//		ResultDTO dto = ls.search(KeyWordsUtils.bracketWords(
-//				head, key), resultFields, 10);
-		System.out.println(dto.toString());
-	}
+//	@SuppressWarnings("rawtypes")
+//	public static void searchIt(String keyName) throws Exception {
+//		Analyzer analyzer = null;
+//		analyzer = new IKAnalyzer4PinYin(false);
+//		String s = "D:/DATA/lucene/index/";
+//		Directory indexDir = null;
+//		try {
+//			indexDir = FSDirectory.open(new File(s));
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//		LuceneSearch ls = new LuceneSearch(indexDir, analyzer);
+//		//String[] resultFields = null;	//new String[]{"name", "allNameIds"};
+//		//String head = "name";
+//		ResultDTO dto = ls.search(keyName, 0, 10);
+//		System.out.println(dto.toString());
+//	}
 }

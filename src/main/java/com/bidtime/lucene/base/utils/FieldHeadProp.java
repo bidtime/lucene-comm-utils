@@ -1,5 +1,7 @@
 package com.bidtime.lucene.base.utils;
 
+import java.util.Date;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.document.DoubleField;
 import org.apache.lucene.document.Field;
@@ -22,9 +24,19 @@ public class FieldHeadProp {
 	Integer pyType;		//pinyinType:0/1/2 ->	HANZI/PINYIN/SHOUZIMU
 	String pyHead;		//>=1, 为拼音对应的中文字段名
 	FieldType fieldType;
-	//SortField sortField;
 	SortField.Type sfType;
+	//String dataTypeRaw;
+	boolean dateTimeType;
+	boolean pk;
 	
+	public boolean isPk() {
+		return pk;
+	}
+
+	public void setPk(boolean pk) {
+		this.pk = pk;
+	}
+
 	public String getPYHead() {
 		return pyHead;
 	}
@@ -86,32 +98,49 @@ public class FieldHeadProp {
 		}
 	}
 	
-	public Field getFieldOfDataType(String value) {
+	public Field getFieldOfDataType(Object value) {
 		return getFieldOfDataType(head, value);
 	}
 	
-	private Field getFieldOfDataType(String head, String value) {
+//	public Field getFieldOfDataType(String value) {
+//		return getFieldOfDataType(head, value);
+//	}
+	
+	private Field getFieldOfDataType(String head, Object value) {
 		Field field = null;
 		if (leftEqualIgnoreCase("int", dataType)) {
 			fieldType.setNumericType(FieldType.NumericType.INT);
-			field = new IntField(head, Integer.parseInt(value), fieldType);
+			field = new IntField(head, 
+					Integer.parseInt(String.valueOf(value)), fieldType);
 		} else if (leftEqualIgnoreCase("double", dataType)) {
 			fieldType.setNumericType(FieldType.NumericType.DOUBLE);
-			field = new DoubleField(head, Double.parseDouble(value), fieldType);
+			field = new DoubleField(head, 
+					Double.parseDouble(String.valueOf(value)), fieldType);
 		} else if (leftEqualIgnoreCase("float", dataType)) {
 			fieldType.setNumericType(FieldType.NumericType.FLOAT);
-			field = new FloatField(head, Float.parseFloat(value), fieldType);
+			field = new FloatField(head, 
+					Float.parseFloat(String.valueOf(value)), fieldType);
 		} else if (leftEqualIgnoreCase("long", dataType)) {
 			fieldType.setNumericType(FieldType.NumericType.LONG);
-			field = new LongField(head, Long.parseLong(value), fieldType);
+			if (this.isDateTime() && value instanceof Date)  {
+				Object o = ((Date)value).getTime();
+				field = new LongField(head, (Long)o, fieldType);
+			} else {
+				field = new LongField(head, 
+					Long.parseLong(String.valueOf(value)), fieldType);
+			}
 		} else if (leftEqualIgnoreCase("stored", dataType)) {
-			field = new StoredField(head, value);
+			field = new StoredField(head, String.valueOf(value));
 		} else if (leftEqualIgnoreCase("string", dataType)) {
-			field = new StringField(head, value, fieldType.stored() ? Field.Store.YES : Field.Store.NO);
+			field = new StringField(head, 
+					String.valueOf(value), 
+					fieldType.stored() ? Field.Store.YES : Field.Store.NO);
 		} else if (leftEqualIgnoreCase("text", dataType)) {
-			field = new TextField(head, value, fieldType.stored() ? Field.Store.YES : Field.Store.NO);
+			field = new TextField(head,
+					String.valueOf(value), fieldType.stored() ? Field.Store.YES : Field.Store.NO);
 		} else {
-			field = new Field(head, value, fieldType);
+			field = new Field(head, 
+					String.valueOf(value), fieldType);
 		}
 		return field;
 	}
@@ -149,11 +178,16 @@ public class FieldHeadProp {
 	}
 
 	public FieldHeadProp(Integer recNo, String head, String dataType, 
-			String index, String tokenized, String storeType) {
+			String index, String tokenized, String storeType, String pk) {
 		this.recNo = recNo;
 		this.head = head;
 		parseDataType(dataType);
 		this.fieldType = arrayToFieldType(index, tokenized, storeType);
+		if (StringUtils.equalsIgnoreCase(pk, "pk")) {
+			this.pk = true;
+		} else {
+			this.pk = false;
+		}
 	}
 	
 	private FieldType arrayToFieldType(String index, String tokenized, String storeType) {
@@ -193,8 +227,13 @@ public class FieldHeadProp {
 	private void parseDataType(String dataType) {
 		String[] dataTypes = dataType.split("/");
 		this.dataType = dataTypes[0];
+		if (StringUtils.equalsIgnoreCase(dataType, "datetime")) {
+			dateTimeType = true;
+			dataType = "long";
+		} else {
+			dateTimeType = false;
+		}
 		if ( dataTypes.length > 1 ) {
-			//pyType = Integer.parseInt(dataTypes[1]);
 			String pyTInput = dataTypes[1];
 			if (StringUtils.equalsIgnoreCase(pyTInput, "PINYIN")) {
 				pyType = 1;
@@ -203,10 +242,18 @@ public class FieldHeadProp {
 			} else {
 				pyType = 0;				
 			}
-			pyHead = dataTypes[2];
+			if (dataTypes.length > 2) {
+				pyHead = dataTypes[2];
+			}
 		} else {
 			pyType = 0;
 		}
+	}
+	
+	public boolean isDateTime() {
+		return dateTimeType;
+		//return (StringUtils.endsWithIgnoreCase(dataTypeRaw, "datetime"))
+		//		? true : false;
 	}
 	
 	@Override

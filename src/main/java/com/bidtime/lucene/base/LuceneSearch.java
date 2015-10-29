@@ -1,5 +1,7 @@
 package com.bidtime.lucene.base;
 
+import java.util.Set;
+
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
@@ -31,29 +33,31 @@ public class LuceneSearch {
 
 	@SuppressWarnings("rawtypes")
 	public ResultDTO search(String words, Integer pageIdx, Integer pageSize,
-			String[] head) throws Exception {
+			Set<String> mapDataTime, String[] head) throws Exception {
 		return SearchUtils.search(searcher, analyzer, words, pageIdx, pageSize,
-				head);
+				mapDataTime, head);
 	}
 
 	@SuppressWarnings("rawtypes")
 	public ResultDTO search(String words, Integer pageIdx, Integer pageSize,
-			Sort sort, String[] head) throws Exception {
+			Sort sort, Set<String> mapDataTime, String[] head) throws Exception {
 		return SearchUtils.search(searcher, analyzer, words, pageIdx, pageSize,
-				sort, head);
+				sort, mapDataTime, head);
 	}
 
 	@SuppressWarnings("rawtypes")
 	public ResultDTO search(String words, Integer pageIdx, Integer pageSize,
-			Sort sort) throws Exception {
+			Sort sort, Set<String> mapDataTime) throws Exception {
 		return SearchUtils.search(searcher, analyzer, words, pageIdx, pageSize,
-				sort);
+				sort, mapDataTime);
 	}
 
 	@SuppressWarnings("rawtypes")
-	public ResultDTO search(String words, Integer pageIdx, Integer pageSize)
+	public ResultDTO search(String words, Integer pageIdx, Integer pageSize,
+			Set<String> mapDataTime)
 			throws Exception {
-		return SearchUtils.search(searcher, analyzer, words, pageIdx, pageSize);
+		return SearchUtils.search(searcher, analyzer, words, pageIdx, pageSize,
+				mapDataTime);
 	}
 
 //	@SuppressWarnings("rawtypes")
