@@ -16,7 +16,7 @@ import org.apache.lucene.document.TextField;
 import org.apache.lucene.search.Sort;
 import org.apache.lucene.search.SortField;
 
-public class FieldHeadProp {
+public class FieldProp {
 	
 	Integer recNo;
 	String head;
@@ -177,7 +177,7 @@ public class FieldHeadProp {
 		return sfType;
 	}
 
-	public FieldHeadProp(Integer recNo, String head, String dataType, 
+	public FieldProp(Integer recNo, String head, String dataType, 
 			String index, String tokenized, String storeType, String pk) {
 		this.recNo = recNo;
 		this.head = head;
@@ -252,8 +252,6 @@ public class FieldHeadProp {
 	
 	public boolean isDateTime() {
 		return dateTimeType;
-		//return (StringUtils.endsWithIgnoreCase(dataTypeRaw, "datetime"))
-		//		? true : false;
 	}
 	
 	@Override

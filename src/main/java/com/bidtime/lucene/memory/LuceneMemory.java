@@ -1,17 +1,20 @@
 package com.bidtime.lucene.memory;
 
+import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.store.RAMDirectory;
 
-import com.bidtime.lucene.base.LuceneIndexRoot;
+import com.bidtime.lucene.base.LuceneCreate;
+import com.bidtime.lucene.base.utils.FieldsMagnt;
 
-public class LuceneMemory extends LuceneIndexRoot {
+public class LuceneMemory extends LuceneCreate {
 	
 //	private static final Logger logger = LoggerFactory
 //			.getLogger(LuceneMemory.class);
-
-	@Override
-	protected void initialIndexDir() throws Exception {
-		indexDir = new RAMDirectory();
+	
+	public LuceneMemory(Analyzer analyzer, Boolean openMode, 
+			FieldsMagnt headMagt) throws Exception {
+		super(analyzer, openMode, headMagt,
+				new RAMDirectory());
 	}
 
 //	public static void main(String[] args) {
