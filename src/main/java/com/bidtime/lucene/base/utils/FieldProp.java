@@ -224,14 +224,14 @@ public class FieldProp {
 	/*
 	 * string/PINYIN/carTypeName
 	 */
-	private void parseDataType(String dataType) {
-		String[] dataTypes = dataType.split("/");
+	private void parseDataType(String dt) {
+		String[] dataTypes = dt.split("/");
 		this.dataType = dataTypes[0];
 		if (StringUtils.equalsIgnoreCase(dataType, "datetime")) {
-			dateTimeType = true;
-			dataType = "long";
+			this.dateTimeType = true;
+			this.dataType = "long";
 		} else {
-			dateTimeType = false;
+			this.dateTimeType = false;
 		}
 		if ( dataTypes.length > 1 ) {
 			String pyTInput = dataTypes[1];

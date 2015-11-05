@@ -35,6 +35,18 @@ public class FieldsMagnt {
 	private Set<String> mapPk = new CaseInsensitiveHashSet();
 	protected String fileSource;
 	protected Integer marginLines = 6;
+	//protected PerFieldAnalyzerWrapper wrapper;
+
+	public FieldsMagnt(String fileSource) throws Exception {
+		this.fileSource = fileSource;
+		setIndexPath(fileSource, marginLines);
+	}
+
+	public FieldsMagnt(String fileSource, Integer marginLines) throws Exception {
+		this.fileSource = fileSource;
+		this.marginLines = marginLines;
+		setIndexPath(fileSource, marginLines);
+	}
 	
 	public Integer getMarginLines() {
 		return marginLines;
@@ -70,20 +82,6 @@ public class FieldsMagnt {
 
 	public FieldProp get(Object key) {
 		return mapProps.get(key);
-	}
-
-	public FieldsMagnt() {
-	}
-
-	public FieldsMagnt(String fileSource) throws Exception {
-		this.fileSource = fileSource;
-		setIndexPath(fileSource, marginLines);
-	}
-
-	public FieldsMagnt(String fileSource, Integer marginLines) throws Exception {
-		this.fileSource = fileSource;
-		this.marginLines = marginLines;
-		setIndexPath(fileSource, marginLines);
 	}
 	
 	private boolean leftEqualIgnoreCase(String s1, String s2) {
@@ -145,7 +143,7 @@ public class FieldsMagnt {
 			}
 			setProps(arHeads, arDataTypes,
 					arIndexs, arTokenized, arStoreTypes, arPks);
-			//wrapper = headMagt.getPinYinAnalyzer(analyzer);
+			//wrapper = getPinYinAnalyzer(analyzer);
 			//initConfig(wrapper);
 			logger.info("readlines: " + n);
 			logger.info("read index format file.");
@@ -267,7 +265,7 @@ public class FieldsMagnt {
 	public List<Field> mapToFields(Map map) throws Exception{
 		List<Field> list = new ArrayList<Field>();
 		for (Map.Entry<String, FieldProp> entry : mapProps.entrySet()) {
-			String head = (String)entry.getKey();
+			String head = entry.getKey();
 			FieldProp prop = entry.getValue();
 			Field field = null;
 			String headReturn = null;

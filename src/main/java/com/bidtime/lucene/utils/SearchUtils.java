@@ -18,6 +18,7 @@ import org.apache.lucene.search.Sort;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.util.Version;
 import org.bidtime.dbutils.gson.ResultDTO;
+import org.bidtime.utils.basic.ObjectComm;
 import org.bidtime.utils.comm.CaseInsensitiveHashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -78,7 +79,7 @@ public class SearchUtils {
 					String keyField = listFld.get(j).name();
 					Object v = doc.get(keyField);
 					if (mapDataTime.contains(keyField)) {
-						map.put(keyField, new Date((Long)v));						
+						map.put(keyField, new Date(ObjectComm.objectToLong(v)));						
 					} else {
 						map.put(keyField, v);
 					}

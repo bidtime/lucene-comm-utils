@@ -1,5 +1,6 @@
-package com.bidtime.lucene.base;
+package com.bidtime.lucene.base.create;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
@@ -13,6 +14,8 @@ import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.IndexWriterConfig.OpenMode;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.store.Directory;
+import org.apache.lucene.store.FSDirectory;
+import org.apache.lucene.store.RAMDirectory;
 import org.apache.lucene.util.Version;
 import org.bidtime.dbutils.gson.JSONHelper;
 import org.bidtime.dbutils.gson.ResultDTO;
@@ -34,27 +37,56 @@ public class LuceneCreate {
 	IndexWriterConfig iwConfig;
 	Boolean openMode;
 	FieldsMagnt headMagt;
-	
-	public LuceneCreate() {
-		
-	}
-	
-//	public LuceneCreate(Analyzer analyzer, Boolean openMode, 
-//			FieldsMagnt headMagt, String dir) throws Exception {
-//		
-//	}
+	//PerFieldAnalyzerWrapper wrapper;
 
-	public LuceneCreate(Analyzer analyzer, Boolean openMode, 
-			FieldsMagnt headMagt, Directory dir) throws Exception {
+	public LuceneCreate(String sourceFile, Analyzer analyzer, 
+			Directory dir, Boolean openMode) throws Exception {
+		this(new FieldsMagnt(sourceFile), analyzer, dir, openMode);
+	}
+
+	public LuceneCreate(String sourceFile, Analyzer analyzer, 
+			String dir, Boolean openMode) throws Exception {
+		this(new FieldsMagnt(sourceFile), analyzer, 
+			FSDirectory.open(new File(dir)), openMode);
+	}
+
+	public LuceneCreate(String sourceFile, Analyzer analyzer, 
+			String dir) throws Exception {
+		this(new FieldsMagnt(sourceFile), analyzer, 
+			FSDirectory.open(new File(dir)), false);
+	}
+
+	public LuceneCreate(FieldsMagnt headMagt, Analyzer analyzer, 
+			Directory dir, Boolean openMode) throws Exception {
 		//this.indexDir = dir;
 		this.analyzer = analyzer;
 		this.openMode = openMode;
 		this.headMagt = headMagt;
 		initConfig(dir);
 	}
+
+	public LuceneCreate(FieldsMagnt headMagt, Analyzer analyzer, 
+			Directory dir) throws Exception {
+		this(headMagt, analyzer, dir, false);
+	}
+
+	public LuceneCreate(FieldsMagnt headMagt, 
+			Analyzer analyzer) throws Exception {
+		this(headMagt, analyzer, 
+				new RAMDirectory(), false);
+	}
+	
+	public LuceneCreate(FieldsMagnt headMagt, 
+			Analyzer analyzer, String dir) throws Exception {
+		this(headMagt, analyzer, 
+				FSDirectory.open(new File(dir)), false);
+	}
 	
 	@SuppressWarnings("deprecation")
 	private void initConfig(Directory dir) throws Exception {
+		if (IndexWriter.isLocked(dir)) {
+			IndexWriter.unlock(dir);		//auto unlock
+		}
 		PerFieldAnalyzerWrapper wrapper =
 				headMagt.getPinYinAnalyzer(analyzer);
 		//配置IndexWriterConfig
@@ -65,13 +97,10 @@ public class LuceneCreate {
 		//setMaxBufferedDocs
 		//iwConfig.setMaxBufferedDocs(-1);
 		indexWriter = new IndexWriter(dir, iwConfig);
-		//auto unlock
-		//IndexWriter.unlock(indexDir);
 	}
 
 	@SuppressWarnings("rawtypes")
-	private void createIndexMap(Map map)
-			throws Exception {
+	private void createIndexMap(Map map) throws Exception {
 		createIndexMap(map, true);
 	}
 	
@@ -290,7 +319,7 @@ public class LuceneCreate {
 	private void updateIndex(List<?> list) throws Exception {
 		for (int i=0; i<list.size(); i++) {
 			updateIndex(list.get(i),
-					(i == list.size() - 1 ) ? true : false);
+				(i == list.size() - 1 ) ? true : false);
 		}
 	}
 	
@@ -417,6 +446,10 @@ public class LuceneCreate {
 		}
 	}
 	
+	public void closeIndex() throws Exception {
+		this.indexWriter.close();
+	}
+	
 //	public Sort getSortOfField(String[] fld) throws Exception {
 //		SortField[] fields = new SortField[fld.length];
 //		for (int i=0; i<fld.length; i++) {
@@ -427,4 +460,5 @@ public class LuceneCreate {
 //				new SortField("ename", Type.STRING, false ) } );
 //		return sort;
 //	}
+
 }

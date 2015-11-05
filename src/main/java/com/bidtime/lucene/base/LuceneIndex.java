@@ -1,13 +1,19 @@
 package com.bidtime.lucene.base;
 
+import com.bidtime.lucene.base.create.LuceneCreate;
+import com.bidtime.lucene.base.search.AbstractIndexSearch;
+
 
 public class LuceneIndex {
 	
 //	private static final Logger logger = LoggerFactory
-//			.getLogger(LuceneIndexRoot.class);
+//			.getLogger(LuceneIndex.class);
 
 	protected LuceneCreate indexCreate;
-	protected LuceneSearch indexSearch;
+	protected AbstractIndexSearch indexSearch;
+	
+	public LuceneIndex() {
+	}
 
 	public LuceneCreate getIndexCreate() {
 		return indexCreate;
@@ -17,15 +23,12 @@ public class LuceneIndex {
 		this.indexCreate = indexCreate;
 	}
 
-	public LuceneSearch getIndexSearch() {
+	public AbstractIndexSearch getIndexSearch() {
 		return indexSearch;
 	}
 
-	public void setIndexSearch(LuceneSearch indexSearch) {
+	public void setIndexSearch(AbstractIndexSearch indexSearch) {
 		this.indexSearch = indexSearch;
-	}
-	
-	public LuceneIndex() {
 	}
 	
 	public void createIndex(Object d) throws Exception {

@@ -1,4 +1,4 @@
-package com.bidtime.lucene.base;
+package com.bidtime.lucene.base.search;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.search.IndexSearcher;
@@ -9,11 +9,12 @@ import org.apache.lucene.store.Directory;
 import com.bidtime.lucene.base.utils.FieldsMagnt;
 
 public class LuceneSearchMgr extends AbstractIndexSearch {
+	
 	private SearcherManager mgr = null;// 是线程安全的
 
-	public LuceneSearchMgr(Directory indexDir, Analyzer analyzer,
-			FieldsMagnt headMagt) throws Exception {
-		super(indexDir, analyzer, headMagt);
+	public LuceneSearchMgr(FieldsMagnt headMagt, Analyzer analyzer,
+			Directory indexDir) throws Exception {
+		super(headMagt, analyzer, indexDir);
 		mgr = new SearcherManager(indexDir, new SearcherFactory());
 	}
 
@@ -50,4 +51,5 @@ public class LuceneSearchMgr extends AbstractIndexSearch {
 //        }
 //        indexSearcher = null;
 //    }
+	
 }
