@@ -1,5 +1,6 @@
 package com.bidtime.lucene.base.search;
 
+import java.io.File;
 import java.util.Set;
 
 import org.apache.lucene.analysis.Analyzer;
@@ -8,6 +9,7 @@ import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Sort;
 import org.apache.lucene.store.Directory;
+import org.apache.lucene.store.FSDirectory;
 import org.bidtime.dbutils.gson.ResultDTO;
 import org.wltea4pinyin.analyzer.lucene.IKAnalyzer4PinYin;
 
@@ -22,30 +24,46 @@ public abstract class AbstractIndexSearch {
 	protected IndexReader reader;
 	protected FieldsMagnt headMagt;
 
-	public AbstractIndexSearch(FieldsMagnt headMagt, Analyzer analyzer,
-			Directory indexDir) throws Exception {
-		this.indexDir = indexDir;
+//	public AbstractIndexSearch(FieldsMagnt headMagt, Analyzer analyzer,
+//			Directory indexDir) throws Exception {
+//		setProp(headMagt, analyzer,	indexDir);
+//	}
+	
+	private void setProp(FieldsMagnt headMagt, Analyzer analyzer,
+			Directory idxDir) throws Exception {
+		this.indexDir = idxDir;
 		this.analyzer = analyzer;
 		this.headMagt = headMagt;
 		this.reader = DirectoryReader.open(indexDir);
 	}
 
-//	public AbstractIndexSearch(FieldsMagnt headMagt, Analyzer analyzer,
-//			String idxPath) throws Exception {
-//		this(headMagt, analyzer, FSDirectory.open(new File(idxPath)));
-//	}
+	public AbstractIndexSearch(FieldsMagnt headMagt, Analyzer analyzer,
+			String idxDir) throws Exception {
+		setProp(headMagt, analyzer, FSDirectory.open(new File(idxDir)));
+	}
 
-	public AbstractIndexSearch(FieldsMagnt headMagt,
-			Directory indexDir) throws Exception {
-		this(headMagt, new IKAnalyzer4PinYin(false),
-				indexDir);
-	}
+//	public AbstractIndexSearch(String fileSource,
+//			String idxPath) throws Exception {
+//		setProp(new FieldsMagnt(fileSource), new IKAnalyzer4PinYin(false),
+//				FSDirectory.open(new File(idxPath)));
+//	}
 	
-	public AbstractIndexSearch(String sourceFile,
-			Directory indexDir) throws Exception {
-		this(new FieldsMagnt(sourceFile),
-				new IKAnalyzer4PinYin(false), indexDir);
+	public AbstractIndexSearch(FieldsMagnt headMagt, String idxDir) throws Exception {
+		setProp(headMagt, new IKAnalyzer4PinYin(false),
+				FSDirectory.open(new File(idxDir)));
 	}
+
+//	public AbstractIndexSearch(FieldsMagnt headMagt,
+//			Directory indexDir) throws Exception {
+//		this(headMagt, new IKAnalyzer4PinYin(false),
+//				indexDir);
+//	}
+	
+//	public AbstractIndexSearch(String sourceFile,
+//			Directory indexDir) throws Exception {
+//		this(new FieldsMagnt(sourceFile),
+//				new IKAnalyzer4PinYin(false), indexDir);
+//	}
 	
 	protected abstract IndexSearcher getSearch() throws Exception;
 	

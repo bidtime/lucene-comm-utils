@@ -35,7 +35,6 @@ public class FieldsMagnt {
 	private Set<String> mapPk = new CaseInsensitiveHashSet();
 	protected String fileSource;
 	protected Integer marginLines = 6;
-	//protected PerFieldAnalyzerWrapper wrapper;
 
 	public FieldsMagnt(String fileSource) throws Exception {
 		this.fileSource = fileSource;

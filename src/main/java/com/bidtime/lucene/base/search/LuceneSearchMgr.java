@@ -4,7 +4,6 @@ import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.SearcherFactory;
 import org.apache.lucene.search.SearcherManager;
-import org.apache.lucene.store.Directory;
 
 import com.bidtime.lucene.base.utils.FieldsMagnt;
 
@@ -12,9 +11,27 @@ public class LuceneSearchMgr extends AbstractIndexSearch {
 	
 	private SearcherManager mgr = null;// 是线程安全的
 
+//	public LuceneSearchMgr(FieldsMagnt headMagt, Analyzer analyzer,
+//			Directory indexDir) throws Exception {
+//		super(headMagt, analyzer, indexDir);
+//		mgr = new SearcherManager(indexDir, new SearcherFactory());
+//	}
+
 	public LuceneSearchMgr(FieldsMagnt headMagt, Analyzer analyzer,
-			Directory indexDir) throws Exception {
-		super(headMagt, analyzer, indexDir);
+			String idxPath) throws Exception {
+		super(headMagt, analyzer, idxPath);
+		mgr = new SearcherManager(indexDir, new SearcherFactory());
+	}
+	
+//	public LuceneSearchMgr(String fileSource,
+//			String idxPath) throws Exception {
+//		super(fileSource, idxPath);
+//		mgr = new SearcherManager(indexDir, new SearcherFactory());
+//	}
+
+	public LuceneSearchMgr(FieldsMagnt headMagt,
+			String idxPath) throws Exception {
+		super(headMagt, idxPath);
 		mgr = new SearcherManager(indexDir, new SearcherFactory());
 	}
 

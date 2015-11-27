@@ -15,13 +15,13 @@ import org.apache.lucene.index.IndexWriterConfig.OpenMode;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
-import org.apache.lucene.store.RAMDirectory;
 import org.apache.lucene.util.Version;
 import org.bidtime.dbutils.gson.JSONHelper;
 import org.bidtime.dbutils.gson.ResultDTO;
 import org.bidtime.utils.basic.ObjectComm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.wltea4pinyin.analyzer.lucene.IKAnalyzer4PinYin;
 
 import com.bidtime.lucene.base.utils.FieldsMagnt;
 
@@ -36,24 +36,47 @@ public class LuceneCreate {
 	Boolean openMode;
 	FieldsMagnt headMagt;
 
-	public LuceneCreate(String sourceFile, Analyzer analyzer, 
-			Directory dir, Boolean openMode) throws Exception {
-		this(new FieldsMagnt(sourceFile), analyzer, dir, openMode);
-	}
-
-	public LuceneCreate(String sourceFile, Analyzer analyzer, 
-			String dir, Boolean openMode) throws Exception {
-		this(new FieldsMagnt(sourceFile), analyzer, 
-			FSDirectory.open(new File(dir)), openMode);
-	}
-
-	public LuceneCreate(String sourceFile, Analyzer analyzer, 
-			String dir) throws Exception {
-		this(new FieldsMagnt(sourceFile), analyzer, 
-			FSDirectory.open(new File(dir)), false);
-	}
+//	public LuceneCreate(String sourceFile, Analyzer analyzer, 
+//			Directory dir, Boolean openMode) throws Exception {
+//		this(new FieldsMagnt(sourceFile), analyzer, dir, openMode);
+//	}
+//
+//	public LuceneCreate(String sourceFile, Analyzer analyzer, 
+//			String dir, Boolean openMode) throws Exception {
+//		this(new FieldsMagnt(sourceFile), analyzer, 
+//			FSDirectory.open(new File(dir)), openMode);
+//	}
+//
+//	public LuceneCreate(String sourceFile, Analyzer analyzer, 
+//			String idxDir) throws Exception {
+//		setProp(new FieldsMagnt(sourceFile), analyzer, 
+//			FSDirectory.open(new File(idxDir)), false);
+//	}
 
 	public LuceneCreate(FieldsMagnt headMagt, Analyzer analyzer, 
+			String idxDir) throws Exception {
+		setProp(headMagt, analyzer, FSDirectory.open(new File(idxDir)), false);
+	}
+
+//	public LuceneCreate(String sourceFile, 
+//			String idxDir) throws Exception {
+//		setProp(new FieldsMagnt(sourceFile), 
+//			new IKAnalyzer4PinYin(false), 
+//				FSDirectory.open(new File(idxDir)), false);
+//	}
+
+	public LuceneCreate(FieldsMagnt headMagt, String idxDir) throws Exception {
+		setProp(headMagt, 
+			new IKAnalyzer4PinYin(false), 
+				FSDirectory.open(new File(idxDir)), false);
+	}
+
+//	public LuceneCreate(FieldsMagnt headMagt, Analyzer analyzer, 
+//			Directory dir, Boolean openMode) throws Exception {
+//		setProp(headMagt, analyzer, dir, openMode);
+//	}
+	
+	protected void setProp(FieldsMagnt headMagt, Analyzer analyzer, 
 			Directory dir, Boolean openMode) throws Exception {
 		this.analyzer = analyzer;
 		this.openMode = openMode;
@@ -61,22 +84,22 @@ public class LuceneCreate {
 		initConfig(dir);
 	}
 
-	public LuceneCreate(FieldsMagnt headMagt, Analyzer analyzer, 
-			Directory dir) throws Exception {
-		this(headMagt, analyzer, dir, false);
-	}
-
-	public LuceneCreate(FieldsMagnt headMagt, 
-			Analyzer analyzer) throws Exception {
-		this(headMagt, analyzer, 
-				new RAMDirectory(), false);
-	}
-	
-	public LuceneCreate(FieldsMagnt headMagt, 
-			Analyzer analyzer, String dir) throws Exception {
-		this(headMagt, analyzer, 
-				FSDirectory.open(new File(dir)), false);
-	}
+//	public LuceneCreate(FieldsMagnt headMagt, Analyzer analyzer, 
+//			Directory dir) throws Exception {
+//		this(headMagt, analyzer, dir, false);
+//	}
+//
+//	public LuceneCreate(FieldsMagnt headMagt, 
+//			Analyzer analyzer) throws Exception {
+//		this(headMagt, analyzer, 
+//				new RAMDirectory(), false);
+//	}
+//	
+//	public LuceneCreate(FieldsMagnt headMagt, 
+//			Analyzer analyzer, String dir) throws Exception {
+//		this(headMagt, analyzer, 
+//				FSDirectory.open(new File(dir)), false);
+//	}
 	
 	@SuppressWarnings("deprecation")
 	private void initConfig(Directory dir) throws Exception {
