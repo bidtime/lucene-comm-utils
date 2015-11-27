@@ -29,15 +29,12 @@ public class LuceneCreate {
 	
 	private static final Logger logger = LoggerFactory
 			.getLogger(LuceneCreate.class);
-
-	//Directory indexDir;
 	
 	IndexWriter indexWriter;
 	Analyzer analyzer;
 	IndexWriterConfig iwConfig;
 	Boolean openMode;
 	FieldsMagnt headMagt;
-	//PerFieldAnalyzerWrapper wrapper;
 
 	public LuceneCreate(String sourceFile, Analyzer analyzer, 
 			Directory dir, Boolean openMode) throws Exception {
@@ -58,7 +55,6 @@ public class LuceneCreate {
 
 	public LuceneCreate(FieldsMagnt headMagt, Analyzer analyzer, 
 			Directory dir, Boolean openMode) throws Exception {
-		//this.indexDir = dir;
 		this.analyzer = analyzer;
 		this.openMode = openMode;
 		this.headMagt = headMagt;

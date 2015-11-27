@@ -13,7 +13,6 @@ import org.wltea4pinyin.analyzer.lucene.IKAnalyzer4PinYin;
 
 import com.bidtime.lucene.base.create.LuceneCreate;
 import com.bidtime.lucene.base.search.LuceneSearch;
-import com.bidtime.lucene.base.utils.FieldsMagnt;
 
 public class IndexTest {
 
