@@ -1,4 +1,4 @@
-package com.bidtime.lucene.utils;
+package org.bidtime.lucene.utils;
 
 import java.io.BufferedReader;
 import java.io.File;

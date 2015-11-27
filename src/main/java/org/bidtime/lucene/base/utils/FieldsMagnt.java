@@ -1,4 +1,4 @@
-package com.bidtime.lucene.base.utils;
+package org.bidtime.lucene.base.utils;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -112,7 +112,7 @@ public class FieldsMagnt {
 		String[] arStoreTypes = null;
 		String[] arPks = null;
 
-		logger.info("文件:" + filePath +"read index format file...");
+		logger.info("文件:" + filePath +", read index format file...");
 		BufferedReader bufferedReader = new BufferedReader(
 				new InputStreamReader(new FileInputStream(filePath), "UTF-8"));
 		try {

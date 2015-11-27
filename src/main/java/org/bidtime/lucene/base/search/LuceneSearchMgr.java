@@ -1,11 +1,11 @@
-package com.bidtime.lucene.base.search;
+package org.bidtime.lucene.base.search;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.SearcherFactory;
 import org.apache.lucene.search.SearcherManager;
 
-import com.bidtime.lucene.base.utils.FieldsMagnt;
+import org.bidtime.lucene.base.utils.FieldsMagnt;
 
 public class LuceneSearchMgr extends AbstractIndexSearch {
 	

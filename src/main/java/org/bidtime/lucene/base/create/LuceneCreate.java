@@ -1,4 +1,4 @@
-package com.bidtime.lucene.base.create;
+package org.bidtime.lucene.base.create;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,12 +18,11 @@ import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
 import org.bidtime.dbutils.gson.JSONHelper;
 import org.bidtime.dbutils.gson.ResultDTO;
+import org.bidtime.lucene.base.utils.FieldsMagnt;
 import org.bidtime.utils.basic.ObjectComm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wltea4pinyin.analyzer.lucene.IKAnalyzer4PinYin;
-
-import com.bidtime.lucene.base.utils.FieldsMagnt;
 
 public class LuceneCreate {
 	
@@ -265,12 +264,12 @@ public class LuceneCreate {
 	}
 	
 	@SuppressWarnings("rawtypes")
-	private void updateIndexMap(Map map) throws Exception {
+	public void updateIndexMap(Map map) throws Exception {
 		updateIndexMap(map, true);
 	}
 	
 	@SuppressWarnings("rawtypes")
-	private void updateIndexMap(Map map, boolean commit)
+	public void updateIndexMap(Map map, boolean commit)
 			throws Exception {
 		Long startTime = System.currentTimeMillis();
 		logger.debug("map:" + "update index...");
@@ -290,7 +289,7 @@ public class LuceneCreate {
 	}
 	
 	@SuppressWarnings("rawtypes")
-	private void updateIndexMap(List<Map> list) throws Exception {
+	public void updateIndexMap(List<Map> list) throws Exception {
 		Long startTime = System.currentTimeMillis();
 		logger.debug("list:" + "update index...");
 		for (int i=0; i<list.size(); i++) {
@@ -324,7 +323,7 @@ public class LuceneCreate {
 	}
 	
 	@SuppressWarnings("rawtypes")
-	private void updateIndex(Object o, boolean commit)
+	public void updateIndex(Object o, boolean commit)
 			throws Exception {
 		Map map = null;
 		if (o instanceof ResultDTO) {
@@ -335,14 +334,14 @@ public class LuceneCreate {
 		updateIndexMap(map, true);
 	}
 	
-	private void updateIndex(List<?> list) throws Exception {
+	public void updateIndex(List<?> list) throws Exception {
 		for (int i=0; i<list.size(); i++) {
 			updateIndex(list.get(i),
 				(i == list.size() - 1 ) ? true : false);
 		}
 	}
 	
-	private void updateNumericDocValue(Term term, Object fld,
+	public void updateNumericDocValue(Term term, Object fld,
 			Object val,	boolean commit)	throws Exception {
 		Long startTime = System.currentTimeMillis();
 		logger.debug("map:" + "update index...");
@@ -372,12 +371,12 @@ public class LuceneCreate {
 	}
 	
 	@SuppressWarnings("rawtypes")
-	private void updateNumericDocValue(Map map) throws Exception {
+	public void updateNumericDocValue(Map map) throws Exception {
 		updateNumericDocValue(map, true);
 	}
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private void updateNumericDocValue(Map map, boolean commit)
+	public void updateNumericDocValue(Map map, boolean commit)
 			throws Exception {
 		Long startTime = System.currentTimeMillis();
 		logger.debug("map:" + "update index...");
@@ -402,7 +401,7 @@ public class LuceneCreate {
 	}
 
 	@SuppressWarnings({ "rawtypes" })
-	private void updateNumericDocValue(List<Map> list) throws Exception {
+	public void updateNumericDocValue(List<Map> list) throws Exception {
 		Long startTime = System.currentTimeMillis();
 		logger.debug("list:" + "update index...");
 		for (int i=0; i<list.size(); i++) {

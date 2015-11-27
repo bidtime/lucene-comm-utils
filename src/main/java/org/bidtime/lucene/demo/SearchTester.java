@@ -1,4 +1,4 @@
-package com.bidtime.lucene.demo;
+package org.bidtime.lucene.demo;
 
 import java.io.File;
 

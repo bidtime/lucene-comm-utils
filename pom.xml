@@ -9,7 +9,7 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-	<groupId>com.bidtime.utils</groupId>
+	<groupId>org.bidtime.utils</groupId>
 	<artifactId>lucene-comm-utils</artifactId>
 	<packaging>jar</packaging>
 	<version>1.0.0-SNAPSHOT</version>

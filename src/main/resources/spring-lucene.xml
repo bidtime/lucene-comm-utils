@@ -16,7 +16,7 @@
 		
 		
 	<!-- 
-	<bean id="fieldsMagnt" class="com.bidtime.lucene.base.utils.FieldsMagnt">
+	<bean id="fieldsMagnt" class="FieldsMagnt">
 		<constructor-arg type="java.lang.String" value="D:/data/lucene/source/cargoods/raw.txt" />
 	</bean>
 	
@@ -24,14 +24,14 @@
 		<constructor-arg type="java.lang.Boolean" value="true" />
 	</bean>
 	
-	<bean id="luceneCreate" class="com.bidtime.lucene.base.create.LuceneCreate">
-		<constructor-arg type="com.bidtime.lucene.base.utils.FieldsMagnt" ref="fieldsMagnt" />
+	<bean id="luceneCreate" class="LuceneCreate">
+		<constructor-arg type="FieldsMagnt" ref="fieldsMagnt" />
 		<constructor-arg type="org.apache.lucene.analysis.Analyzer" ref="luceneAnalyzer" />
 		<constructor-arg type="java.lang.String" value="D:/data/lucene/index/cargoods/" />
 	</bean>
 	
-	<bean id="luceneSearchMgr" class="com.bidtime.lucene.base.search.LuceneSearchMgr">
-		<constructor-arg type="com.bidtime.lucene.base.utils.FieldsMagnt" ref="fieldsMagnt" />
+	<bean id="luceneSearchMgr" class="LuceneSearchMgr">
+		<constructor-arg type="FieldsMagnt" ref="fieldsMagnt" />
 		<constructor-arg type="org.apache.lucene.analysis.Analyzer" ref="luceneAnalyzer" />
 		<constructor-arg type="java.lang.String" value="D:/data/lucene/index/cargoods/" />
 	</bean>

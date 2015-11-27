@@ -1,4 +1,4 @@
-package com.bidtime.lucene.base.search;
+package org.bidtime.lucene.base.search;
 
 import java.io.File;
 import java.util.Set;
@@ -11,12 +11,17 @@ import org.apache.lucene.search.Sort;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.bidtime.dbutils.gson.ResultDTO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.wltea4pinyin.analyzer.lucene.IKAnalyzer4PinYin;
 
-import com.bidtime.lucene.base.utils.FieldsMagnt;
-import com.bidtime.lucene.utils.SearchUtils;
+import org.bidtime.lucene.base.utils.FieldsMagnt;
+import org.bidtime.lucene.utils.SearchUtils;
 
 public abstract class AbstractIndexSearch {
+	
+	private static final Logger logger = LoggerFactory
+			.getLogger(AbstractIndexSearch.class);
 
 	protected Analyzer analyzer;
 	protected Directory indexDir;
@@ -34,7 +39,11 @@ public abstract class AbstractIndexSearch {
 		this.indexDir = idxDir;
 		this.analyzer = analyzer;
 		this.headMagt = headMagt;
-		this.reader = DirectoryReader.open(indexDir);
+		try {
+			this.reader = DirectoryReader.open(indexDir);
+		} catch (Exception e) {
+			logger.error("setProp", e);
+		}
 	}
 
 	public AbstractIndexSearch(FieldsMagnt headMagt, Analyzer analyzer,

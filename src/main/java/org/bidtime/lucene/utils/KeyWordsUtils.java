@@ -1,4 +1,4 @@
-package com.bidtime.lucene.utils;
+package org.bidtime.lucene.utils;
 
 public class KeyWordsUtils {
 	

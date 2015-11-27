@@ -24,7 +24,7 @@
  *
  */
 
-package com.bidtime.lucene.demo;
+package org.bidtime.lucene.demo;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -149,7 +149,6 @@ public class LuceneIndexAndSearchDemo {
 				Document targetDoc = isearcher.doc(scoreDocs[i].doc);
 				System.out.println("内容：" + targetDoc.toString());
 			}
-
 		} catch (CorruptIndexException e) {
 			e.printStackTrace();
 		} catch (LockObtainFailedException e) {

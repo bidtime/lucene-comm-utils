@@ -1,7 +1,7 @@
-package com.bidtime.lucene.base;
+package org.bidtime.lucene.base;
 
-import com.bidtime.lucene.base.create.LuceneCreate;
-import com.bidtime.lucene.base.search.AbstractIndexSearch;
+import org.bidtime.lucene.base.create.LuceneCreate;
+import org.bidtime.lucene.base.search.AbstractIndexSearch;
 
 
 public class LuceneIndex {

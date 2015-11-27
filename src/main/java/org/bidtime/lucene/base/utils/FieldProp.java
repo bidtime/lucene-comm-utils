@@ -1,4 +1,4 @@
-package com.bidtime.lucene.base.utils;
+package org.bidtime.lucene.base.utils;
 
 import java.util.Date;
 
