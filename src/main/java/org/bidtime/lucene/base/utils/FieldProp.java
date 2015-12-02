@@ -15,8 +15,13 @@ import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
 import org.apache.lucene.search.Sort;
 import org.apache.lucene.search.SortField;
+import org.bidtime.utils.basic.ObjectComm;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class FieldProp {
+	
+	private static final Logger logger = LoggerFactory.getLogger(FieldProp.class);
 	
 	Integer recNo;
 	String head;
@@ -98,7 +103,7 @@ public class FieldProp {
 		}
 	}
 	
-	public Field getFieldOfDataType(Object value) {
+	public Field getFieldOfDataType(Object value) throws Exception {
 		return getFieldOfDataType(head, value);
 	}
 	
@@ -106,41 +111,45 @@ public class FieldProp {
 //		return getFieldOfDataType(head, value);
 //	}
 	
-	private Field getFieldOfDataType(String head, Object value) {
+	private Field getFieldOfDataType(String head, Object value) throws Exception {
 		Field field = null;
-		if (leftEqualIgnoreCase("int", dataType)) {
-			fieldType.setNumericType(FieldType.NumericType.INT);
-			field = new IntField(head, 
-					Integer.parseInt(String.valueOf(value)), fieldType);
-		} else if (leftEqualIgnoreCase("double", dataType)) {
-			fieldType.setNumericType(FieldType.NumericType.DOUBLE);
-			field = new DoubleField(head, 
-					Double.parseDouble(String.valueOf(value)), fieldType);
-		} else if (leftEqualIgnoreCase("float", dataType)) {
-			fieldType.setNumericType(FieldType.NumericType.FLOAT);
-			field = new FloatField(head, 
-					Float.parseFloat(String.valueOf(value)), fieldType);
-		} else if (leftEqualIgnoreCase("long", dataType)) {
-			fieldType.setNumericType(FieldType.NumericType.LONG);
-			if (this.isDateTime() && value instanceof Date)  {
-				Object o = ((Date)value).getTime();
-				field = new LongField(head, (Long)o, fieldType);
+		try {
+			if (leftEqualIgnoreCase("int", dataType)) {
+				fieldType.setNumericType(FieldType.NumericType.INT);
+				field = new IntField(head, 
+						ObjectComm.objectToInteger(value), fieldType);
+			} else if (leftEqualIgnoreCase("double", dataType)) {
+				fieldType.setNumericType(FieldType.NumericType.DOUBLE);
+				field = new DoubleField(head, 
+						Double.parseDouble(String.valueOf(value)), fieldType);
+			} else if (leftEqualIgnoreCase("float", dataType)) {
+				fieldType.setNumericType(FieldType.NumericType.FLOAT);
+				field = new FloatField(head, 
+						Float.parseFloat(String.valueOf(value)), fieldType);
+			} else if (leftEqualIgnoreCase("long", dataType)) {
+				fieldType.setNumericType(FieldType.NumericType.LONG);
+				if (this.isDateTime() && value instanceof Date)  {
+					Object o = ((Date)value).getTime();
+					field = new LongField(head, (Long)o, fieldType);
+				} else {
+					field = new LongField(head, 
+						Long.parseLong(String.valueOf(value)), fieldType);
+				}
+			} else if (leftEqualIgnoreCase("stored", dataType)) {
+				field = new StoredField(head, String.valueOf(value));
+			} else if (leftEqualIgnoreCase("string", dataType)) {
+				field = new StringField(head, 
+						String.valueOf(value), 
+						fieldType.stored() ? Field.Store.YES : Field.Store.NO);
+			} else if (leftEqualIgnoreCase("text", dataType)) {
+				field = new TextField(head,
+						String.valueOf(value), fieldType.stored() ? Field.Store.YES : Field.Store.NO);
 			} else {
-				field = new LongField(head, 
-					Long.parseLong(String.valueOf(value)), fieldType);
+				field = new Field(head, 
+						String.valueOf(value), fieldType);
 			}
-		} else if (leftEqualIgnoreCase("stored", dataType)) {
-			field = new StoredField(head, String.valueOf(value));
-		} else if (leftEqualIgnoreCase("string", dataType)) {
-			field = new StringField(head, 
-					String.valueOf(value), 
-					fieldType.stored() ? Field.Store.YES : Field.Store.NO);
-		} else if (leftEqualIgnoreCase("text", dataType)) {
-			field = new TextField(head,
-					String.valueOf(value), fieldType.stored() ? Field.Store.YES : Field.Store.NO);
-		} else {
-			field = new Field(head, 
-					String.valueOf(value), fieldType);
+		} catch (Exception e) {
+			logger.error("getFieldOfDataType: head: " + head + " -> " + value , e);
 		}
 		return field;
 	}

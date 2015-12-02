@@ -39,7 +39,8 @@ public class IndexTest {
 		if (createIdx) {
 			testCreateIndex();
 		} else {
-			String key = "name:中国 OR name_shouzimu:eg";//"id:" + 5;
+			//String key = "name:中国 OR name_shouzimu:eg";//"id:" + 5;
+			String key = "brandName:马 OR brandName_shouzimu:bm";//"id:" + 5;
 			searchIt(key);
 		}
 	}

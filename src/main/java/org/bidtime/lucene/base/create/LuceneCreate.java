@@ -16,7 +16,9 @@ import org.apache.lucene.index.Term;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
+import org.bidtime.dbutils.gson.GsonEbUtils;
 import org.bidtime.dbutils.gson.JSONHelper;
+import org.bidtime.dbutils.gson.PropAdapt;
 import org.bidtime.dbutils.gson.ResultDTO;
 import org.bidtime.lucene.base.utils.FieldsMagnt;
 import org.bidtime.utils.basic.ObjectComm;
@@ -307,7 +309,7 @@ public class LuceneCreate {
 		if (d instanceof Map) {
 			updateIndexMap((Map)d);
 		} else if (d instanceof List) {
-			if (!((List) d).isEmpty()) {
+			if (((List) d).isEmpty()) {
 				return; 
 			}
 			Object o = ((List) d).get(0);
@@ -323,13 +325,13 @@ public class LuceneCreate {
 	}
 	
 	@SuppressWarnings("rawtypes")
-	public void updateIndex(Object o, boolean commit)
+	private void updateIndex(Object o, boolean commit)
 			throws Exception {
 		Map map = null;
 		if (o instanceof ResultDTO) {
 			map = JSONHelper.clazzToMap(((ResultDTO)o).dataToMap());
 		} else {
-			map = JSONHelper.clazzToMap(o);			
+			map = GsonEbUtils.clazzToMap(o, PropAdapt.NOTNULL);
 		}
 		updateIndexMap(map, true);
 	}
@@ -363,7 +365,7 @@ public class LuceneCreate {
 	
 	public void updateNumericDocValue(Object pkVal, Object fld,
 			Object val) throws Exception {
-		Term term = headMagt.getTermOfMap(pkVal);
+		Term term = headMagt.getTermOfValue(pkVal);
 		if (term == null) {
 			throw new Exception("get term error: term is not null.");
 		}
@@ -435,7 +437,7 @@ public class LuceneCreate {
 	}
 	
 	public void deleteIndex(Object pkVal, boolean commit, boolean force) throws Exception {
-		Term term = headMagt.getTermOfMap(pkVal);
+		Term term = headMagt.getTermOfValue(pkVal);
 		if (term == null) {
 			throw new Exception("get term error: term is not null.");
 		}
@@ -448,12 +450,21 @@ public class LuceneCreate {
 		}
 	}
 	
+	public void deleteIndex(Long pkVal) throws Exception {
+		deleteIndex(pkVal, true, true);
+	}
+	
 	public void deleteIndex(Object pkVal, boolean force) throws Exception {
 		deleteIndex(pkVal, true, force);
 	}
 	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void deleteIndex(Object pkVal) throws Exception {
-		deleteIndex(pkVal, true, true);
+		if (pkVal instanceof List) {
+			deleteIndex((List)pkVal);
+		} else {
+			deleteIndex(pkVal, true, true);
+		}
 	}
 	
 	public void deleteIndex(Object[] pkVal) throws Exception {
@@ -461,6 +472,12 @@ public class LuceneCreate {
 			boolean commit = (i == pkVal.length - 1 ) ? true : false;
 			boolean force = commit;
 			deleteIndex(pkVal[i], commit, force);
+		}
+	}
+	
+	public void deleteIndex(List<Object> listPk) throws Exception {
+		if (listPk != null && !listPk.isEmpty()) {
+			deleteIndex(listPk.toArray());
 		}
 	}
 	

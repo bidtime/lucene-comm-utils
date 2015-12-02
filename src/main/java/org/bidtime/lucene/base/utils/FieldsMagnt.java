@@ -297,7 +297,7 @@ public class FieldsMagnt {
 		return o.getSort(reverse);
 	}
 	
-	public Term getTermOfMap(Object val) throws Exception {
+	public Term getTermOfValue(Object val) throws Exception {
 		if (val == null) {
 			throw new Exception("get term error: pk value is not null.");
 		}
