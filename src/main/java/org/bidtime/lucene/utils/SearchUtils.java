@@ -101,9 +101,9 @@ public class SearchUtils {
 	@SuppressWarnings("rawtypes")
 	public static ResultDTO topDocsToDTO(IndexSearcher searcher, String words,
 			TopDocs topDocs, Set<String> mapDataTime, String[] head) throws Exception {
+		ResultDTO dto = null;
 		if (topDocs.totalHits == 0) {
-			ResultDTO dto = ResultDTO.error("没有搜索到相关内容");
-			// GsonEbRst rst = GsonEbUtils.toGsonEbRstSuccess("");
+			dto = ResultDTO.error("没有搜索到相关内容");
 			if (logger.isDebugEnabled()) {
 				StringBuilder sb = new StringBuilder();
 				sb.append("query:");
@@ -115,12 +115,11 @@ public class SearchUtils {
 				sb.append(dto.toString());
 				logger.debug(sb.toString());
 			}
-			return dto;
 		} else {
-			ResultDTO rst = SearchUtils.scoreDocToDTO(searcher, words,
-					topDocs.totalHits, topDocs.scoreDocs, mapDataTime, head);
-			return rst;
+			dto = SearchUtils.scoreDocToDTO(searcher, words,
+				topDocs.totalHits, topDocs.scoreDocs, mapDataTime, head);
 		}
+		return dto;
 	}
 
     private static ScoreDoc getLastScoreDoc(Integer pageIdx, Integer pageSize, Query query,
@@ -165,7 +164,7 @@ public class SearchUtils {
 	}
     
 	@SuppressWarnings({ "rawtypes" })
-	public static ResultDTO search(IndexSearcher searcher, Query query,
+	private static ResultDTO search(IndexSearcher searcher, Query query,
 			String words, Integer pageIdx, Integer pageSize, Set<String> mapDataTime, String[] head)
 			throws Exception {
 		TopDocs topDocs = null;

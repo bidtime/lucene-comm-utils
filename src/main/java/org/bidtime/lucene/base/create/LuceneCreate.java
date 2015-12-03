@@ -23,6 +23,7 @@ import org.bidtime.dbutils.gson.JSONHelper;
 import org.bidtime.dbutils.gson.PropAdapt;
 import org.bidtime.dbutils.gson.ResultDTO;
 import org.bidtime.lucene.base.utils.FieldsMagnt;
+import org.bidtime.lucene.utils.LogTimeUtil;
 import org.bidtime.utils.basic.ObjectComm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -142,8 +143,10 @@ public class LuceneCreate {
 	@SuppressWarnings("rawtypes")
 	private void createIndexMap(Map map, boolean commit)
 			throws Exception {
-		Long startTime = System.currentTimeMillis();
-		logger.debug("map:" + "create index...");
+		Long start = null;
+		if (logger.isDebugEnabled()) {
+			start = System.currentTimeMillis();
+		}
 		Document doc = headMagt.newRows(map);
 		if (doc != null) {
 			indexWriter.addDocument(doc);
@@ -152,18 +155,24 @@ public class LuceneCreate {
 				indexCommit();
 			}
 		}
-		logger.debug(getFmtNow(startTime) + " ms create index.");
+		if (logger.isDebugEnabled()) {
+			logger.debug(LogTimeUtil.getFmtDiffNowMs("createIndexMap:" + map + ", span ", start));
+		}
 	}
 
 	@SuppressWarnings("rawtypes")
 	private void createIndexMap(List<Map> list) throws Exception {
-		Long startTime = System.currentTimeMillis();
-		logger.debug("list:" + "create index...");
+		Long start = null;
+		if (logger.isDebugEnabled()) {
+			start = System.currentTimeMillis();
+		}
 		for (int i=0; i<list.size(); i++) {
 			createIndexMap(list.get(i),
 				(i == list.size() - 1 ) ? true : false);
 		}
-		logger.debug(getFmtNow(startTime) + " ms create index.");
+		if (logger.isDebugEnabled()) {
+			logger.debug(LogTimeUtil.getFmtDiffNowMs("createIndexMap:" + list + ", span ", start));
+		}		
 	}
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -174,7 +183,7 @@ public class LuceneCreate {
 		if (d instanceof Map) {
 			createIndexMap((Map)d);
 		} else if (d instanceof List) {
-			if (!((List) d).isEmpty()) {
+			if (((List) d).isEmpty()) {
 				return; 
 			}
 			Object o = ((List) d).get(0);
@@ -269,11 +278,6 @@ public class LuceneCreate {
 //			}
 //		}
 //	}
-	
-	private String getFmtNow(Long startTime) {
-		Long endTime = System.currentTimeMillis();
-		return "span: " + (endTime - startTime);
-	}
 
 	public void indexCommit() throws IOException {
 		indexWriter.prepareCommit();
@@ -288,8 +292,10 @@ public class LuceneCreate {
 	@SuppressWarnings("rawtypes")
 	public void updateIndexMap(Map map, boolean commit)
 			throws Exception {
-		Long startTime = System.currentTimeMillis();
-		logger.debug("map:" + "update index...");
+		Long start = null;
+		if (logger.isDebugEnabled()) {
+			start = System.currentTimeMillis();
+		}
 		Term term = headMagt.getTermOfMap(map);
 		if (term == null) {
 			throw new Exception("get term error: term is not null.");
@@ -302,18 +308,24 @@ public class LuceneCreate {
 				indexCommit();
 			}
 		}
-		logger.debug(getFmtNow(startTime) + " ms update index.");
+		if (logger.isDebugEnabled()) {
+			logger.debug(LogTimeUtil.getFmtDiffNowMs("updateIndexMap:" + map + ", span ", start));
+		}
 	}
 	
 	@SuppressWarnings("rawtypes")
 	public void updateIndexMap(List<Map> list) throws Exception {
-		Long startTime = System.currentTimeMillis();
-		logger.debug("list:" + "update index...");
+		Long start = null;
+		if (logger.isDebugEnabled()) {
+			start = System.currentTimeMillis();
+		}
 		for (int i=0; i<list.size(); i++) {
 			updateIndexMap(list.get(i),
 				(i == list.size() - 1 ) ? true : false);
 		}
-		logger.debug(getFmtNow(startTime) + " ms update index.");
+		if (logger.isDebugEnabled()) {
+			logger.debug(LogTimeUtil.getFmtDiffNowMs("updateIndexMap:" + list + ", span ", start));
+		}		
 	}
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -324,7 +336,7 @@ public class LuceneCreate {
 		if (d instanceof Map) {
 			updateIndexMap((Map)d);
 		} else if (d instanceof List) {
-			if (((List) d).isEmpty()) {
+			if ( ((List) d).isEmpty() ) {
 				return; 
 			}
 			Object o = ((List) d).get(0);
@@ -360,8 +372,10 @@ public class LuceneCreate {
 	
 	public void updateNumericDocValue(Term term, Object fld,
 			Object val,	boolean commit)	throws Exception {
-		Long startTime = System.currentTimeMillis();
-		logger.debug("map:" + "update index...");
+		Long start = null;
+		if (logger.isDebugEnabled()) {
+			start = System.currentTimeMillis();
+		}
 		String head = null;
 		if (fld instanceof String) {
 			head = (String)fld;
@@ -375,7 +389,9 @@ public class LuceneCreate {
 		if (commit) {
 			indexCommit();
 		}
-		logger.debug(getFmtNow(startTime) + " ms update index.");
+		if (logger.isDebugEnabled()) {
+			logger.debug(LogTimeUtil.getFmtDiffNowMs("updateNumericDocValue:" + term + ", span ", start));
+		}		
 	}
 	
 	public void updateNumericDocValue(Object pkVal, Object fld,
@@ -395,8 +411,10 @@ public class LuceneCreate {
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public void updateNumericDocValue(Map map, boolean commit)
 			throws Exception {
-		Long startTime = System.currentTimeMillis();
-		logger.debug("map:" + "update index...");
+		Long start = null;
+		if (logger.isDebugEnabled()) {
+			start = System.currentTimeMillis();
+		}
 		Term term = headMagt.getTermOfMap(map);
 		if (term == null) {
 			throw new Exception("get term error: term is not null.");
@@ -414,18 +432,24 @@ public class LuceneCreate {
 		if (commit) {
 			indexCommit();
 		}
-		logger.debug(getFmtNow(startTime) + " ms update index.");
+		if (logger.isDebugEnabled()) {
+			logger.debug(LogTimeUtil.getFmtDiffNowMs("updateNumericDocValue:" + term + ", span ", start));
+		}		
 	}
 
 	@SuppressWarnings({ "rawtypes" })
 	public void updateNumericDocValue(List<Map> list) throws Exception {
-		Long startTime = System.currentTimeMillis();
-		logger.debug("list:" + "update index...");
+		Long start = null;
+		if (logger.isDebugEnabled()) {
+			start = System.currentTimeMillis();
+		}
 		for (int i=0; i<list.size(); i++) {
 			updateNumericDocValue(list.get(i),
 				(i == list.size() - 1 ) ? true : false);
 		}
-		logger.debug(getFmtNow(startTime) + " ms update index.");
+		if (logger.isDebugEnabled()) {
+			logger.debug(LogTimeUtil.getFmtDiffNowMs("updateNumericDocValue:" + list + ", span ", start));
+		}
 	}
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -436,7 +460,7 @@ public class LuceneCreate {
 		if (d instanceof Map) {
 			updateNumericDocValue((Map)d);
 		} else if (d instanceof List) {
-			if (!((List) d).isEmpty()) {
+			if ( ((List) d).isEmpty() ) {
 				return; 
 			}
 			Object o = ((List) d).get(0);

@@ -12,6 +12,7 @@ import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.bidtime.dbutils.gson.ResultDTO;
 import org.bidtime.lucene.base.utils.FieldsMagnt;
+import org.bidtime.lucene.utils.LogTimeUtil;
 import org.bidtime.lucene.utils.SearchUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -84,97 +85,152 @@ public abstract class AbstractIndexSearch {
 	@SuppressWarnings("rawtypes")
 	public ResultDTO search(String words, Integer pageIdx, Integer pageSize,
 			String[] head) throws Exception {
+		Long start = null;
+		if (logger.isDebugEnabled()) {
+			start = System.currentTimeMillis();
+		}
 		Set<String> setDateTime = headMagt.getMapDateTime();
-		return searchIt(words, pageIdx, pageSize,
-				setDateTime, head);
+		ResultDTO dto = searchIt(words, pageIdx, pageSize, setDateTime, head);
+		if (logger.isDebugEnabled()) {
+			logger.debug(LogTimeUtil.getFmtDiffNowMs("search:" + words + ", span ", start));
+		}		
+		return dto;
 	}
 
 	@SuppressWarnings("rawtypes")
 	public ResultDTO search(String words, Integer pageIdx, Integer pageSize,
 			Sort sort, String[] head) throws Exception {
+		Long start = null;
+		if (logger.isDebugEnabled()) {
+			start = System.currentTimeMillis();
+		}
 		Set<String> setDateTime = headMagt.getMapDateTime();
-		return searchIt(words, pageIdx, pageSize,
-				sort, setDateTime, head);
+		ResultDTO dto = searchIt(words, pageIdx, pageSize, sort, setDateTime, head);
+		if (logger.isDebugEnabled()) {
+			logger.debug(LogTimeUtil.getFmtDiffNowMs("search:" + words + ", span ", start));
+		}		
+		return dto;
 	}
 
 	@SuppressWarnings("rawtypes")
 	public ResultDTO search(String words, Integer pageIdx, Integer pageSize,
 			Sort sort) throws Exception {
+		Long start = null;
+		if (logger.isDebugEnabled()) {
+			start = System.currentTimeMillis();
+		}
 		Set<String> setDateTime = headMagt.getMapDateTime();
-		return searchIt(words, pageIdx, pageSize,
-				sort, setDateTime);
+		ResultDTO dto = searchIt(words, pageIdx, pageSize, sort, setDateTime);
+		if (logger.isDebugEnabled()) {
+			logger.debug(LogTimeUtil.getFmtDiffNowMs("search:" + words + ", span ", start));
+		}		
+		return dto;
 	}
 
 	@SuppressWarnings("rawtypes")
 	public ResultDTO search(String words, Integer pageIdx, Integer pageSize)
 			throws Exception {
+		Long start = null;
+		if (logger.isDebugEnabled()) {
+			start = System.currentTimeMillis();
+		}
 		Set<String> setDateTime = headMagt.getMapDateTime();
-		return searchIt(words, pageIdx, pageSize, setDateTime);
+		ResultDTO dto = searchIt(words, pageIdx, pageSize, setDateTime);
+		if (logger.isDebugEnabled()) {
+			logger.debug(LogTimeUtil.getFmtDiffNowMs("search:" + words + ", span ", start));
+		}		
+		return dto;
 	}
 
 	@SuppressWarnings("rawtypes")
 	public ResultDTO search(String words, Integer pageIdx, Integer pageSize,
 			String sortFld, boolean reverse) throws Exception {
+		Long start = null;
+		if (logger.isDebugEnabled()) {
+			start = System.currentTimeMillis();
+		}
 		Sort sort = headMagt.getSortOfField(sortFld, reverse);
 		Set<String> setDateTime = headMagt.getMapDateTime();
-		return searchIt(words, pageIdx, pageSize,	sort, 
-				setDateTime);
+		ResultDTO dto = searchIt(words, pageIdx, pageSize, sort, setDateTime);
+		if (logger.isDebugEnabled()) {
+			logger.debug(LogTimeUtil.getFmtDiffNowMs("search:" + words + ", span ", start));
+		}		
+		return dto;
 	}
 
 	@SuppressWarnings("rawtypes")
 	protected ResultDTO searchIt(String words, Integer pageIdx, Integer pageSize,
 			Set<String> mapDataTime, String[] head) throws Exception {
-		ResultDTO dto = null;
+		Long start = null;
+		if (logger.isDebugEnabled()) {
+			start = System.currentTimeMillis();
+		}
 		IndexSearcher is = this.getSearch();
 		try {
-			dto = SearchUtils.search(is, analyzer, words, pageIdx, pageSize,
+			return SearchUtils.search(is, analyzer, words, pageIdx, pageSize,
 					mapDataTime, head);
 		} finally {
 			this.closeSearch(is);
+			if (logger.isDebugEnabled()) {
+				logger.debug(LogTimeUtil.getFmtDiffNowMs("searchIt:" + words + ", span ", start));
+			}
 		}
-		return dto;
 	}
 
 	@SuppressWarnings("rawtypes")
 	protected ResultDTO searchIt(String words, Integer pageIdx, Integer pageSize,
 			Sort sort, Set<String> mapDataTime, String[] head) throws Exception {
-		ResultDTO dto = null;
+		Long start = null;
+		if (logger.isDebugEnabled()) {
+			start = System.currentTimeMillis();
+		}
 		IndexSearcher is = this.getSearch();
 		try {
-			dto = SearchUtils.search(is, analyzer, words, pageIdx, pageSize,
+			return SearchUtils.search(is, analyzer, words, pageIdx, pageSize,
 					sort, mapDataTime, head);
 		} finally {
 			this.closeSearch(is);
+			if (logger.isDebugEnabled()) {
+				logger.debug(LogTimeUtil.getFmtDiffNowMs("searchIt:" + words + ", span ", start));
+			}
 		}
-		return dto;
 	}
 
 	@SuppressWarnings("rawtypes")
 	protected ResultDTO searchIt(String words, Integer pageIdx, Integer pageSize,
 			Sort sort, Set<String> mapDataTime) throws Exception {
-		ResultDTO dto = null;
+		Long start = null;
+		if (logger.isDebugEnabled()) {
+			start = System.currentTimeMillis();
+		}
 		IndexSearcher is = this.getSearch();
 		try {
-			dto = SearchUtils.search(is, analyzer, words, pageIdx, pageSize,
+			return SearchUtils.search(is, analyzer, words, pageIdx, pageSize,
 					sort, mapDataTime);
 		} finally {
 			this.closeSearch(is);
+			if (logger.isDebugEnabled()) {
+				logger.debug(LogTimeUtil.getFmtDiffNowMs("searchIt:" + words + ", span ", start));
+			}
 		}
-		return dto;
 	}
 
 	@SuppressWarnings("rawtypes")
 	protected ResultDTO searchIt(String words, Integer pageIdx, Integer pageSize,
 			Set<String> mapDataTime) throws Exception {
-		ResultDTO dto = null;
+		Long start = null;
+		if (logger.isDebugEnabled()) {
+			start = System.currentTimeMillis();
+		}
 		IndexSearcher is = this.getSearch();
 		try {
-			dto = SearchUtils.search(is, analyzer, words, pageIdx, pageSize,
-				mapDataTime);
+			return SearchUtils.search(is, analyzer, words, pageIdx, pageSize, mapDataTime);
 		} finally {
 			this.closeSearch(is);
+			if (logger.isDebugEnabled()) {
+				logger.debug(LogTimeUtil.getFmtDiffNowMs("searchIt:" + words + ", span ", start));
+			}
 		}
-		return dto;
 	}
 
 //	@SuppressWarnings("rawtypes")
