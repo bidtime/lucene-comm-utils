@@ -5,6 +5,7 @@ import java.util.Set;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.index.DirectoryReader;
+import org.apache.lucene.index.IndexNotFoundException;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Sort;
@@ -43,6 +44,7 @@ public abstract class AbstractIndexSearch {
 		this.headMagt = headMagt;
 		try {
 			this.reader = DirectoryReader.open(indexDir);
+		//} catch (IndexNotFoundException e) {
 		} catch (Exception e) {
 			logger.error("setProp", e);
 		}

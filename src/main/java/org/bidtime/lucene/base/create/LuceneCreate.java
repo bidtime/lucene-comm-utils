@@ -9,6 +9,8 @@ import java.util.Map;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.miscellaneous.PerFieldAnalyzerWrapper;
 import org.apache.lucene.document.Document;
+import org.apache.lucene.index.DirectoryReader;
+import org.apache.lucene.index.IndexNotFoundException;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.IndexWriterConfig.OpenMode;
@@ -120,6 +122,16 @@ public class LuceneCreate {
 		//setMaxBufferedDocs
 		//iwConfig.setMaxBufferedDocs(-1);
 		indexWriter = new IndexWriter(dir, iwConfig);
+		initIndexIt(dir);		//init index dir
+	}
+	
+	private void initIndexIt(Directory dir) throws Exception {
+		try {
+			DirectoryReader.open(dir);
+		} catch (IndexNotFoundException e) {
+			logger.error("IndexNotFoundException:" + dir.toString());
+			indexWriter.commit();
+		}
 	}
 
 	@SuppressWarnings("rawtypes")
