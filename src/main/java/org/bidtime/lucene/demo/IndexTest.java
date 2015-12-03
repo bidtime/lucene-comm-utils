@@ -76,6 +76,7 @@ public class IndexTest {
 //			FSDirectory.open(new File("D:/DATA/lucene/index/demo/")));
 		LuceneSearch m = new LuceneSearch(
 				new FieldsMagnt("D:/DATA/lucene/source/cargoods/raw.txt"),
+				new IKAnalyzer4PinYin(false),
 				"D:/DATA/lucene/index/cargoods/");
 		ResultDTO dto = m.search(keyName, 0, 10);
 		logger.info(dto.toJson().toString());

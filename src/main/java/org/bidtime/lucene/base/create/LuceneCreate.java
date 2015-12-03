@@ -43,39 +43,38 @@ public class LuceneCreate {
 //	}
 //
 //	public LuceneCreate(String sourceFile, Analyzer analyzer, 
-//			String dir, Boolean openMode) throws Exception {
+//			String idxPath, Boolean openMode) throws Exception {
 //		this(new FieldsMagnt(sourceFile), analyzer, 
-//			FSDirectory.open(new File(dir)), openMode);
+//			FSDirectory.open(new File(idxPath)), openMode);
 //	}
 //
 //	public LuceneCreate(String sourceFile, Analyzer analyzer, 
-//			String idxDir) throws Exception {
+//			String idxPath) throws Exception {
 //		setProp(new FieldsMagnt(sourceFile), analyzer, 
-//			FSDirectory.open(new File(idxDir)), false);
+//			FSDirectory.open(new File(idxPath)), false);
 //	}
 
 	public LuceneCreate(FieldsMagnt headMagt, Analyzer analyzer, 
-			String idxDir) throws Exception {
-		setProp(headMagt, analyzer, FSDirectory.open(new File(idxDir)), false);
+			String idxPath) throws Exception {
+		setProp(headMagt, analyzer, FSDirectory.open(new File(idxPath)), false);
 	}
 
-//	public LuceneCreate(String sourceFile, 
-//			String idxDir) throws Exception {
-//		setProp(new FieldsMagnt(sourceFile), 
-//			new IKAnalyzer4PinYin(false), 
-//				FSDirectory.open(new File(idxDir)), false);
-//	}
+	public LuceneCreate(String sourceFile, String idxPath) throws Exception {
+		setProp(new FieldsMagnt(sourceFile), 
+			new IKAnalyzer4PinYin(false), 
+				FSDirectory.open(new File(idxPath)), false);
+	}
 
-	public LuceneCreate(FieldsMagnt headMagt, String idxDir) throws Exception {
+	public LuceneCreate(FieldsMagnt headMagt, String idxPath) throws Exception {
 		setProp(headMagt, 
 			new IKAnalyzer4PinYin(false), 
-				FSDirectory.open(new File(idxDir)), false);
+				FSDirectory.open(new File(idxPath)), false);
 	}
 
-//	public LuceneCreate(FieldsMagnt headMagt, Analyzer analyzer, 
-//			Directory dir, Boolean openMode) throws Exception {
-//		setProp(headMagt, analyzer, dir, openMode);
-//	}
+	public LuceneCreate(FieldsMagnt headMagt, Analyzer analyzer, 
+			Directory dir, Boolean openMode) throws Exception {
+		setProp(headMagt, analyzer, dir, openMode);
+	}
 	
 	protected void setProp(FieldsMagnt headMagt, Analyzer analyzer, 
 			Directory dir, Boolean openMode) throws Exception {
@@ -84,14 +83,18 @@ public class LuceneCreate {
 		this.headMagt = headMagt;
 		initConfig(dir);
 	}
+	
+	protected void setProp(FieldsMagnt headMagt, Analyzer analyzer,
+			String idxPath, Boolean openMode) throws Exception {
+		setProp(headMagt, analyzer, idxPath, openMode);
+	}
 
-//	public LuceneCreate(FieldsMagnt headMagt, Analyzer analyzer, 
-//			Directory dir) throws Exception {
-//		this(headMagt, analyzer, dir, false);
-//	}
-//
-//	public LuceneCreate(FieldsMagnt headMagt, 
-//			Analyzer analyzer) throws Exception {
+	public LuceneCreate(FieldsMagnt headMagt, Analyzer analyzer, 
+			Directory dir) throws Exception {
+		this(headMagt, analyzer, dir, false);
+	}
+
+//	public LuceneCreate(FieldsMagnt headMagt, Analyzer analyzer) throws Exception {
 //		this(headMagt, analyzer, 
 //				new RAMDirectory(), false);
 //	}

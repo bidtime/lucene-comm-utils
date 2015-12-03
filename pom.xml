@@ -17,7 +17,6 @@
 
 	<dependencies>
 		<!-- baturu -->
-		
         <dependency>
             <groupId>org.bidtime.utils</groupId>
             <artifactId>idbutils</artifactId>
