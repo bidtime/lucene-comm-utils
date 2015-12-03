@@ -263,7 +263,7 @@ public class LuceneCreate {
 		return "span: " + (endTime - startTime);
 	}
 
-	private void indexCommit() throws IOException {
+	public void indexCommit() throws IOException {
 		indexWriter.prepareCommit();
 		indexWriter.commit();
 	}
