@@ -128,6 +128,20 @@ public abstract class AbstractIndexSearch {
 	}
 
 	@SuppressWarnings("rawtypes")
+	public ResultDTO search(String words, Integer pageIdx, Integer pageSize,
+			String fldSort, String[] head) throws Exception {
+		Sort sort =headMagt.getSortOfField(fldSort);
+		return search(words, pageIdx, pageSize, sort, head);
+	}
+
+	@SuppressWarnings("rawtypes")
+	public ResultDTO search(String words, Integer pageIdx, Integer pageSize,
+			String fldSort) throws Exception {
+		Sort sort =headMagt.getSortOfField(fldSort);
+		return search(words, pageIdx, pageSize, sort);
+	}
+
+	@SuppressWarnings("rawtypes")
 	public ResultDTO search(String words, Integer pageIdx, Integer pageSize)
 			throws Exception {
 		Long start = null;

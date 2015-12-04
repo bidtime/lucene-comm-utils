@@ -297,6 +297,18 @@ public class FieldsMagnt {
 		return o.getSort(reverse);
 	}
 	
+	public Sort getSortOfField(String fldSort) throws Exception {
+		boolean reverse = false;
+		String[] fld = fldSort.split(" ");
+		if (fld.length>1) {
+			String revStr = fld[1];
+			if (StringUtils.equalsIgnoreCase(revStr, "desc")) {
+				reverse = true;
+			}
+		}
+		return getSortOfField(fld[0], reverse);
+	}
+	
 	public Term getTermOfValue(Object val) throws Exception {
 		if (val == null) {
 			throw new Exception("get term error: pk value is not null.");
