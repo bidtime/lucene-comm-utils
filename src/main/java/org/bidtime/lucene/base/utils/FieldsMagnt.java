@@ -18,6 +18,7 @@ import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.Sort;
+import org.apache.lucene.search.SortField;
 import org.bidtime.utils.basic.ObjectComm;
 import org.bidtime.utils.comm.CaseInsensitiveHashMap;
 import org.bidtime.utils.comm.CaseInsensitiveHashSet;
@@ -289,15 +290,35 @@ public class FieldsMagnt {
 		return list;
 	}
 	
+	public SortField getSortFldOfField(String fld, boolean reverse) throws Exception {
+		FieldProp o = get(fld);
+		if (o == null) {
+			throw new Exception(fld + "field is null.");
+		}
+		return o.getSortField(reverse);
+	}
+	
 	public Sort getSortOfField(String fld, boolean reverse) throws Exception {
 		FieldProp o = get(fld);
 		if (o == null) {
 			throw new Exception(fld + "field is null.");
 		}
-		return o.getSort(reverse);
+		return new Sort(o.getSortField(reverse));
 	}
 	
 	public Sort getSortOfField(String fldSort) throws Exception {
+		if (StringUtils.isEmpty(fldSort)) {
+			return null;
+		}
+		String[] fld = fldSort.split(";");
+		List<SortField> list = new ArrayList<SortField>();
+		for (int i=0; i<fld.length; i++) {
+			list.add(getSortOfPerField(fld[i]));
+		}
+		return new Sort((SortField[])list.toArray(new SortField[list.size()]));
+	}
+
+	public SortField getSortOfPerField(String fldSort) throws Exception {
 		if (StringUtils.isEmpty(fldSort)) {
 			return null;
 		}
@@ -309,9 +330,9 @@ public class FieldsMagnt {
 				reverse = true;
 			}
 		}
-		return getSortOfField(fld[0], reverse);
+		return getSortFldOfField(fld[0], reverse);
 	}
-	
+
 	public Term getTermOfValue(Object val) throws Exception {
 		if (val == null) {
 			throw new Exception("get term error: pk value is not null.");
