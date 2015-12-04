@@ -298,6 +298,9 @@ public class FieldsMagnt {
 	}
 	
 	public Sort getSortOfField(String fldSort) throws Exception {
+		if (StringUtils.isEmpty(fldSort)) {
+			return null;
+		}
 		boolean reverse = false;
 		String[] fld = fldSort.split(" ");
 		if (fld.length>1) {
