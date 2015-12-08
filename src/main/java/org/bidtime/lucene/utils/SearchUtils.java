@@ -122,15 +122,15 @@ public class SearchUtils {
 		return dto;
 	}
 
-    private static ScoreDoc getLastScoreDoc(Integer pageIdx, Integer pageSize, Query query,
-            IndexSearcher searcher) throws Exception {
-        if (pageIdx == 0) {
-            return null;
-        }
-        int num = pageSize * pageIdx;
-        TopDocs tds = searcher.search(query, num);
-        return tds.scoreDocs[num];
-    }
+//    private static ScoreDoc getLastScoreDoc(Integer pageIdx, Integer pageSize, Query query,
+//            IndexSearcher searcher) throws Exception {
+//        if (pageIdx == 0) {
+//            return null;
+//        }
+//        int num = pageSize * pageIdx;
+//        TopDocs tds = searcher.search(query, num);
+//        return tds.totalHits < num ? tds.scoreDocs[tds.totalHits] : tds.scoreDocs[num];
+//    }
     
 	@SuppressWarnings({ "rawtypes" })
 	public static ResultDTO search(IndexSearcher searcher, Query query,
@@ -145,19 +145,31 @@ public class SearchUtils {
 		 */
 		TopDocs topDocs = null;
 		if (pageSize != null) {
-			//topDocs = searcher.search(query, pageSize);
-			ScoreDoc scoreDoc = null;
-			getLastScoreDoc(pageIdx, pageSize, query, searcher);
-			if (sort != null) {
-				topDocs = searcher.searchAfter(scoreDoc, query, pageSize, sort);
+			if (pageIdx == 0) {
+				if (sort != null) {
+					topDocs = searcher.search(query, Integer.MAX_VALUE, sort);
+				} else {
+					topDocs = searcher.search(query, Integer.MAX_VALUE);					
+				}
 			} else {
-				topDocs = searcher.searchAfter(scoreDoc, query, pageSize);
+		        int rows = pageSize * pageIdx;
+		        TopDocs tds = searcher.search(query, rows);
+		        if (tds.totalHits > rows) {
+			        ScoreDoc scoreDoc = tds.totalHits < rows ? tds.scoreDocs[tds.totalHits] : tds.scoreDocs[rows];
+					if (sort != null) {
+						topDocs = searcher.searchAfter(scoreDoc, query, pageSize, sort);
+					} else {
+						topDocs = searcher.searchAfter(scoreDoc, query, pageSize);
+					}
+		        } else {
+		        	topDocs = tds;
+		        }
 			}
 		} else {
 			if (sort != null) {
 				topDocs = searcher.search(query, Integer.MAX_VALUE, sort);
 			} else {
-				topDocs = searcher.search(query, Integer.MAX_VALUE);				
+				topDocs = searcher.search(query, Integer.MAX_VALUE);
 			}
 		}
 		return SearchUtils.topDocsToDTO(searcher, words, topDocs, mapDataTime, head);
@@ -167,15 +179,16 @@ public class SearchUtils {
 	private static ResultDTO search(IndexSearcher searcher, Query query,
 			String words, Integer pageIdx, Integer pageSize, Set<String> mapDataTime, String[] head)
 			throws Exception {
-		TopDocs topDocs = null;
-		if (pageSize != null) {
-			//topDocs = searcher.search(query, pageSize);
-			ScoreDoc scoreDoc = getLastScoreDoc(pageIdx, pageSize, query, searcher);
-			topDocs = searcher.searchAfter(scoreDoc, query, pageSize);
-		} else {
-			topDocs = searcher.search(query, Integer.MAX_VALUE);
-		}
-		return SearchUtils.topDocsToDTO(searcher, words, topDocs, mapDataTime, head);
+		return search(searcher, query, words, pageIdx, pageSize, null, mapDataTime, head);
+//		TopDocs topDocs = null;
+//		if (pageSize != null) {
+//			//topDocs = searcher.search(query, pageSize);
+//			ScoreDoc scoreDoc = getLastScoreDoc(pageIdx, pageSize, query, searcher);
+//			topDocs = searcher.searchAfter(scoreDoc, query, pageSize);
+//		} else {
+//			topDocs = searcher.search(query, Integer.MAX_VALUE);
+//		}
+//		return SearchUtils.topDocsToDTO(searcher, words, topDocs, mapDataTime, head);
 	}
 	
 	@SuppressWarnings({ "deprecation", "rawtypes" })
