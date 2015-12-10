@@ -180,15 +180,6 @@ public class SearchUtils {
 			String words, Integer pageIdx, Integer pageSize, Set<String> mapDataTime, String[] head)
 			throws Exception {
 		return search(searcher, query, words, pageIdx, pageSize, null, mapDataTime, head);
-//		TopDocs topDocs = null;
-//		if (pageSize != null) {
-//			//topDocs = searcher.search(query, pageSize);
-//			ScoreDoc scoreDoc = getLastScoreDoc(pageIdx, pageSize, query, searcher);
-//			topDocs = searcher.searchAfter(scoreDoc, query, pageSize);
-//		} else {
-//			topDocs = searcher.search(query, Integer.MAX_VALUE);
-//		}
-//		return SearchUtils.topDocsToDTO(searcher, words, topDocs, mapDataTime, head);
 	}
 	
 	@SuppressWarnings({ "deprecation", "rawtypes" })

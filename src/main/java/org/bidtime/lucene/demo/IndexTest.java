@@ -2,16 +2,16 @@ package org.bidtime.lucene.demo;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedHashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
+import org.apache.lucene.queryparser.flexible.standard.QueryParserUtil;
 import org.bidtime.dbutils.gson.ResultDTO;
 import org.bidtime.lucene.base.create.LuceneCreate;
 import org.bidtime.lucene.base.search.LuceneSearch;
 import org.bidtime.lucene.base.utils.FieldsMagnt;
+import org.bidtime.utils.basic.ObjectComm;
 import org.bidtime.utils.comm.SimpleHashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,14 +25,14 @@ public class IndexTest {
 	public static final void main(String[] args) {
 		try {
 			doIt();
-			Object lock = new Object();
-			synchronized (lock) {
-				try {
-					lock.wait();
-				} catch (InterruptedException e) {
-					logger.error("lock", e);
-				}
-			}
+//			Object lock = new Object();
+//			synchronized (lock) {
+//				try {
+//					lock.wait();
+//				} catch (InterruptedException e) {
+//					logger.error("lock", e);
+//				}
+//			}
 		} catch (Exception e) {
 			logger.error("main", e);
 		}
@@ -45,9 +45,10 @@ public class IndexTest {
 		} else {
 			//String key = "name:中国 OR name_shouzimu:eg";//"id:" + 5;
 			logger.info("begin...");
-			String key = "brandName:马 OR brandName_shouzimu:bm";//"id:" + 5;
-			searchIt(key);
-			//getTipCarGoods(key, 0, 10);
+			String key = QueryParserUtil.escape("brandName:" + "bao ma");//"id:" + 5;
+			//String key = "cityId:26";//"id:" + 5;
+			//searchIt(key);
+			getTipCarGoods(key, 0, 10);
 			logger.info("end.");
 		}
 	}
@@ -93,40 +94,79 @@ public class IndexTest {
 		}
 	}
 	
-	@SuppressWarnings({ "rawtypes" })
-	private static void addMergeNameToList(List<Map> listMap, String key, Integer nPageSize, Set<String> set) throws Exception {
-		for (Map m: listMap) {
-			String v = (String)m.get(key);
-			if (v != null) {
-				set.add(v);
-			}
-			if (set.size() >= nPageSize) {
-				break;
-			}
-		}
+//	@SuppressWarnings({ "rawtypes" })
+//	private static void addMergeNameToList(List<Map> listMap, String key, Integer nPageSize, Set<String> set) throws Exception {
+//		for (Map m: listMap) {
+//			String v = (String)m.get(key);
+//			if (v != null) {
+//				set.add(v);
+//			}
+//			if (set.size() >= nPageSize) {
+//				break;
+//			}
+//		}
+//	}
+//	
+//	@SuppressWarnings({ "rawtypes" })
+//	private static List<Map<String, Object>> toMergeNameIt(List<Map> listMap, Integer nPageSize) throws Exception {		
+//		Set<String> set = new LinkedHashSet<String>();
+//		if (set.size()<nPageSize) {
+//			addMergeNameToList(listMap, "brandName", nPageSize, set);
+//		}
+//		if (set.size()<nPageSize) {
+//			addMergeNameToList(listMap, "carSysName", nPageSize, set);
+//		}
+//		if (set.size()<nPageSize) {
+//			addMergeNameToList(listMap, "carTypeName", nPageSize, set);
+//		}
+//		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+//		for (String s: set) {
+//			Map<String, Object> map = new HashMap<String, Object>();
+//			map.put("k", s);
+//			list.add(map);
+//		}
+//		return list;
+//	}
+	
+	@SuppressWarnings("rawtypes")
+	private static void getNewMapInteger(Map m, String key, String keyId, char c,
+			Map<Integer, Map<String, Object>> mapBrand) {
+		Object name = m.get(key);
+		Integer id = ObjectComm.objectToInteger(m.get(keyId));
+		Map<String, Object> mBrandTmp = new LinkedHashMap<>();
+		mBrandTmp.put("n", name);
+		mBrandTmp.put("i", id);
+		mBrandTmp.put("t", c);
+		mapBrand.put(id, mBrandTmp);
 	}
 	
 	@SuppressWarnings({ "rawtypes" })
-	private static List<Map<String, Object>> toMergeNameIt(List<Map> listMap, Integer nPageSize) throws Exception {		
-		Set<String> set = new LinkedHashSet<String>();
-		if (set.size()<nPageSize) {
-			addMergeNameToList(listMap, "brandName", nPageSize, set);
+	private static List<Map<String, Object>> toMergeNameIt(List<Map> listMap, Integer nPageSize) throws Exception {				
+		Map<Integer, Map<String, Object>> mapBrand = new LinkedHashMap<>();
+		Map<Integer, Map<String, Object>> mapCarSys = new LinkedHashMap<>();
+		Map<Integer, Map<String, Object>> mapCarType = new LinkedHashMap<>();
+		for (Map m: listMap) {
+			getNewMapInteger(m, "brandName", "brandId", 'B', mapBrand);
+			getNewMapInteger(m, "carSysName", "carSysId", 'S', mapCarSys);
+			getNewMapInteger(m, "carTypeName", "carTypeId", 'C', mapCarType);
 		}
-		if (set.size()<nPageSize) {
-			addMergeNameToList(listMap, "carSysName", nPageSize, set);
-		}
-		if (set.size()<nPageSize) {
-			addMergeNameToList(listMap, "carTypeName", nPageSize, set);
-		}
+		//
 		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
-		for (String s: set) {
-			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("k", s);
-			list.add(map);
+		for (Map.Entry<Integer, Map<String, Object>> et : mapBrand.entrySet()) {
+			if (list.size() > nPageSize) { break; }
+			list.add(et.getValue());
+		}
+		for (Map.Entry<Integer, Map<String, Object>> et : mapCarSys.entrySet()) {
+			if (list.size() > nPageSize) { break; }
+			list.add(et.getValue());
+		}
+		for (Map.Entry<Integer, Map<String, Object>> et : mapCarType.entrySet()) {
+			if (list.size() > nPageSize) { break; }
+			list.add(et.getValue());
 		}
 		return list;
 	}
-	
+
 	public static void getTipCarGoods(String key, Integer nPageIndex, Integer nPageSize) throws Exception {
 		LuceneSearch m = new LuceneSearch(
 				new FieldsMagnt("D:/DATA/lucene/source/cargoods/raw.txt"),
@@ -141,13 +181,13 @@ public class IndexTest {
 	// 查询
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public static <T> T getTipCarGoods(LuceneSearch m, String key, Integer nPageIndex, Integer nPageSize) throws Exception {
-		String[] head = new String[]{"brandName", "carSysName", "carTypeName"};
+		String[] head = new String[]{"brandName", "carSysName", "carTypeName", "brandId", "carSysId", "carTypeId"};
 		logger.info("start search...");
 		ResultDTO dto = m.search(key, nPageIndex, nPageSize * 3, head);
 		if (dto != null && dto.isSuccess()) {
 			List<Map<String, Object>> list = toMergeNameIt((List<Map>)dto.getData(), nPageSize);
 			ResultDTO d = ResultDTO.success(list);
-			logger.info("end search...");
+			logger.info("end search..." + d.toJsonMsg());
 			return (T)d;
 		} else {
 			return (T) dto;
