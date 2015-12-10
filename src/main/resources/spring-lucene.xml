@@ -13,6 +13,44 @@
 	<!-- 引用@Autowired必须定义这个bean -->
 	<!-- <bean class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor" 
 		/> -->
+		
+		
+	<!-- 
+	<bean id="fieldsMagnt" class="FieldsMagnt">
+		<constructor-arg type="java.lang.String" value="D:/data/lucene/source/cargoods/raw.txt" />
+	</bean>
+	
+	<bean id="luceneAnalyzer" class="org.wltea4pinyin.analyzer.lucene.IKAnalyzer4PinYin">
+		<constructor-arg type="java.lang.Boolean" value="true" />
+	</bean>
+	
+	<bean id="luceneCreate" class="LuceneCreate">
+		<constructor-arg type="FieldsMagnt" ref="fieldsMagnt" />
+		<constructor-arg type="org.apache.lucene.analysis.Analyzer" ref="luceneAnalyzer" />
+		<constructor-arg type="java.lang.String" value="D:/data/lucene/index/cargoods/" />
+	</bean>
+	
+	<bean id="luceneSearchMgr" class="LuceneSearchMgr">
+		<constructor-arg type="FieldsMagnt" ref="fieldsMagnt" />
+		<constructor-arg type="org.apache.lucene.analysis.Analyzer" ref="luceneAnalyzer" />
+		<constructor-arg type="java.lang.String" value="D:/data/lucene/index/cargoods/" />
+	</bean>
+	
+	<bean id="luceneDirectory" class="org.apache.lucene.store.SimpleFSDirectory">
+		<constructor-arg>
+			<bean class="java.io.File">
+				<constructor-arg value="D:\\data\\common\\hahaha" />
+			</bean>
+		</constructor-arg>
+	</bean>
+	
+	<bean id="luceneAnalyzer" class="org.wltea4pinyin.analyzer.lucene.IKAnalyzer4PinYin">
+		<constructor-arg type="java.lang.Boolean" value="true" />
+	</bean>
+	
+	//index="0" 
+	
+	-->
 
 	<!-- LUCENE SEARCH CONFIG -->
 	<!-- 设置字段内容长度，这里不做限定 -->
