@@ -41,6 +41,10 @@ public class KeyWordsUtils {
 		}
 	}
 
+	public static String bracketWords(String fields, String key) {
+		return bracketWords(fields, key, null);
+	}
+	
 	public static String bracketWords(String fields, String key,
 			String logic) {
 		String[] arFields = fields.split(";");
