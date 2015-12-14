@@ -2,46 +2,46 @@ package org.bidtime.lucene.utils;
 
 public class KeyWordsUtils {
 	
-	public static final String AND = " AND ";
-	public static final String OR = " OR ";
+	public static final String AND = "AND";
+	public static final String OR = "OR";
 
-	public static String bracketWords(String fields, String keywords) {
-		return bracketWords(fields, keywords, OR);
-	}
+//	public static String bracketWords(String fields, String keywords) {
+//		return bracketWords(fields, keywords, OR);
+//	}
+//
+//	public static String bracketWordsAnd(String fields, String keywords) {
+//		return bracketWords(fields, keywords, AND);
+//	}
 
-	public static String bracketWordsAnd(String fields, String keywords) {
-		return bracketWords(fields, keywords, AND);
-	}
-
-	public static String bracketWords(String fields, String keywords,
-			String logicInner) {
+	public static String bracketWords(String fields, String key,
+			String logic) {
 		String[] arFields = fields.split(";");
 		if (arFields.length<2) {
-			return bracketWords(new String[]{fields}, keywords, logicInner);
+			return bracketKey(new String[]{fields}, key, logic);
 		} else {
-			return bracketWords(arFields, keywords, logicInner);
+			return bracketKey(arFields, key, logic);
 		}
 	}
 
-	public static String bracketWords(String[] fields, String keywords) {
-		return bracketWords(fields, keywords, OR);
-	}
+//	public static String bracketWords(String[] fields, String keywords) {
+//		return bracketWords(fields, keywords, OR);
+//	}
 	
-	public static String bracketWords(String[] fields, String keywords,
-			String logicInner) {
+	public static String bracketKey(String[] fields, String key,
+			String logic) {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < fields.length; i++) {
 			if (i == 0) {
 				sb.append(fields[i]);
 				sb.append(":");
-				sb.append(keywords);
+				sb.append(key);
 			} else {
 				sb.append(" ");
-				sb.append(logicInner);
+				sb.append(logic);
 				sb.append(" ");
 				sb.append(fields[i]);
 				sb.append(":");
-				sb.append(keywords);
+				sb.append(key);
 			}
 		}
 		sb.insert(0, "(");
