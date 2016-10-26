@@ -13,6 +13,7 @@ import org.apache.lucene.document.LongField;
 import org.apache.lucene.document.StoredField;
 import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
+import org.apache.lucene.index.IndexOptions;
 import org.apache.lucene.search.Sort;
 import org.apache.lucene.search.SortField;
 import org.bidtime.utils.basic.ObjectComm;
@@ -205,10 +206,12 @@ public class FieldProp {
 		boolean bIndex = (index != null && 
 				!index.equalsIgnoreCase("Index.YES")) ? false : true;
 		if (bIndex) {
-			ft.setIndexed(true);
+			ft.setIndexOptions(IndexOptions.DOCS_AND_FREQS_AND_POSITIONS);
+			//ft.setIndexed(true);
 			//ft.setIndexOptions(FieldInfo.IndexOptions.DOCS_AND_FREQS_AND_POSITIONS);
 		} else {
-			ft.setIndexed(false);
+			//ft.setIndexed(false);
+			ft.setIndexOptions(IndexOptions.NONE);
 		}
 		
 		//Tokenized.YES/Tokenized.NO

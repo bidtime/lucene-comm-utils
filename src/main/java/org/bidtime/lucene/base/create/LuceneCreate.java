@@ -1,7 +1,7 @@
 package org.bidtime.lucene.base.create;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -17,11 +17,6 @@ import org.apache.lucene.index.IndexWriterConfig.OpenMode;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
-import org.apache.lucene.util.Version;
-import org.bidtime.dbutils.gson.GsonEbUtils;
-import org.bidtime.dbutils.gson.JSONHelper;
-import org.bidtime.dbutils.gson.PropAdapt;
-import org.bidtime.dbutils.gson.ResultDTO;
 import org.bidtime.lucene.base.utils.FieldsMagnt;
 import org.bidtime.lucene.utils.LogTimeUtil;
 import org.bidtime.utils.basic.ObjectComm;
@@ -59,19 +54,19 @@ public class LuceneCreate {
 
 	public LuceneCreate(FieldsMagnt headMagt, Analyzer analyzer, 
 			String idxPath) throws Exception {
-		setProp(headMagt, analyzer, FSDirectory.open(new File(idxPath)), false);
+		setProp(headMagt, analyzer, FSDirectory.open(Paths.get(idxPath)), false);
 	}
 
 	public LuceneCreate(String sourceFile, String idxPath) throws Exception {
 		setProp(new FieldsMagnt(sourceFile), 
 			new IKAnalyzer4PinYin(false), 
-				FSDirectory.open(new File(idxPath)), false);
+				FSDirectory.open(Paths.get(idxPath)), false);
 	}
 
 	public LuceneCreate(FieldsMagnt headMagt, String idxPath) throws Exception {
 		setProp(headMagt, 
 			new IKAnalyzer4PinYin(false), 
-				FSDirectory.open(new File(idxPath)), false);
+				FSDirectory.open(Paths.get(idxPath)), false);
 	}
 
 	public LuceneCreate(FieldsMagnt headMagt, Analyzer analyzer, 
@@ -111,13 +106,13 @@ public class LuceneCreate {
 	@SuppressWarnings("deprecation")
 	private void initConfig(Directory dir) throws Exception {
 		if (IndexWriter.isLocked(dir)) {
-			IndexWriter.unlock(dir);		//auto unlock
+			//IndexWriter.unlock(dir);		//auto unlock
+			logger.warn("{} is locked", dir.toString());
 		}
 		PerFieldAnalyzerWrapper wrapper =
 				headMagt.getPinYinAnalyzer(analyzer);
 		//配置IndexWriterConfig
-		iwConfig = new IndexWriterConfig(Version.LUCENE_CURRENT,
-				wrapper != null ? wrapper : analyzer);
+		iwConfig = new IndexWriterConfig(wrapper != null ? wrapper : analyzer);
 		iwConfig.setOpenMode(openMode ? 
 				OpenMode.CREATE : OpenMode.CREATE_OR_APPEND);
 		//setMaxBufferedDocs
@@ -202,11 +197,11 @@ public class LuceneCreate {
 	private void createIndex(Object o, boolean commit)
 			throws Exception {
 		Map map = null;
-		if (o instanceof ResultDTO) {
-			map = JSONHelper.clazzToMap(((ResultDTO)o).dataToMap());
-		} else {
-			map = JSONHelper.clazzToMap(o);			
-		}
+//		if (o instanceof ResultDTO) {
+//			map = JSONHelper.clazzToMap(((ResultDTO)o).dataToMap());
+//		} else {
+//			map = JSONHelper.clazzToMap(o);			
+//		}
 		updateIndexMap(map, true);
 	}
 	
@@ -355,11 +350,11 @@ public class LuceneCreate {
 	private void updateIndex(Object o, boolean commit)
 			throws Exception {
 		Map map = null;
-		if (o instanceof ResultDTO) {
-			map = JSONHelper.clazzToMap(((ResultDTO)o).dataToMap());
-		} else {
-			map = GsonEbUtils.clazzToMap(o, PropAdapt.NOTNULL);
-		}
+//		if (o instanceof ResultDTO) {
+//			map = JSONHelper.clazzToMap(((ResultDTO)o).dataToMap());
+//		} else {
+//			map = GsonEbUtils.clazzToMap(o, PropAdapt.NOTNULL);
+//		}
 		updateIndexMap(map, true);
 	}
 	

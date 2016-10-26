@@ -1,6 +1,6 @@
-package org.bidtime.lucene.demo;
+package demo;
 
-import java.io.File;
+import java.nio.file.Paths;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.analysis.Analyzer;
@@ -21,7 +21,6 @@ import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.store.RAMDirectory;
-import org.apache.lucene.util.Version;
 
 public class SearchTester {
 
@@ -94,53 +93,18 @@ public class SearchTester {
 			System.out.println(doc);
 		}
 	}
-	
-//	@SuppressWarnings("deprecation")
-//	public void search2(String field, String word, short nPageSize)
-//			throws Exception {
-//		QueryParser parser = new QueryParser(Version.LUCENE_CURRENT, field, analyzer);
-//		Query query = parser.parse(word);
-//		TopDocs score = searcher.search(query, nPageSize);
-//		System.out.println(field+":"+word);
-//		//System.out.println("\t HITS:" + score.totalHits);
-//		
-//		SearchUtils.topDocsToDTO(searcher, word, score, (String[])null);
-//	}
-	
-//	@SuppressWarnings("deprecation")
-//	private GsonEbRst search3(String field, String words, short nPageSize) throws Exception {
-//		System.out.println("search:"+words);
-//		QueryParser parser = new QueryParser(Version.LUCENE_CURRENT, field, analyzer);
-////		MultiFieldQueryParser parser = new MultiFieldQueryParser(Version.LUCENE_CURRENT, fieldHeads, analyzer);
-//		Query query = parser.parse(words);
-//		TopDocs topDocs = searcher.search(query, nPageSize);
-//		GsonEbRst rst = SearchUtils.topDocsToRst(searcher,words,topDocs,(String[])null);
-//		return rst;
-//	}
-
-//	void testSearch(String word) throws Exception {
-//		System.out.println("search:"+word);
-//		Query q = new TermQuery(new Term(field, word.toLowerCase()));
-//		TopDocs docs = searcher.search(q, null, 100000);
-//		System.out.println("HITS:" + docs.totalHits);
-//		for (int i = 0; i < docs.totalHits; i++) {
-//			ScoreDoc s_doc = docs.scoreDocs[i];
-//			Document doc = searcher.doc(s_doc.doc);
-//			System.out.println(doc);
-//		}
-//	}
 
 	@SuppressWarnings("deprecation")
-	void buildIndex(String path) throws Exception {
-		if (StringUtils.isEmpty(path)) {
+	void buildIndex(String pathName) throws Exception {
+		if (StringUtils.isEmpty(pathName)) {
 			dir = new RAMDirectory();
 		} else {
-			dir = FSDirectory.open(new File(path));
+			dir = FSDirectory.open(Paths.get(pathName));
 		}
-		analyzer = new StandardAnalyzer(Version.LUCENE_CURRENT);
+		analyzer = new StandardAnalyzer();
 		if (create) {
 			//配置IndexWriterConfig    
-			IndexWriterConfig iwConfig = new IndexWriterConfig(Version.LUCENE_CURRENT , analyzer);   
+			IndexWriterConfig iwConfig = new IndexWriterConfig(analyzer);   
 			//iwConfig.setOpenMode(OpenMode.CREATE_OR_APPEND);		
 			iwConfig.setOpenMode(OpenMode.CREATE);
 			IndexWriter writer = new IndexWriter(dir, iwConfig);		

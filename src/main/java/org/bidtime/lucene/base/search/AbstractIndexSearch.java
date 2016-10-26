@@ -1,6 +1,6 @@
 package org.bidtime.lucene.base.search;
 
-import java.io.File;
+import java.nio.file.Paths;
 import java.util.Set;
 
 import org.apache.lucene.analysis.Analyzer;
@@ -52,17 +52,17 @@ public abstract class AbstractIndexSearch {
 	
 	protected void setProp(FieldsMagnt headMagt, Analyzer analyzer,
 			String idxPath) throws Exception {
-		setProp(headMagt, analyzer, FSDirectory.open(new File(idxPath)));
+		setProp(headMagt, analyzer, FSDirectory.open(Paths.get(idxPath)));
 	}
 
 	public AbstractIndexSearch(FieldsMagnt headMagt, Analyzer analyzer,
 			String idxPath) throws Exception {
-		setProp(headMagt, analyzer, FSDirectory.open(new File(idxPath)));
+		setProp(headMagt, analyzer, FSDirectory.open(Paths.get(idxPath)));
 	}
 
 	public AbstractIndexSearch(String fileSource, String idxPath) throws Exception {
 		setProp(new FieldsMagnt(fileSource), new IKAnalyzer4PinYin(false),
-				FSDirectory.open(new File(idxPath)));
+				FSDirectory.open(Paths.get(idxPath)));
 	}
 	
 	public AbstractIndexSearch(FieldsMagnt headMagt, String idxPath) throws Exception {

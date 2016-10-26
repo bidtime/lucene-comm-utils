@@ -16,7 +16,6 @@ import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.Sort;
 import org.apache.lucene.search.TopDocs;
-import org.apache.lucene.util.Version;
 import org.bidtime.dbutils.gson.ResultDTO;
 import org.bidtime.utils.basic.ObjectComm;
 import org.bidtime.utils.comm.CaseInsensitiveHashMap;
@@ -103,7 +102,7 @@ public class SearchUtils {
 			TopDocs topDocs, Set<String> mapDataTime, String[] head) throws Exception {
 		ResultDTO dto = null;
 		if (topDocs.totalHits == 0) {
-			dto = ResultDTO.error("没有搜索到相关内容");
+			dto = ResultDTO.success();
 			if (logger.isDebugEnabled()) {
 				StringBuilder sb = new StringBuilder();
 				sb.append("query:");
@@ -186,8 +185,7 @@ public class SearchUtils {
 	public static ResultDTO search(IndexSearcher searcher, Analyzer analyzer,
 			String field, String words, Integer pageIdx, Integer pageSize,
 			Set<String> mapDataTime, String[] head) throws Exception {
-		QueryParser parser = new QueryParser(Version.LUCENE_CURRENT, field,
-				analyzer);
+		QueryParser parser = new QueryParser(field, analyzer);
 		Query query = parser.parse(words);
 		return search(searcher, query, words, pageIdx, pageSize, mapDataTime, head);
 	}
@@ -196,8 +194,7 @@ public class SearchUtils {
 	public static ResultDTO search(IndexSearcher searcher, Analyzer analyzer,
 			String field, String words, Integer pageIdx, Integer pageSize, 
 			Sort sort, Set<String> mapDataTime, String[] head) throws Exception {
-		QueryParser parser = new QueryParser(Version.LUCENE_CURRENT, field,
-				analyzer);
+		QueryParser parser = new QueryParser(field,	analyzer);
 		Query query = parser.parse(words);
 		return search(searcher, query, words, pageIdx, pageSize, sort, mapDataTime, head);
 	}
@@ -228,38 +225,5 @@ public class SearchUtils {
 			String words, Integer pageIdx, Integer pageSize, Sort sort, Set<String> mapDataTime) throws Exception {
 		return search(searcher, analyzer, null, words, pageIdx, pageSize, sort, mapDataTime, null);
 	}
-
-//	@SuppressWarnings("rawtypes")
-//	public static ResultDTO search(IndexSearcher searcher, Analyzer analyzer,
-//			String words, Integer pageSize) throws Exception {
-//		return search(searcher, analyzer, words, null, pageSize);
-//	}
-//
-//	@SuppressWarnings({ "rawtypes" })
-//	public static ResultDTO searchTerm(IndexSearcher searcher,
-//			Analyzer analyzer, String field, String words, String[] head,
-//			Integer pageSize) throws Exception {
-//		Term term = new Term(field, words);
-//		Query query = new TermQuery(term);
-//		return search(searcher, query, words, head, pageSize);
-//	}
-//
-//	@SuppressWarnings({ "rawtypes" })
-//	public static ResultDTO search(IndexSearcher searcher, Query query,
-//			String words, Integer pageSize) throws Exception {
-//		return search(searcher, query, words, (String[]) null, pageSize);
-//	}
-//
-//	@SuppressWarnings({ "rawtypes" })
-//	public static ResultDTO search(IndexSearcher searcher, Analyzer analyzer,
-//			String field, String words, Integer pageSize) throws Exception {
-//		return search(searcher, analyzer, field, words, null, pageSize);
-//	}
-//
-//	@SuppressWarnings({ "rawtypes" })
-//	public static ResultDTO search(IndexSearcher searcher, Analyzer analyzer,
-//			String words, Integer pageSize) throws Exception {
-//		return search(searcher, analyzer, null, words, null, pageSize);
-//	}
 
 }
