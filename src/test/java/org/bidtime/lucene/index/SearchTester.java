@@ -1,4 +1,4 @@
-package demo;
+package org.bidtime.lucene.index;
 
 import java.nio.file.Paths;
 

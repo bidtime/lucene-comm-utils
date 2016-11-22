@@ -31,31 +31,31 @@ public class LuceneIndex {
 		this.indexSearch = indexSearch;
 	}
 	
-	public void createIndex(Object d) throws Exception {
-		this.indexCreate.createIndex(d);
-	}
-	
-	public void deleteIndex(Object pkVal) throws Exception {
-		this.indexCreate.deleteIndex(pkVal);
-	}
-	
-	public void deleteIndex(Object[] pkVal) throws Exception {
-		this.indexCreate.deleteIndex(pkVal);
-	}
-	
-	public void updateIndex(Object d) throws Exception {
-		this.indexCreate.updateIndex(d);
-	}
-	
-	public void updateNumericDocValue(Object pkVal, Object fld,
-			Object val) throws Exception {
-		this.indexCreate.updateNumericDocValue(pkVal, fld,
-			val);
-	}
-	
-	public void updateNumericDocValue(Object d) throws Exception {
-		this.indexCreate.updateNumericDocValue(d);
-	}
+//	public void createIndex(Object d) throws Exception {
+//		this.indexCreate.createIndex(d);
+//	}
+//	
+//	public void deleteIndex(Object pkVal) throws Exception {
+//		this.indexCreate.deleteIndex(pkVal);
+//	}
+//	
+//	public void deleteIndex(Object[] pkVal) throws Exception {
+//		this.indexCreate.deleteIndex(pkVal);
+//	}
+//	
+//	public void updateIndex(Object d) throws Exception {
+//		this.indexCreate.updateIndex(d);
+//	}
+//	
+//	public void updateNumericDocValue(Object pkVal, Object fld,
+//			Object val) throws Exception {
+//		this.indexCreate.updateNumericDocValue(pkVal, fld,
+//			val);
+//	}
+//	
+//	public void updateNumericDocValue(Object d) throws Exception {
+//		this.indexCreate.updateNumericDocValue(d);
+//	}
 	
 //	@SuppressWarnings("deprecation")
 //	public void initial() throws Exception {

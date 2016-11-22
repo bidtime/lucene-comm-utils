@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<classes>
+
+<class package="" name="User" table="u_user">
+	<id name="id" column="id" type="int" length="10" not-null="true" generator="identity" store="true" index="DOCS" tokenized="true">
+	<property name="code" column="code" type="varchar" length="20" not-null="true" store="true" index="DOCS" tokenized="true"/>
+	<property name="name" column="name" type="varchar" length="96" not-null="true" store="true" index="DOCS" tokenized="true"/>
+	<property name="name_pinyin" column="name_pinyin" type="varchar" length="96" not-null="true"
+		store="true" index="DOCS" tokenized="true" wordType="pinyin" wordName="name"/>
+	<property name="name_szm" column="name_szm" type="varchar" length="96" not-null="true"
+		store="true" index="DOCS" tokenized="true" wordType="shouzimu" wordName="name"/>
+	<property name="tmCreate" column="tmCreate" type="datetime" not-null="false" store="true" index="DOCS" tokenized="true" omitNorms="true"/>
+</class>
+
+<sql>
+	<id name="getFullSql">
+	<![CDATA[
+	SELECT
+	  userId,
+	  loginMobile,
+	  pwd,
+	  userName,
+	  sex,
+	  sign,
+	  code,
+	  provinceId,
+	  cityId,
+	  countyId,
+	  imageUrl,
+	  contactphone,
+	  userType,
+	  memo,
+	  idCardUrl,
+	  idCardUrl2,
+	  auth,
+	  state,
+	  createTime,
+	  updateTime
+	FROM
+		u_user
+	WHERE TRUE=TRUE
+	  << AND userId = #userId# >>
+	  << AND loginMobile like #loginMobile# >>
+	  << AND loginMobile = #loginMobile_equal# >>
+	  << AND userName like #userName# >>
+	  << AND sex = #sex# >>
+	  << AND provinceId = #provinceId# >>
+	  << AND cityId = #cityId# >>
+	  << AND countyId = #countyId# >>
+	  << AND imageUrl = #imageUrl# >>
+	  << AND contactphone = #contactphone# >>
+	  << AND userType = #userType# >>
+	  << AND state = #state# >>
+	  order by userId desc
+	]]>
+	</id>
+
+</sql>
+
+</classes>

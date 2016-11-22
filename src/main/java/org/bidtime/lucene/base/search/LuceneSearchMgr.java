@@ -5,36 +5,28 @@ import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.SearcherFactory;
 import org.apache.lucene.search.SearcherManager;
 import org.apache.lucene.store.Directory;
-import org.bidtime.lucene.base.utils.FieldsMagnt;
 
 public class LuceneSearchMgr extends AbstractIndexSearch {
 	
 	private SearcherManager mgr = null;// 是线程安全的
 
-	public LuceneSearchMgr(FieldsMagnt headMagt, Analyzer analyzer,
-			Directory indexDir) throws Exception {
-		super(headMagt, analyzer, indexDir);
+	public LuceneSearchMgr(Analyzer analyzer, Directory indexDir) throws Exception {
+		super(analyzer, indexDir);
 		mgr = new SearcherManager(indexDir, new SearcherFactory());
 	}
 	
-	public LuceneSearchMgr(FieldsMagnt headMagt, Analyzer analyzer, 
-			String idxPath) throws Exception {
-		super(headMagt, analyzer, idxPath);
-		mgr = new SearcherManager(indexDir, new SearcherFactory());
-	}
-	
-	public LuceneSearchMgr(String fileSource, String idxPath) throws Exception {
-		super(fileSource, idxPath);
+	public LuceneSearchMgr(Analyzer analyzer, String idxPath) throws Exception {
+		super(analyzer, idxPath);
 		mgr = new SearcherManager(indexDir, new SearcherFactory());
 	}
 
-	public LuceneSearchMgr(FieldsMagnt headMagt, String idxPath) throws Exception {
-		super(headMagt, idxPath);
+	public LuceneSearchMgr(String idxPath) throws Exception {
+		super(idxPath);
 		mgr = new SearcherManager(indexDir, new SearcherFactory());
 	}
 
 	@Override
-	protected IndexSearcher getSearch() throws Exception {
+	public IndexSearcher getSearch() throws Exception {
 		mgr.maybeRefresh();
 		return mgr.acquire();
 	}

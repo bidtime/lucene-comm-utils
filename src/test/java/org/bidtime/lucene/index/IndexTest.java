@@ -1,16 +1,7 @@
-package demo;
+package org.bidtime.lucene.index;
 
-import java.util.Date;
-import java.util.Map;
-
-import org.bidtime.dbutils.gson.ResultDTO;
-import org.bidtime.lucene.base.create.LuceneCreate;
-import org.bidtime.lucene.base.search.LuceneSearch;
-import org.bidtime.lucene.base.utils.FieldsMagnt;
-import org.bidtime.utils.comm.SimpleHashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.wltea4pinyin.analyzer.lucene.IKAnalyzer4PinYin;
 
 public class IndexTest {
 
@@ -19,7 +10,7 @@ public class IndexTest {
 	
 	public static final void main(String[] args) {
 		try {
-			doIt();
+			//doIt();
 //			Object lock = new Object();
 //			synchronized (lock) {
 //				try {
@@ -49,63 +40,63 @@ public class IndexTest {
 //		}
 //	}
 
-	public static void doIt() throws Exception {
-		boolean createIdx = false;
-		if (createIdx) {
-			testCreateIndex();
-		} else {
-			//String key = "name:中国 OR name_shouzimu:eg";//"id:" + 5;
-			logger.info("begin...");
-			//String key = QueryParserUtil.escape("brandName:" + "奥迪");//"id:" + 5;
-			//String key = "brandName:" + "奥迪";//"cityId:26";//"id:" + 5;
-			String key = "name:中国";//getSearchTerm("bk", null);
-			searchIt(key);
-			//getTipCarGoods(key, 0, 10);
-			logger.info("end.");
-		}
-	}
+//	public static void doIt() throws Exception {
+//		boolean createIdx = false;
+//		if (createIdx) {
+//			testCreateIndex();
+//		} else {
+//			//String key = "name:中国 OR name_shouzimu:eg";//"id:" + 5;
+//			logger.info("begin...");
+//			//String key = QueryParserUtil.escape("brandName:" + "奥迪");//"id:" + 5;
+//			//String key = "brandName:" + "奥迪";//"cityId:26";//"id:" + 5;
+//			String key = "name:中国";//getSearchTerm("bk", null);
+//			searchIt(key);
+//			//getTipCarGoods(key, 0, 10);
+//			logger.info("end.");
+//		}
+//	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public static void addToDoc(LuceneCreate m) throws Exception {
-		Map map = new SimpleHashMap();
-		map.put("id", 5);
-		map.put("code", "05");
-		map.put("tmCreate", new Date());
-		map.put("name", "中国");
-		m.createIndex(map);
-	}
+//	@SuppressWarnings({ "rawtypes", "unchecked" })
+//	public static void addToDoc(LuceneCreate m) throws Exception {
+//		Map map = new SimpleHashMap();
+//		map.put("id", 5);
+//		map.put("code", "05");
+//		map.put("name", "中国");
+//		map.put("tmCreate", new Date());
+//		m.createIndex(map);
+//	}
 	
 	private static final String SOURCE_PATH = "D:/TDDownload/DATA/lucene/source/parts/";
 	private static final String TARGET_PATH = "D:/TDDownload/DATA/lucene/index/parts/";
 
-	public static void testCreateIndex() throws Exception {
-		logger.info("testCreateIndex start...");
-		LuceneCreate m = new LuceneCreate(
-			new FieldsMagnt(SOURCE_PATH + "raw.txt"),
-			new IKAnalyzer4PinYin(false), TARGET_PATH);
-		try {
-			addToDoc(m);
-		} finally {
-			m.closeIndex();
-			m = null;
-		}
-		logger.info("testCreateIndex end.");
-	}
+//	public static void testCreateIndex() throws Exception {
+//		logger.info("testCreateIndex start...");
+//		LuceneCreate m = new LuceneCreate(
+//			new FieldsMagnt(SOURCE_PATH + "raw.txt"),
+//			new IKAnalyzer4PinYin(false), TARGET_PATH);
+//		try {
+//			addToDoc(m);
+//		} finally {
+//			m.closeIndex();
+//			m = null;
+//		}
+//		logger.info("testCreateIndex end.");
+//	}
 
-	@SuppressWarnings({ "rawtypes" })
-	public static void searchIt(String keyName) throws Exception {
-		LuceneSearch m = new LuceneSearch(
-				new FieldsMagnt(SOURCE_PATH + "raw.txt"),
-				new IKAnalyzer4PinYin(false), TARGET_PATH);
-		ResultDTO dto = m.search(keyName, 0, 10, "createTime desc");
-		if (dto != null && dto.isSuccess()) {
-//			List<CarGoods> list = JSONHelper.listMapToClazz((List<Map>)dto.getData(), CarGoods.class);
-//			ResultDTO dd = ResultDTO.success(list);
-			logger.info(dto.toString());
-		} else {
-			logger.info(dto.toString());
-		}
-	}
+//	@SuppressWarnings({ "rawtypes" })
+//	public static void searchIt(String keyName) throws Exception {
+//		LuceneSearch m = new LuceneSearch(
+//				new FieldsMagnt(SOURCE_PATH + "raw.txt"),
+//				new IKAnalyzer4PinYin(false), TARGET_PATH);
+//		ResultDTO dto = m.search(keyName, 0, 10, "createTime desc");
+//		if (dto != null && dto.isSuccess()) {
+////			List<CarGoods> list = JSONHelper.listMapToClazz((List<Map>)dto.getData(), CarGoods.class);
+////			ResultDTO dd = ResultDTO.success(list);
+//			logger.info(dto.toString());
+//		} else {
+//			logger.info(dto.toString());
+//		}
+//	}
 	
 //	@SuppressWarnings({ "rawtypes" })
 //	private static void addMergeNameToList(List<Map> listMap, String key, Integer nPageSize, Set<String> set) throws Exception {

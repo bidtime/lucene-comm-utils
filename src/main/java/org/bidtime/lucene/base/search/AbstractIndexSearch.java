@@ -11,7 +11,6 @@ import org.apache.lucene.search.Sort;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.bidtime.dbutils.gson.ResultDTO;
-import org.bidtime.lucene.base.utils.FieldsMagnt;
 import org.bidtime.lucene.utils.LogTimeUtil;
 import org.bidtime.lucene.utils.SearchUtils;
 import org.slf4j.Logger;
@@ -24,24 +23,18 @@ public abstract class AbstractIndexSearch {
 			.getLogger(AbstractIndexSearch.class);
 
 	protected Analyzer analyzer;
+	public Analyzer getAnalyzer() {
+		return analyzer;
+	}
+
 	protected Directory indexDir;
 
 	protected IndexReader reader;
-	protected FieldsMagnt headMagt;
 	
-//	AbstractIndexSearch() throws Exception {
-//		
-//	}
-
-	public AbstractIndexSearch(FieldsMagnt headMagt, Analyzer analyzer, Directory indexDir) throws Exception {
-		setProp(headMagt, analyzer,	indexDir);
-	}
-	
-	protected void setProp(FieldsMagnt headMagt, Analyzer analyzer,
+	protected void setProp(Analyzer analyzer,
 			Directory idxDir) throws Exception {
 		this.indexDir = idxDir;
 		this.analyzer = analyzer;
-		this.headMagt = headMagt;
 		try {
 			this.reader = DirectoryReader.open(indexDir);
 		//} catch (IndexNotFoundException e) {
@@ -50,35 +43,28 @@ public abstract class AbstractIndexSearch {
 		}
 	}
 	
-	protected void setProp(FieldsMagnt headMagt, Analyzer analyzer,
-			String idxPath) throws Exception {
-		setProp(headMagt, analyzer, FSDirectory.open(Paths.get(idxPath)));
+	protected void setProp(Analyzer analyzer, String idxPath) throws Exception {
+		setProp(analyzer, FSDirectory.open(Paths.get(idxPath)));
 	}
 
-	public AbstractIndexSearch(FieldsMagnt headMagt, Analyzer analyzer,
-			String idxPath) throws Exception {
-		setProp(headMagt, analyzer, FSDirectory.open(Paths.get(idxPath)));
+	public AbstractIndexSearch(Analyzer analyzer, String idxPath) throws Exception {
+		setProp(analyzer, FSDirectory.open(Paths.get(idxPath)));
 	}
 
-	public AbstractIndexSearch(String fileSource, String idxPath) throws Exception {
-		setProp(new FieldsMagnt(fileSource), new IKAnalyzer4PinYin(false),
+	public AbstractIndexSearch(Analyzer analyzer, Directory indexDir) throws Exception {
+		setProp(analyzer, indexDir);
+	}
+
+	public AbstractIndexSearch(String idxPath) throws Exception {
+		setProp(new IKAnalyzer4PinYin(false),
 				FSDirectory.open(Paths.get(idxPath)));
 	}
-	
-	public AbstractIndexSearch(FieldsMagnt headMagt, String idxPath) throws Exception {
-		setProp(headMagt, new IKAnalyzer4PinYin(false), idxPath);
-	}
 
-	public AbstractIndexSearch(FieldsMagnt headMagt, Directory indexDir) throws Exception {
-		this(headMagt, new IKAnalyzer4PinYin(false), indexDir);
+	public AbstractIndexSearch(Directory indexDir) throws Exception {
+		this(new IKAnalyzer4PinYin(false), indexDir);
 	}
 	
-	public AbstractIndexSearch(String sourceFile, Directory indexDir) throws Exception {
-		this(new FieldsMagnt(sourceFile),
-				new IKAnalyzer4PinYin(false), indexDir);
-	}
-	
-	protected abstract IndexSearcher getSearch() throws Exception;
+	public abstract IndexSearcher getSearch() throws Exception;
 	
 	protected abstract void closeSearch(IndexSearcher srh) throws Exception;
 
@@ -89,7 +75,7 @@ public abstract class AbstractIndexSearch {
 		if (logger.isDebugEnabled()) {
 			start = System.currentTimeMillis();
 		}
-		Set<String> setDateTime = headMagt.getMapDateTime();
+		Set<String> setDateTime = null;		//headMagt.getMapDateTime();
 		ResultDTO dto = searchIt(words, pageIdx, pageSize, setDateTime, head);
 		if (logger.isDebugEnabled()) {
 			logger.debug(LogTimeUtil.getFmtDiffNowMs("search:" + words + ", span ", start));
@@ -104,7 +90,7 @@ public abstract class AbstractIndexSearch {
 		if (logger.isDebugEnabled()) {
 			start = System.currentTimeMillis();
 		}
-		Set<String> setDateTime = headMagt.getMapDateTime();
+		Set<String> setDateTime = null;	//headMagt.getMapDateTime();
 		ResultDTO dto = searchIt(words, pageIdx, pageSize, sort, setDateTime, head);
 		if (logger.isDebugEnabled()) {
 			logger.debug(LogTimeUtil.getFmtDiffNowMs("search:" + words + ", span ", start));
@@ -119,7 +105,7 @@ public abstract class AbstractIndexSearch {
 		if (logger.isDebugEnabled()) {
 			start = System.currentTimeMillis();
 		}
-		Set<String> setDateTime = headMagt.getMapDateTime();
+		Set<String> setDateTime = null;	//headMagt.getMapDateTime();
 		ResultDTO dto = searchIt(words, pageIdx, pageSize, sort, setDateTime);
 		if (logger.isDebugEnabled()) {
 			logger.debug(LogTimeUtil.getFmtDiffNowMs("search:" + words + ", span ", start));
@@ -130,14 +116,14 @@ public abstract class AbstractIndexSearch {
 	@SuppressWarnings("rawtypes")
 	public ResultDTO search(String words, Integer pageIdx, Integer pageSize,
 			String fldSort, String[] head) throws Exception {
-		Sort sort =headMagt.getSortOfField(fldSort);
+		Sort sort = null;		//=headMagt.getSortOfField(fldSort);
 		return search(words, pageIdx, pageSize, sort, head);
 	}
 
 	@SuppressWarnings("rawtypes")
 	public ResultDTO search(String words, Integer pageIdx, Integer pageSize,
 			String fldSort) throws Exception {
-		Sort sort =headMagt.getSortOfField(fldSort);
+		Sort sort = null;		//=headMagt.getSortOfField(fldSort);
 		return search(words, pageIdx, pageSize, sort);
 	}
 
@@ -148,7 +134,7 @@ public abstract class AbstractIndexSearch {
 		if (logger.isDebugEnabled()) {
 			start = System.currentTimeMillis();
 		}
-		Set<String> setDateTime = headMagt.getMapDateTime();
+		Set<String> setDateTime = null;		//headMagt.getMapDateTime();
 		ResultDTO dto = searchIt(words, pageIdx, pageSize, setDateTime);
 		if (logger.isDebugEnabled()) {
 			logger.debug(LogTimeUtil.getFmtDiffNowMs("search:" + words + ", span ", start));
@@ -163,8 +149,8 @@ public abstract class AbstractIndexSearch {
 		if (logger.isDebugEnabled()) {
 			start = System.currentTimeMillis();
 		}
-		Sort sort = headMagt.getSortOfField(sortFld, reverse);
-		Set<String> setDateTime = headMagt.getMapDateTime();
+		Sort sort = null;		//headMagt.getSortOfField(sortFld, reverse);
+		Set<String> setDateTime = null;		//headMagt.getMapDateTime();
 		ResultDTO dto = searchIt(words, pageIdx, pageSize, sort, setDateTime);
 		if (logger.isDebugEnabled()) {
 			logger.debug(LogTimeUtil.getFmtDiffNowMs("search:" + words + ", span ", start));
@@ -246,71 +232,5 @@ public abstract class AbstractIndexSearch {
 			}
 		}
 	}
-
-//	@SuppressWarnings("rawtypes")
-//	public ResultDTO search(String words, Integer pageSize) throws Exception {
-//		return search(words, 0, pageSize);
-//	}
-//
-//	@SuppressWarnings("rawtypes")
-//	public ResultDTO searchTerm(String field, String words, Integer pageSize)
-//			throws Exception {
-//		return SearchUtils.searchTerm(searcher, analyzer, field, words, null,
-//				pageSize);
-//	}
-//
-//	@SuppressWarnings("rawtypes")
-//	public ResultDTO searchTerm(String field, String words, String[] head,
-//			Integer pageSize) throws Exception {
-//		return SearchUtils.searchTerm(searcher, analyzer, field, words, head,
-//				pageSize);
-//	}
-//
-//	@SuppressWarnings("rawtypes")
-//	public ResultDTO search(Query query, String words, Integer pageSize)
-//			throws Exception {
-//		return SearchUtils.search(searcher, query, words, pageSize);
-//	}
-//
-//	@SuppressWarnings("rawtypes")
-//	public ResultDTO search(Query query, String words, String[] head,
-//			Integer pageSize) throws Exception {
-//		return SearchUtils.search(searcher, query, words, head, pageSize);
-//	}
-//
-//	@SuppressWarnings("rawtypes")
-//	public ResultDTO search(String words, Integer pageSize) throws Exception {
-//		return SearchUtils.search(searcher, analyzer, words, pageSize);
-//	}
-//
-//	@SuppressWarnings("rawtypes")
-//	public ResultDTO search(String field, String words, Integer pageSize)
-//			throws Exception {
-//		return SearchUtils.search(searcher, analyzer, field, words, pageSize);
-//	}
-//
-//	@SuppressWarnings("rawtypes")
-//	public ResultDTO search(String field, String words, String[] head,
-//			Integer pageSize) throws Exception {
-//		return SearchUtils.search(searcher, analyzer, field, words, head,
-//				pageSize);
-//	}
-//
-//	@SuppressWarnings({ "deprecation", "rawtypes" })
-//	public ResultDTO searchPY(String words, String[] fields, String[] head,
-//			Integer pageSize) throws Exception {
-//		// 使用QueryParser查询分析器构造Query对象
-//		BooleanQuery fieldBoolQuery = new BooleanQuery();
-//		for (int i = 0; i < fields.length; i++) {
-//			QueryParser qp = new QueryParser(Version.LUCENE_CURRENT, fields[i],
-//					analyzer);
-//			Query queryWords = qp.parse(words);
-//			fieldBoolQuery.add(queryWords, BooleanClause.Occur.SHOULD);
-//		}
-//		BooleanQuery innerBoolQuery = new BooleanQuery();
-//		innerBoolQuery.add(fieldBoolQuery, BooleanClause.Occur.MUST);
-//		//
-//		return search(innerBoolQuery, words, head, pageSize);
-//	}
 
 }

@@ -24,7 +24,7 @@
  *
  */
 
-package demo;
+package org.bidtime.lucene.index;
 
 import java.io.IOException;
 import java.util.HashMap;
