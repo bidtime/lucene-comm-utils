@@ -7,6 +7,7 @@ import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.index.Term;
 import org.bidtime.dbutils.gson.PropAdapt;
+import org.bidtime.lucene.ldbc.rs.handler.LuceneSetHandler;
 import org.bidtime.lucene.ldbc.sql.xml.JsonFieldXmlsLoader;
 import org.bidtime.lucene.ldbc.sql.xml.parser.TTableProps;
 import org.bidtime.lucene.utils.LogTimeUtil;
@@ -165,6 +166,13 @@ public class SqlLoadUtils {
 		if (logger.isDebugEnabled()) {
 			logger.debug(LogTimeUtil.getFmtDiffNowMs("update:" + map + ", span ", start));
 		}
+	}
+	
+	// query
+	@SuppressWarnings("rawtypes")
+	public static <T> T query(Class clazz, String words, Integer nPageIdx, Integer nPageSize,
+			LuceneSetHandler<T> rsh) throws Exception {
+		return DbConnection.query(words, nPageIdx, nPageSize, rsh);
 	}
 	
 }

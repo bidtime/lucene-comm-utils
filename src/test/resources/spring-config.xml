@@ -13,9 +13,9 @@
 		ignore-unresolvable="true"/>
 	-->
 	   
-    <bean id="jsonFieldXmlsLoader" class="org.bidtime.lucene.utils.sql.xml.JsonFieldXmlsLoader"
+    <bean id="jsonFieldXmlsLoader" class="org.bidtime.lucene.ldbc.sql.xml.JsonFieldXmlsLoader"
           init-method="init" lazy-init="false">
-        <property name="packageRoot" value="org.demo"/>
+        <property name="packageRoot" value="org.bidtime.lucene.duty"/>
         <property name="extName" value=".xml"/>
         <property name="recursive" value="true"/>
     </bean>

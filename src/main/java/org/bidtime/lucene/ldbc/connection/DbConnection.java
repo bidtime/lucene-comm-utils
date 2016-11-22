@@ -7,8 +7,8 @@ import org.apache.lucene.index.Term;
 import org.bidtime.lucene.base.create.LuceneCreate;
 import org.bidtime.lucene.base.search.AbstractIndexSearch;
 import org.bidtime.lucene.ldbc.connection.log.LogSelectSql;
-import org.bidtime.lucene.ldbc.rs.LuceneSetHandler;
 import org.bidtime.lucene.ldbc.rs.QueryRunnerEx;
+import org.bidtime.lucene.ldbc.rs.handler.LuceneSetHandler;
 import org.bidtime.lucene.ldbc.sql.xml.JsonFieldXmlsLoader;
 import org.bidtime.lucene.ldbc.sql.xml.parser.EnumWord;
 

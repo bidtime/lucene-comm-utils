@@ -1,4 +1,4 @@
-package org.bidtime.lucene.ldbc.rs;
+package org.bidtime.lucene.ldbc.rs.handler;
 
 import java.sql.SQLException;
 

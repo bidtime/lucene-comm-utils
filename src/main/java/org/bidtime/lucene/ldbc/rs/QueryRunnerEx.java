@@ -26,6 +26,7 @@ import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.Sort;
 import org.apache.lucene.search.TopDocs;
+import org.bidtime.lucene.ldbc.rs.handler.LuceneSetHandler;
 
 /**
  * @author jss

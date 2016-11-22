@@ -3,6 +3,7 @@ package org.bidtime.lucene.ldbc.dao;
 import java.util.Map;
 
 import org.bidtime.lucene.ldbc.connection.SqlLoadUtils;
+import org.bidtime.lucene.ldbc.rs.handler.LuceneSetHandler;
 
 
 /**
@@ -39,4 +40,9 @@ public class LuceneDAO {
 		SqlLoadUtils.update(this.getClass(), map);
 	}
 	
+	// query
+	public <T> T query(String words, Integer nPageIdx, Integer nPageSize,
+			LuceneSetHandler<T> rsh) throws Exception {
+		return SqlLoadUtils.query(this.getClass(), words, nPageIdx, nPageSize, rsh);		
+	}
 }

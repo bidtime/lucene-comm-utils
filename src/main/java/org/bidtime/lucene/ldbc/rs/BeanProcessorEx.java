@@ -26,6 +26,7 @@ import java.lang.reflect.Method;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,6 +34,7 @@ import java.util.Map;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexableField;
 import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
 import org.bidtime.utils.comm.CaseInsensitiveHashMap;
 
@@ -141,14 +143,23 @@ public class BeanProcessorEx implements Serializable {
     }
 
 	public <T> T toBean(IndexSearcher search, TopDocs rs, Class<T> type, Map<String, String> mapBeanProps) throws Exception {
-        if (rs.totalHits == 0) {
-            return null;
-        }
+//		PropertyDescriptor[] props = this.propertyDescriptors(type);
+//		List<IndexableField> rsmd = null;//rs.getFields();
+//		int[] columnToProperty = null;	//this.mapColumnsToProperties(rsmd, props, mapBeanProps);
+//        //
+//       	Document doc = search.doc(rs.scoreDocs[0].doc);
+//       	rsmd = doc.getFields();
+//       	columnToProperty = this.mapColumnsToProperties(rsmd, props, mapBeanProps);
+//       	return this.createBean(rsmd, type, props, columnToProperty);
+       	return this.toBean(search, rs.scoreDocs[0], type, mapBeanProps);
+    }
+
+	public <T> T toBean(IndexSearcher search, ScoreDoc tp, Class<T> type, Map<String, String> mapBeanProps) throws Exception {
 		PropertyDescriptor[] props = this.propertyDescriptors(type);
 		List<IndexableField> rsmd = null;//rs.getFields();
 		int[] columnToProperty = null;	//this.mapColumnsToProperties(rsmd, props, mapBeanProps);
-        
-       	Document doc = search.doc(rs.scoreDocs[0].doc);
+        //
+       	Document doc = search.doc(tp.doc);
        	rsmd = doc.getFields();
        	columnToProperty = this.mapColumnsToProperties(rsmd, props, mapBeanProps);
        	return this.createBean(rsmd, type, props, columnToProperty);
@@ -192,9 +203,6 @@ public class BeanProcessorEx implements Serializable {
     }
 
 	public <T> List<T> toBeanList(IndexSearcher search, TopDocs rs, Class<T> type, Map<String,String> mapBeanProps) throws Exception {
-        if (rs.totalHits == 0) {
-            return null;
-        }
 		List<T> results = new ArrayList<T>();
 		PropertyDescriptor[] props = this.propertyDescriptors(type);
 		List<IndexableField> rsmd = null;//rs.getFields();
@@ -209,6 +217,23 @@ public class BeanProcessorEx implements Serializable {
         	results.add(this.createBean(rsmd, type, props, columnToProperty));
         }
         return results;
+    }
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public void searchToList(IndexSearcher search, TopDocs rs, Class type,
+			Map<String,String> mapBeanProps, Collection results) throws Exception {
+		PropertyDescriptor[] props = this.propertyDescriptors(type);
+		List<IndexableField> rsmd = null;//rs.getFields();
+		int[] columnToProperty = null;	//this.mapColumnsToProperties(rsmd, props, mapBeanProps);
+        
+        for (int i = 0; i < rs.scoreDocs.length; i++) {
+        	Document doc = search.doc(rs.scoreDocs[i].doc);
+        	if (i == 0) {
+        		rsmd = doc.getFields();
+        		columnToProperty = this.mapColumnsToProperties(rsmd, props, mapBeanProps);
+        	}
+        	results.add(this.createBean(rsmd, type, props, columnToProperty));
+        }
     }
 
     /**
