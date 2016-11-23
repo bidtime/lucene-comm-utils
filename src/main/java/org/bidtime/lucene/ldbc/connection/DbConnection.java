@@ -85,13 +85,13 @@ public class DbConnection {
 //	}
 	
 	protected static LuceneCreate getIndexWriter(Map<String, EnumWord> mapEnumWord) throws Exception {
-		LuceneCreate idx = (LuceneCreate)JsonFieldXmlsLoader.getBean("luceneCreateTx");
+		LuceneCreate idx = (LuceneCreate)JsonFieldXmlsLoader.getBean("luceneCreate");
 		idx.initConfig(mapEnumWord);
 		return idx;
 	}
 	
 	protected static AbstractIndexSearch getIndexReader() throws Exception {
-		AbstractIndexSearch idx = (AbstractIndexSearch)JsonFieldXmlsLoader.getBean("luceneReaderTx");
+		AbstractIndexSearch idx = (AbstractIndexSearch)JsonFieldXmlsLoader.getBean("luceneSearch");
 		return idx;
 	}
 	

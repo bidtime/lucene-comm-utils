@@ -7,13 +7,11 @@ public enum EnumWord {
 	
 	HANZI("hanzi", 0), PINYIN("pinyin", 1), SHOUZIMU("shouzimu", 2);
 
-	// 构造方法
 	private EnumWord(String name, Integer idx) {
 		this.name = name;
 		this.idx = idx.shortValue();
 	}
 	
-	// 普通方法
 	public static String getName(Integer idx) {
 		if (idx == null) {
 			return null;
@@ -77,7 +75,6 @@ public enum EnumWord {
 		}
 	}
 	
-	// 普通方法
 	public static boolean exists(String name) {
 		if (name == null) {
 			return false;

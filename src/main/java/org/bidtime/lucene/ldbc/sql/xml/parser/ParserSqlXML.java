@@ -1,6 +1,5 @@
 package org.bidtime.lucene.ldbc.sql.xml.parser;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
@@ -24,10 +23,14 @@ public class ParserSqlXML {
 	public ParserSqlXML() {
 	}
 	
-	private static void elementToColumnPro(Element e, ColumnPro p) {
+	private static void elementToColumnPro(Element e, ColumnPro p) throws Exception {
 		p.setName(ElementUtils.getValue(e, "name", String.class));
 		p.setColumn(ElementUtils.getValue(e, "column", String.class));
-		p.setDataType(ElementUtils.getValue(e, "type", String.class));
+		String dataType = ElementUtils.getValue(e, "type", String.class);
+		p.setDataType(dataType);
+		if (p.getDataType()==null) {
+			throw new Exception("data type is null.");
+		}
 		p.setLength(ElementUtils.getValue(e, "length", Integer.class));
 		p.setGenerator(ElementUtils.getValue(e, "generator", String.class));
 		//
@@ -56,7 +59,7 @@ public class ParserSqlXML {
 	}
 
 	@SuppressWarnings("rawtypes")
-	private static void visitClassElementChild(Element pElement, TTableProps tp) {
+	private static void visitClassElementChild(Element pElement, TTableProps tp) throws Exception {
 		List<String> listPkField = new ArrayList<>();
 		for (Iterator iter1 = pElement.elementIterator(); iter1.hasNext();) {
 			Element e = (Element) iter1.next();
@@ -73,31 +76,6 @@ public class ParserSqlXML {
 		}
 		tp.setFieldPK((String[])listPkField.toArray(new String[listPkField.size()]));
 	}
-	
-//	private static final Pattern SQL_STANDARD_PATN = Pattern.compile(
-//			"^*(insert|delete|update|if exists|select|call)\\s", Pattern.CASE_INSENSITIVE);
-//
-//	private static boolean isExistsSql(String sql) {
-//		Matcher matcher = SQL_STANDARD_PATN.matcher(sql);
-//		return matcher.find();
-//	}
-//	
-//	private static final Pattern COMMA_CHAR_PATN = Pattern.compile(
-//			",", Pattern.CASE_INSENSITIVE);
-//
-//	private static boolean isExistsComma(String s) {
-//		Matcher matcher = COMMA_CHAR_PATN.matcher(s);
-//		return matcher.find();
-//	}
-	
-//	public static void main(String[] args) {
-//		//String sSql = "\\n\\t  \\t\\n\\t  \\t\\tselect \\n\\t  \\t\\t\\tca.ActID,\\n\\t  \\t\\t\\tca.ActSmallID,\\n\\t  \\t\\t\\tst.ActSmallName,\\n\\t  \\t\\t\\tca.ActName,\\n\\t  \\t\\t\\tca.ActContent,\\n\\t  \\t\\t\\tca.ShopID,\\n\\t  \\t\\t\\tca.ShopName,\\n\\t  \\t\\t\\tca.Longitude,\\n\\t\\t\\t\\tca.Latitude,\\n\\t\\t\\t\\tca.SubmitMan,\\n\\t\\t\\t\\tca.SubmitDate,\\n\\t\\t\\t\\tca.Auditor,\\n\\t\\t\\t\\tca.AuditDate,\\n\\t\\t\\t\\tca.CancelDate,\\n\\t\\t\\t\\tca.CancelMan,\\n\\t\\t\\t\\tca.Status,\\n\\t\\t\\t\\t(case \\n\\t\\t             when ca.Status =0 then\\n\\t\\t             '未审'\\n\\t\\t             when ca.Status = 1 then\\n\\t\\t             '已审'\\n\\t\\t             when ca.Status = 2 then\\n\\t\\t             '取消'\\n\\t\\t             when ca.Status = 3 then\\n\\t\\t             '完成'\\n\\t\\t         end) staName,\\n\\t\\t\\t\\tca.ActBeginDate,\\n\\t\\t\\t\\tca.ActEndDate,\\n\\t\\t\\t\\tca.RptBeginDate,\\n\\t\\t\\t\\tca.RptEndDate,\\n\\t\\t\\t\\tca.IndexURL,\\n\\t\\t\\t\\tca.ItemType,\\n\\t\\t\\t\\tca.ItemPath,\\n\\t\\t\\t\\tca.OldPriceDes,\\n\\t\\t\\t\\tca.PriceDes,\\n\\t\\t\\t\\tca.OffDes,\\n\\t\\t\\t\\tca.ImageURL,\\n\\t\\t\\t\\tca.Type,\\n\\t\\t\\t\\t(case \\n\\t\\t             when ca.Type =0 then\\n\\t\\t             '报名'\\n\\t\\t             when ca.Type = 1 then\\n\\t\\t             '购买'\\n\\t\\t         end) typeName,\\n\\t\\t         ca.Price\\n\\t\\t\\tfrom crm_activity ca\\n\\t\\t\\tleft join crm_actsmalltype st on st.ActSmallID=ca.ActSmallID\\n\\t\\t\\t<<where ca.Status=#Status#>>\\n\\t\\t\\t<<and ca.ActName like #name#>>\\n\\t\\t\\t<<and ca.ActId =#id#>>\\n\\t\\t\\t<<and ca.ShopId = #shopId#>>\\n\\t\\t\\t<<and ca.ShopId in (select suser.ShopId from crm_shop_user suser where suser.CustomerID=#customerID#)>>\\n\\t\\t\\t<<and ca.SubmitDate between #dtOrderStart# and #dtOrderEnd#>>\\n\\t\\t\\t\\n\\t\\t\\torder by ca.SubmitDate desc\\n\\t  \\t\\n\\t\\t";
-//		String sSql = "\n\t  \t\n\t  \t\tinsert into t_user_oper_log (UserID,UserName,funCode,funOperCode,tmCreate,EnablePower,UserIP,ShopID) values (?,?,?,?,Now(),?,?,?)\n\t  \t\n\t\t";
-//		boolean b = isExistsSql(sSql);
-//		System.out.println(b);
-//		b = isExistsComma(sSql);
-//		System.out.println(b);
-//	}
 	
 	@SuppressWarnings({ "rawtypes" })
 	private static void visitSqlIdCol(Element pele, SqlHeadCountPro p) {
@@ -151,14 +129,7 @@ public class ParserSqlXML {
 	}
 
 	@SuppressWarnings("rawtypes")
-	public static TTableProps parserTable(Class cls, String path)
-			throws DocumentException, IOException {
-		return parserTables(cls, path);
-	}
-
-	@SuppressWarnings({ "rawtypes" })
-	public static TTableProps parserTables(Class cls, String path)
-			throws DocumentException, IOException {
+	public static TTableProps parserTable(Class cls, String path) throws Exception {
 		SAXReader saxReader = new SAXReader();
 		URL url = Thread.currentThread().getContextClassLoader()
 				.getResource(path);
@@ -197,7 +168,7 @@ public class ParserSqlXML {
 				if (is != null) {
 					is.close();
 				}
-			} catch (IOException e) {
+			} catch (Exception e) {
 				logger.error("parserTables->" + path + ":", e);
 			}				
 		}

@@ -24,9 +24,9 @@ public class LuceneDAO {
 		this.dsName = dsName;
 	}
 
-//	public int update(Object o) throws Exception {
-//		return SqlLoadUtils.update(this.getClass(),	o);
-//	}
+	public void insert(Object o) throws Exception {
+		SqlLoadUtils.insert(this.getClass(), o);
+	}
 
 	public void insert(Map<String, Object> map) throws Exception {
 		SqlLoadUtils.insert(this.getClass(), map);
@@ -39,10 +39,15 @@ public class LuceneDAO {
 	public void update(Map<String, Object> map) throws Exception {
 		SqlLoadUtils.update(this.getClass(), map);
 	}
+
+	public void update(Object o) throws Exception {
+		SqlLoadUtils.update(this.getClass(),	o);
+	}
 	
 	// query
 	public <T> T query(String words, Integer nPageIdx, Integer nPageSize,
 			LuceneSetHandler<T> rsh) throws Exception {
 		return SqlLoadUtils.query(this.getClass(), words, nPageIdx, nPageSize, rsh);		
 	}
+	
 }

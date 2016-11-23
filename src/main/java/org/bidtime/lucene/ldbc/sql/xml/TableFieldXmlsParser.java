@@ -12,7 +12,6 @@ import java.util.Map;
 import org.bidtime.lucene.ldbc.sql.xml.parser.ParserSqlXML;
 import org.bidtime.lucene.ldbc.sql.xml.parser.TTableProps;
 import org.bidtime.utils.basic.PackageUtils;
-import org.dom4j.DocumentException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -142,8 +141,7 @@ public class TableFieldXmlsParser implements ApplicationContextAware {
 	 *             if the ClassLoader can't find a file at the given path.
 	 * @return Map of query names to SQL values
 	 */
-	public synchronized TTableProps load(String path)
-			throws IOException {
+	public synchronized TTableProps load(String path) throws Exception {
 		return load(path, path);
 	}
 	
@@ -170,8 +168,7 @@ public class TableFieldXmlsParser implements ApplicationContextAware {
 	 * 替换成com.eb.business.User
 	 * 以方便类中取此sql
 	 */
-	protected TTableProps loadClass(String path)
-			throws IOException {
+	protected TTableProps loadClass(String path) throws Exception {
 		String sPackCom = null;
 		char c = path.charAt(0);
 		if (c=='/') {
@@ -188,7 +185,7 @@ public class TableFieldXmlsParser implements ApplicationContextAware {
 	}
 
 	private TTableProps load(String sKey, String path)
-			throws IOException {
+			throws Exception {
 		TTableProps queryMap = this.loadMapOfPath(path);
 		this.queries.put(sKey, queryMap);
 		return queryMap;
@@ -207,14 +204,14 @@ public class TableFieldXmlsParser implements ApplicationContextAware {
 	 * @since DbUtils 1.1
 	 * @return Map of query names to SQL values
 	 */
-	protected TTableProps loadMapOfPath(String path) throws IOException {
+	protected TTableProps loadMapOfPath(String path) throws Exception {
 		// Findbugs flags getClass().getResource as a bad practice; maybe we
 		// should change the API?
 		// Copy to HashMap for better performance
 		TTableProps tp = null;
 		try {
 			tp = ParserSqlXML.parserTable(this.getClass(), path);
-		} catch (DocumentException e) {
+		} catch (Exception e) {
 			logger.error("loadMapOfPath:" + path, e);
 		}
 		return tp;

@@ -15,11 +15,27 @@
 	   
     <bean id="jsonFieldXmlsLoader" class="org.bidtime.lucene.ldbc.sql.xml.JsonFieldXmlsLoader"
           init-method="init" lazy-init="false">
-        <property name="packageRoot" value="org.bidtime.lucene.duty"/>
+        <property name="packageRoot" value="org.bidtime.lucene"/>
         <property name="extName" value=".xml"/>
         <property name="recursive" value="true"/>
     </bean>
 
-	<context:component-scan base-package="org.bidtime.basicdata" />
+	<context:component-scan base-package="org.bidtime" />
 
+    <bean id="luceneAnalyzer" class="org.wltea4pinyin.analyzer.lucene.IKAnalyzer4PinYin">
+        <constructor-arg index="0" value="true"/>
+    </bean>
+    
+    <bean id="luceneCreate" class="org.bidtime.lucene.base.create.LuceneCreate">
+        <constructor-arg type="org.apache.lucene.analysis.Analyzer" ref="luceneAnalyzer"/>
+        <constructor-arg type="java.lang.String" value="D:/data/lucene/index/cargoods/"/>
+    </bean>
+    
+    <!--
+    <bean id="luceneSearch" class="org.bidtime.lucene.base.search.LuceneSearch">
+        <constructor-arg type="org.apache.lucene.analysis.Analyzer" ref="luceneAnalyzer"/>
+        <constructor-arg type="java.lang.String" value="D:/data/lucene/index/cargoods/"/>
+    </bean>
+    -->
+    
 </beans>
