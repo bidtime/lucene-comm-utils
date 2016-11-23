@@ -1,15 +1,15 @@
 /**
- * IK 中文分词 版本 5.0
+ * IK 中文分词  版本 5.0
  * IK Analyzer release 5.0
- *
+ * 
  * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements. See the NOTICE file distributed with
+ * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
+ * the License.  You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -20,10 +20,9 @@
  * 源代码由林良益(linliangyi2005@gmail.com)提供
  * 版权声明 2012，乌龙茶工作室
  * provided by Linliangyi and copyright 2012 by Oolong studio
- *
- *
+ * 
+ * 
  */
-
 package org.bidtime.lucene.index;
 
 import java.io.IOException;
@@ -55,95 +54,100 @@ import org.apache.lucene.store.LockObtainFailedException;
 import org.apache.lucene.store.RAMDirectory;
 import org.wltea4pinyin.analyzer.lucene.IKAnalyzer4PinYin;
 
+
+
+
 /**
- * 使用IKAnalyzer进行Lucene索引和查询的演示 2012-3-2
+ * 使用IKAnalyzer进行Lucene索引和查询的演示
+ * 2012-3-2
  * 
  * 以下是结合Lucene4.0 API的写法
- * 
+ *
  */
 public class LuceneIndexAndSearchDemo {
-
+	
+	
 	/**
-	 * 模拟： 创建一个单条记录的索引，并对其进行搜索
-	 * 
+	 * 模拟：
+	 * 创建一个单条记录的索引，并对其进行搜索
 	 * @param args
 	 */
-	@SuppressWarnings("deprecation")
-	public static void main(String[] args) {
-		// Lucene Document的域名
-		String fieldName = "hanzi";
-		String quanpin = "pinyin";
-		String shouzimu = "shouzimu";
-		// 检索内容
-		//String text = "IK Analyzer是一个结合词典分词和文法分词的中文分词开源工具包。它使用了全新的正向迭代最细粒度切分算法。";
-		String text = "大灯";
-		// 实例化IKAnalyzer分词器
-		// 使用PerFieldAnalyzerWrapper可以对不同的field使用不同的分词器
-		Map<String, Analyzer> analyzerMap = new HashMap<String, Analyzer>();
-		analyzerMap.put(quanpin, new IKAnalyzer4PinYin(false,
-				IKAnalyzer4PinYin.PINYIN));
-		analyzerMap.put(shouzimu, new IKAnalyzer4PinYin(false,
-				IKAnalyzer4PinYin.PINYIN_SHOUZIMU));
-		PerFieldAnalyzerWrapper wrapper = new PerFieldAnalyzerWrapper(
-				new IKAnalyzer4PinYin(false), analyzerMap);
-
+	public static void main(String[] args){
+		//Lucene Document的域名
+        String fieldName = "hanzi";
+        String quanpin = "pinyin";
+        String shouzimu = "shouzimu";
+		 //检索内容
+		String text = "IK Analyzer是一个结合词典分词和文法分词的中文分词开源工具包。它使用了全新的正向迭代最细粒度切分算法。";
+		
+		//实例化IKAnalyzer分词器
+        //使用PerFieldAnalyzerWrapper可以对不同的field使用不同的分词器
+        Map<String, Analyzer> analyzerMap = new HashMap<String, Analyzer>();
+        analyzerMap.put(quanpin, new IKAnalyzer4PinYin(false, IKAnalyzer4PinYin.PINYIN));
+        analyzerMap.put(shouzimu, new IKAnalyzer4PinYin(false, IKAnalyzer4PinYin.PINYIN_SHOUZIMU));
+        PerFieldAnalyzerWrapper wrapper = new PerFieldAnalyzerWrapper(new IKAnalyzer4PinYin(false), analyzerMap);
+        
 		Directory directory = null;
 		IndexWriter iwriter = null;
 		IndexReader ireader = null;
 		IndexSearcher isearcher = null;
 		try {
-			// 建立内存索引对象
-			directory = new RAMDirectory();
-
-			// 配置IndexWriterConfig
+			//建立内存索引对象
+			directory = new RAMDirectory();	 
+			
+			//配置IndexWriterConfig
 			IndexWriterConfig iwConfig = new IndexWriterConfig(wrapper);
 			iwConfig.setOpenMode(OpenMode.CREATE_OR_APPEND);
-			iwriter = new IndexWriter(directory, iwConfig);
-			// 写入索引
+			iwriter = new IndexWriter(directory , iwConfig);
+			//写入索引
 			Document doc = new Document();
 			doc.add(new StringField("ID", "10000", Field.Store.YES));
-			doc.add(new TextField(fieldName, text, Field.Store.YES));
-			doc.add(new TextField(quanpin, text, Field.Store.YES));
-			doc.add(new TextField(shouzimu, text, Field.Store.YES));
+            doc.add(new TextField(fieldName,text, Field.Store.YES));
+            doc.add(new TextField(quanpin,  text, Field.Store.YES));
+            doc.add(new TextField(shouzimu, text, Field.Store.YES));
 
+            
 			iwriter.addDocument(doc);
 			iwriter.close();
-
-			// 搜索过程**********************************
-			// 实例化搜索器
+			
+			
+			//搜索过程**********************************
+		    //实例化搜索器   
 			ireader = DirectoryReader.open(directory);
-			isearcher = new IndexSearcher(ireader);
-
-			String keyword = "d";
-			// 使用QueryParser查询分析器构造Query对象
+			isearcher = new IndexSearcher(ireader);			
+			
+			
+			String keyword = "工具";			
+			//使用QueryParser查询分析器构造Query对象
 			Analyzer analyzer = new IKAnalyzer4PinYin(true);
-			QueryParser qp = new QueryParser(fieldName, analyzer);
-			QueryParser qpQuanpin = new QueryParser(quanpin, analyzer);
-			QueryParser qpShouzimu = new QueryParser(shouzimu, analyzer);
+            QueryParser qp = new QueryParser(fieldName,  analyzer);
+            QueryParser qpQuanpin = new QueryParser(quanpin,  analyzer);
+            QueryParser qpShouzimu = new QueryParser(shouzimu,  analyzer);
+          
+            Query query = qp.parse(keyword);
+            Query queryQuanpin = qpQuanpin.parse(keyword);
+            Query queryShouzimu = qpShouzimu.parse(keyword);
+//            
+            BooleanQuery bq=new BooleanQuery();
+            BooleanQuery innerbq=new BooleanQuery();
+//            
+            bq.add(query, BooleanClause.Occur.SHOULD);
+            bq.add(queryQuanpin, BooleanClause.Occur.SHOULD);
+            bq.add(queryShouzimu, BooleanClause.Occur.SHOULD);
+            innerbq.add(bq, BooleanClause.Occur.MUST);
+            
+//			System.out.println("innerbq = " + innerbq);
 
-			Query query = qp.parse(keyword);
-			Query queryQuanpin = qpQuanpin.parse(keyword);
-			Query queryShouzimu = qpShouzimu.parse(keyword);
-			//
-			BooleanQuery bq = new BooleanQuery();
-			BooleanQuery innerbq = new BooleanQuery();
-			//
-			bq.add(query, BooleanClause.Occur.SHOULD);
-			bq.add(queryQuanpin, BooleanClause.Occur.SHOULD);
-			bq.add(queryShouzimu, BooleanClause.Occur.SHOULD);
-			innerbq.add(bq, BooleanClause.Occur.MUST);
-
-			// System.out.println("innerbq = " + innerbq);
-
-			// 搜索相似度最高的5条记录
+			//搜索相似度最高的5条记录
 			TopDocs topDocs = isearcher.search(innerbq, 5);
 			System.out.println("命中：" + topDocs.totalHits);
-			// 输出结果
+			//输出结果
 			ScoreDoc[] scoreDocs = topDocs.scoreDocs;
-			for (int i = 0; i < topDocs.totalHits; i++) {
+			for (int i = 0; i < topDocs.totalHits; i++){
 				Document targetDoc = isearcher.doc(scoreDocs[i].doc);
 				System.out.println("内容：" + targetDoc.toString());
-			}
+			}			
+			
 		} catch (CorruptIndexException e) {
 			e.printStackTrace();
 		} catch (LockObtainFailedException e) {
@@ -152,15 +156,15 @@ public class LuceneIndexAndSearchDemo {
 			e.printStackTrace();
 		} catch (ParseException e) {
 			e.printStackTrace();
-		} finally {
-			if (ireader != null) {
+		} finally{
+			if(ireader != null){
 				try {
 					ireader.close();
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
 			}
-			if (directory != null) {
+			if(directory != null){
 				try {
 					directory.close();
 				} catch (IOException e) {

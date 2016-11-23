@@ -10,13 +10,13 @@ import java.util.Map.Entry;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.miscellaneous.PerFieldAnalyzerWrapper;
 import org.apache.lucene.document.Document;
-import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.IndexWriterConfig.OpenMode;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
+import org.apache.lucene.store.RAMDirectory;
 import org.bidtime.lucene.ldbc.sql.xml.parser.EnumWord;
 import org.bidtime.lucene.utils.LogTimeUtil;
 import org.slf4j.Logger;
@@ -66,11 +66,14 @@ public class LuceneCreate {
 //			Directory dir, Boolean openMode) throws Exception {
 //		setProp(analyzer, dir, openMode);
 //	}
-//
-//	public LuceneCreate(Analyzer analyzer, 
-//			Directory dir) throws Exception {
-//		this(analyzer, dir, false);
-//	}
+
+	public LuceneCreate(Analyzer analyzer) throws Exception {
+		setProp(analyzer, new RAMDirectory(), false);
+	}
+
+	public LuceneCreate(Analyzer analyzer, Directory dir) throws Exception {
+		setProp(analyzer, dir, false);
+	}
 	
 	protected void setProp(Analyzer analyzer, 
 			Directory dir, Boolean openMode) throws Exception {
@@ -130,7 +133,7 @@ public class LuceneCreate {
 		//iwConfig.setMaxBufferedDocs(-1);
 		indexWriter = new IndexWriter(dir, iwConfig);
 		//init index dir
-		DirectoryReader.open(dir);
+		//DirectoryReader.open(dir);
 	}
 
 	public void insert(Document doc) throws Exception {

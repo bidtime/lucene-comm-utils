@@ -1,9 +1,9 @@
-package org.bidtime.lucene.duty;
+package org.bidtime.lucene.duty.bean;
 
 import java.io.Serializable;
 
 @SuppressWarnings("serial")
-public class DutyBean implements Serializable {
+public class Duty implements Serializable {
 	private Integer id;
 	private String name;
 	public Integer getId() {

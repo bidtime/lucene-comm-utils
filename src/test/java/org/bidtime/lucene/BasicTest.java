@@ -10,7 +10,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "classpath:spring-config.xml",
-		"classpath:spring-dataSource.xml"
+		"classpath:spring-dataSource.xml",
+		"classpath:IKAnalyzer.cfg.xml"
 	})
 
 @Ignore
@@ -31,7 +32,7 @@ public class BasicTest {
 //		return page;
 //	}
 	
-	public void pring(Object o) {
+	public void print(Object o) {
 		if (o != null) {
 			System.out.println("result: " + o);
 		} else {
