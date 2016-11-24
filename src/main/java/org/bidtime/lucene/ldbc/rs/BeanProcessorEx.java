@@ -139,27 +139,23 @@ public class BeanProcessorEx implements Serializable {
      * @return the newly created bean
      */
     public <T> T toBean(IndexSearcher search, TopDocs rs, Class<T> type) throws Exception {
-        return toBean(search, rs, type, columnToPropertyOverrides);
+        return toBean(search, rs.scoreDocs[0], type, columnToPropertyOverrides);
     }
 
 	public <T> T toBean(IndexSearcher search, TopDocs rs, Class<T> type, Map<String, String> mapBeanProps) throws Exception {
-//		PropertyDescriptor[] props = this.propertyDescriptors(type);
-//		List<IndexableField> rsmd = null;//rs.getFields();
-//		int[] columnToProperty = null;	//this.mapColumnsToProperties(rsmd, props, mapBeanProps);
-//        //
-//       	Document doc = search.doc(rs.scoreDocs[0].doc);
-//       	rsmd = doc.getFields();
-//       	columnToProperty = this.mapColumnsToProperties(rsmd, props, mapBeanProps);
-//       	return this.createBean(rsmd, type, props, columnToProperty);
        	return this.toBean(search, rs.scoreDocs[0], type, mapBeanProps);
     }
 
-	public <T> T toBean(IndexSearcher search, ScoreDoc tp, Class<T> type, Map<String, String> mapBeanProps) throws Exception {
+//	public <T> T toBean(IndexSearcher search, ScoreDoc scoreDoc, Class<T> type, Map<String, String> mapBeanProps) throws Exception {
+//       	return this.toBean(search, scoreDoc, type, mapBeanProps);
+//    }
+
+	public <T> T toBean(IndexSearcher search, ScoreDoc sc, Class<T> type, Map<String, String> mapBeanProps) throws Exception {
 		PropertyDescriptor[] props = this.propertyDescriptors(type);
 		List<IndexableField> rsmd = null;//rs.getFields();
 		int[] columnToProperty = null;	//this.mapColumnsToProperties(rsmd, props, mapBeanProps);
         //
-       	Document doc = search.doc(tp.doc);
+       	Document doc = search.doc(sc.doc);
        	rsmd = doc.getFields();
        	columnToProperty = this.mapColumnsToProperties(rsmd, props, mapBeanProps);
        	return this.createBean(rsmd, type, props, columnToProperty);
@@ -207,7 +203,7 @@ public class BeanProcessorEx implements Serializable {
 		PropertyDescriptor[] props = this.propertyDescriptors(type);
 		List<IndexableField> rsmd = null;//rs.getFields();
 		int[] columnToProperty = null;	//this.mapColumnsToProperties(rsmd, props, mapBeanProps);
-        
+        //
         for (int i = 0; i < rs.scoreDocs.length; i++) {
         	Document doc = search.doc(rs.scoreDocs[i].doc);
         	if (i == 0) {
@@ -217,6 +213,27 @@ public class BeanProcessorEx implements Serializable {
         	results.add(this.createBean(rsmd, type, props, columnToProperty));
         }
         return results;
+    }
+
+	@SuppressWarnings("rawtypes")
+	public void toBeanList(IndexSearcher search, TopDocs rs, Class type, List results) throws Exception {
+        toBeanList(search, rs, type, results, this.columnToPropertyOverrides);
+	}
+	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public void toBeanList(IndexSearcher search, TopDocs rs, Class type, List results, Map<String,String> mapBeanProps) throws Exception {
+		PropertyDescriptor[] props = this.propertyDescriptors(type);
+		List<IndexableField> rsmd = null;//rs.getFields();
+		int[] columnToProperty = null;	//this.mapColumnsToProperties(rsmd, props, mapBeanProps);
+        
+        for (int i = 0; i < rs.scoreDocs.length; i++) {
+        	Document doc = search.doc(rs.scoreDocs[i].doc);
+        	if (i == 0) {
+        		rsmd = doc.getFields();
+        		columnToProperty = this.mapColumnsToProperties(rsmd, props, mapBeanProps);
+        	}
+        	results.add(this.createBean(rsmd, type, props, columnToProperty));
+        }
     }
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -246,11 +263,10 @@ public class BeanProcessorEx implements Serializable {
      * @return An initialized object.
      * @throws Exception if a database error occurs.
      */
-    
-    private <T> T createBean(List<IndexableField> rsmd, Class<T> type,
+	private <T> T createBean(List<IndexableField> rsmd, Class<T> type,
             PropertyDescriptor[] props, int[] columnToProperty) throws Exception {
         T bean = this.newInstance(type);
-        for (int i = 1; i < columnToProperty.length; i++) {
+        for (int i = 0; i < columnToProperty.length; i++) {
         	int nColIdx = columnToProperty[i];
             if (nColIdx == PROPERTY_NOT_FOUND) {
                 continue;
@@ -260,7 +276,7 @@ public class BeanProcessorEx implements Serializable {
             //
             Object value = null;
             if(propType != null) {
-                value = this.processColumn(rsmd.get(i), propType);
+                value = processColumn(rsmd.get(i), propType);
                 if (value == null && propType.isPrimitive()) {
                     value = primitiveDefaults.get(propType);
                 }
@@ -411,7 +427,7 @@ public class BeanProcessorEx implements Serializable {
 	protected int[] mapColumnsToProperties(List<IndexableField> rsmd,
             PropertyDescriptor[] props, Map<String,String> mapBeanReflactColumn) throws Exception {
         int cols = rsmd.size();
-        int[] columnToProperty = new int[cols + 1];
+        int[] columnToProperty = new int[cols];
         Arrays.fill(columnToProperty, PROPERTY_NOT_FOUND);
         
         Map<String, Integer> mapBeanPropsIdx = new CaseInsensitiveHashMap<Integer>();
@@ -420,7 +436,7 @@ public class BeanProcessorEx implements Serializable {
 	        	mapBeanPropsIdx.put(props[i].getName(), i);
 	        }
 	        
-	        for (int col = 1; col <= cols; col++) {
+	        for (int col = 0; col < cols; col++) {
 	            String columnName = rsmd.get(col).name();
 	            // try get pro from map
 	            String propertyName = getColumnName(columnName, mapBeanReflactColumn);
@@ -498,12 +514,12 @@ public class BeanProcessorEx implements Serializable {
 //		return processColumn(fields, fldName, propType);
 //	}
 	
-    public Object processColumn(IndexableField fields, Class<?> propType) throws Exception {
-        if ( !propType.isPrimitive() ) {
-            return null;
-        }
+    public static Object processColumn(IndexableField field, Class<?> propType) throws Exception {
+//        if ( !propType.isPrimitive() ) {
+//            return null;
+//        }
         //IndexableField field = fields.get(i);
-    	String rtnVal = fields.name();
+    	String rtnVal = field.stringValue();
         if ( rtnVal == null ) {
             return null;
         }

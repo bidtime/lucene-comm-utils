@@ -9,24 +9,32 @@ public class LuceneSearch extends AbstractIndexSearch {
 	protected IndexSearcher searcher;
 
 	public LuceneSearch(Analyzer analyzer,
-			Directory indexDir) throws Exception {
-		super(analyzer, indexDir);
-		this.searcher = new IndexSearcher(reader);
+			Directory indexDir, Boolean open) throws Exception {
+		super(analyzer, indexDir, open);
+		if (open) {
+			this.searcher = new IndexSearcher(reader);
+		}
 	}
 	
-	public LuceneSearch(Directory indexDir) throws Exception {
-		super(indexDir);
-		this.searcher = new IndexSearcher(reader);
+	public LuceneSearch(Directory indexDir, Boolean open) throws Exception {
+		super(indexDir, open);
+		if (open) {
+			this.searcher = new IndexSearcher(reader);
+		}
 	}
 	
-	public LuceneSearch(Analyzer analyzer, String idxPath) throws Exception {
-		super(analyzer, idxPath);
-		this.searcher = new IndexSearcher(reader);
+	public LuceneSearch(Analyzer analyzer, String idxPath, Boolean open) throws Exception {
+		super(analyzer, idxPath, open);
+		if (open) {
+			this.searcher = new IndexSearcher(reader);
+		}
 	}
 
-	public LuceneSearch(String idxPath) throws Exception {
-		super(idxPath);
-		this.searcher = new IndexSearcher(reader);
+	public LuceneSearch(String idxPath, Boolean open) throws Exception {
+		super(idxPath, open);
+		if (open) {
+			this.searcher = new IndexSearcher(reader);
+		}
 	}
 	
 	public IndexSearcher getSearch() throws Exception {

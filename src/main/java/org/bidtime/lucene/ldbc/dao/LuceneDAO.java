@@ -50,4 +50,8 @@ public class LuceneDAO {
 		return SqlLoadUtils.query(this.getClass(), words, nPageIdx, nPageSize, rsh);		
 	}
 	
+	public <T> T query(String words, LuceneSetHandler<T> rsh) throws Exception {
+		return SqlLoadUtils.query(this.getClass(), words, rsh);		
+	}
+	
 }

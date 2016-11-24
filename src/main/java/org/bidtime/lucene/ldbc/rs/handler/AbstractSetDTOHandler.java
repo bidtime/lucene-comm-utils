@@ -1,13 +1,13 @@
 package org.bidtime.lucene.ldbc.rs.handler;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
-import org.bidtime.dbutils.jdbc.rs.handle.cb.ListCallback;
+import org.bidtime.dbutils.jdbc.rs.handle.cb.SetCallback;
 import org.bidtime.lucene.ldbc.rs.handler.ext.LuceneSetDTOHandler;
 
 /**
@@ -17,20 +17,21 @@ import org.bidtime.lucene.ldbc.rs.handler.ext.LuceneSetDTOHandler;
  *
  */
 @SuppressWarnings("serial")
-public abstract class AbstractListDTOHandler<T> extends LuceneSetDTOHandler<List<T>> {
+public abstract class AbstractSetDTOHandler<T> extends
+	LuceneSetDTOHandler<Set<T>> {
 	
-	protected ListCallback<T> ccb;
+	protected SetCallback<T> ccb;
 
-	protected List<T> newCollect() {
-		return new ArrayList<>();
+	protected Set<T> newCollect() {
+		return new HashSet<T>();
 	}
 
 	@Override
-	public List<T> doDTO(IndexSearcher searcher, TopDocs topDocs) throws Exception {
+	public Set<T> doDTO(IndexSearcher searcher, TopDocs topDocs) throws Exception {
 		if (topDocs.totalHits == 0) {
 			return null;
 		} else {
-			List<T> collect = null;
+			Set<T> collect = null;
 			if (ccb != null) {
 				collect = ccb.callback();
 			} else {

@@ -1,7 +1,7 @@
 package org.bidtime.lucene.ldbc.rs.handler;
 
 import org.apache.lucene.search.IndexSearcher;
-import org.apache.lucene.search.TopDocs;
+import org.apache.lucene.search.ScoreDoc;
 import org.bidtime.lucene.ldbc.rs.BeanAdapt;
 import org.bidtime.lucene.ldbc.rs.BeanProcessorEx;
 
@@ -13,17 +13,17 @@ import org.bidtime.lucene.ldbc.rs.BeanProcessorEx;
  */
 
 @SuppressWarnings("serial")
-public class BeanListDTOHandler<T> extends AbstractListDTOHandler<T> {
+public class BeanListLDTOHandler<T> extends AbstractListDTOHandler<T> {
 
-	public BeanListDTOHandler(Class<T> type) {
+	public BeanListLDTOHandler(Class<T> type) {
 		this(type, false);
 	}
 
-	public BeanListDTOHandler(Class<T> type, boolean countSql) {
+	public BeanListLDTOHandler(Class<T> type, boolean countSql) {
 		this(type, countSql, BeanAdapt.AUTO);
 	}
 
-	public BeanListDTOHandler(Class<T> type, BeanAdapt beanAdapt) {
+	public BeanListLDTOHandler(Class<T> type, BeanAdapt beanAdapt) {
 		this(type, false, beanAdapt);
 	}
 
@@ -32,23 +32,23 @@ public class BeanListDTOHandler<T> extends AbstractListDTOHandler<T> {
 //		this(type, convert, countSql, BeanAdapt.AUTO);
 //	}
 
-	public BeanListDTOHandler(Class<T> type, boolean countSql, BeanAdapt beanAdapt) {
+	public BeanListLDTOHandler(Class<T> type, boolean countSql, BeanAdapt beanAdapt) {
 		this(type, new BeanProcessorEx(), countSql, beanAdapt);
 	}
 
-	public BeanListDTOHandler(Class<T> type, BeanAdapt beanAdapt, boolean countSql) {
+	public BeanListLDTOHandler(Class<T> type, BeanAdapt beanAdapt, boolean countSql) {
 		this(type, new BeanProcessorEx(), countSql, beanAdapt);
 	}
 
-	public BeanListDTOHandler(Class<T> type, BeanProcessorEx convert,
+	public BeanListLDTOHandler(Class<T> type, BeanProcessorEx convert,
 			boolean countSql, BeanAdapt beanAdapt) {
 		super.setProp(type, convert, countSql, beanAdapt);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	protected T handleRow(IndexSearcher searcher, TopDocs topDocs) throws Exception {
-		return (T) this.convert.toBean(searcher, topDocs, this.type, this.mapBeanPropColumns);
+	protected T handleRow(IndexSearcher searcher, ScoreDoc scoreDoc) throws Exception {
+		return (T) this.convert.toBean(searcher, scoreDoc, this.type, this.mapBeanPropColumns);
 	}
 
 }

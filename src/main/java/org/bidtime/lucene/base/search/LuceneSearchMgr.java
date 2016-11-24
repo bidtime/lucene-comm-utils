@@ -10,18 +10,18 @@ public class LuceneSearchMgr extends AbstractIndexSearch {
 	
 	private SearcherManager mgr = null;// 是线程安全的
 
-	public LuceneSearchMgr(Analyzer analyzer, Directory indexDir) throws Exception {
-		super(analyzer, indexDir);
+	public LuceneSearchMgr(Analyzer analyzer, Directory indexDir, Boolean open) throws Exception {
+		super(analyzer, indexDir, open);
 		mgr = new SearcherManager(indexDir, new SearcherFactory());
 	}
 	
-	public LuceneSearchMgr(Analyzer analyzer, String idxPath) throws Exception {
-		super(analyzer, idxPath);
+	public LuceneSearchMgr(Analyzer analyzer, String idxPath, Boolean open) throws Exception {
+		super(analyzer, idxPath, open);
 		mgr = new SearcherManager(indexDir, new SearcherFactory());
 	}
 
-	public LuceneSearchMgr(String idxPath) throws Exception {
-		super(idxPath);
+	public LuceneSearchMgr(String idxPath, Boolean open) throws Exception {
+		super(idxPath, open);
 		mgr = new SearcherManager(indexDir, new SearcherFactory());
 	}
 

@@ -13,33 +13,33 @@ import org.bidtime.lucene.ldbc.rs.handler.ext.LuceneSetDTOHandler;
  *
  */
 @SuppressWarnings("serial")
-public class BeanDTOHandler<T> extends LuceneSetDTOHandler<T> {
+public class BeanLDTOHandler<T> extends LuceneSetDTOHandler<T> {
 
-    public BeanDTOHandler(Class<T> type) {
+    public BeanLDTOHandler(Class<T> type) {
     	this(type, false);
     }
 
-    public BeanDTOHandler(Class<T> type, boolean countSql) {
+    public BeanLDTOHandler(Class<T> type, boolean countSql) {
     	this(type, countSql, BeanAdapt.AUTO);
     }
     
-    public BeanDTOHandler(Class<T> type, BeanAdapt beanAdpat) {
+    public BeanLDTOHandler(Class<T> type, BeanAdapt beanAdpat) {
     	this(type, false, BeanAdapt.AUTO);
     }
 
-    public BeanDTOHandler(Class<T> type, BeanAdapt beanAdpat, boolean countSql) {
+    public BeanLDTOHandler(Class<T> type, BeanAdapt beanAdpat, boolean countSql) {
     	this(type, new BeanProcessorEx(), countSql, beanAdpat);
     }
     
-    public BeanDTOHandler(Class<T> type, boolean countSql, BeanAdapt beanAdpat) {
+    public BeanLDTOHandler(Class<T> type, boolean countSql, BeanAdapt beanAdpat) {
     	this(type, new BeanProcessorEx(), countSql, beanAdpat);
     }
     
-    public BeanDTOHandler(Class<T> type, BeanProcessorEx convert, boolean countSql) {
+    public BeanLDTOHandler(Class<T> type, BeanProcessorEx convert, boolean countSql) {
     	this(type, convert, countSql, BeanAdapt.AUTO);
     }
     
-    public BeanDTOHandler(Class<T> type, BeanProcessorEx convert, boolean countSql,
+    public BeanLDTOHandler(Class<T> type, BeanProcessorEx convert, boolean countSql,
     		BeanAdapt beanAdapt) {
     	super.setProp(type, convert, countSql, beanAdapt);
     }

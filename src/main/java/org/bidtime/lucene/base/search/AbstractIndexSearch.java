@@ -31,37 +31,42 @@ public abstract class AbstractIndexSearch {
 
 	protected IndexReader reader;
 	
+//	protected void setProp(Analyzer analyzer, Directory idxDir) throws Exception {
+//		this.setProp(analyzer, idxDir, false);
+//	}
+	
 	protected void setProp(Analyzer analyzer,
-			Directory idxDir) throws Exception {
+			Directory idxDir, Boolean open) throws Exception {
 		this.indexDir = idxDir;
 		this.analyzer = analyzer;
-		try {
-			this.reader = DirectoryReader.open(indexDir);
-		//} catch (IndexNotFoundException e) {
-		} catch (Exception e) {
-			logger.error("setProp", e);
+		if (open) {
+			try {
+				this.reader = DirectoryReader.open(indexDir);
+			} catch (Exception e) {
+				logger.error("init", e);
+			}
 		}
 	}
 	
-	protected void setProp(Analyzer analyzer, String idxPath) throws Exception {
-		setProp(analyzer, FSDirectory.open(Paths.get(idxPath)));
+//	protected void setProp(Analyzer analyzer, String idxPath) throws Exception {
+//		setProp(analyzer, FSDirectory.open(Paths.get(idxPath)));
+//	}
+
+	public AbstractIndexSearch(Analyzer analyzer, String idxPath, Boolean open) throws Exception {
+		setProp(analyzer, FSDirectory.open(Paths.get(idxPath)), open);
 	}
 
-	public AbstractIndexSearch(Analyzer analyzer, String idxPath) throws Exception {
-		setProp(analyzer, FSDirectory.open(Paths.get(idxPath)));
+	public AbstractIndexSearch(Analyzer analyzer, Directory indexDir, Boolean open) throws Exception {
+		setProp(analyzer, indexDir, open);
 	}
 
-	public AbstractIndexSearch(Analyzer analyzer, Directory indexDir) throws Exception {
-		setProp(analyzer, indexDir);
-	}
-
-	public AbstractIndexSearch(String idxPath) throws Exception {
+	public AbstractIndexSearch(String idxPath, Boolean open) throws Exception {
 		setProp(new IKAnalyzer4PinYin(false),
-				FSDirectory.open(Paths.get(idxPath)));
+				FSDirectory.open(Paths.get(idxPath)), open);
 	}
 
-	public AbstractIndexSearch(Directory indexDir) throws Exception {
-		this(new IKAnalyzer4PinYin(false), indexDir);
+	public AbstractIndexSearch(Directory indexDir, Boolean open) throws Exception {
+		this(new IKAnalyzer4PinYin(false), indexDir, open);
 	}
 	
 	public abstract IndexSearcher getSearch() throws Exception;

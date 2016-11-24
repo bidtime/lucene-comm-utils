@@ -175,4 +175,9 @@ public class SqlLoadUtils {
 		return DbConnection.query(words, nPageIdx, nPageSize, rsh);
 	}
 	
+	@SuppressWarnings("rawtypes")
+	public static <T> T query(Class clazz, String words, LuceneSetHandler<T> rsh) throws Exception {
+		return DbConnection.query(words, null, null, rsh);
+	}
+	
 }

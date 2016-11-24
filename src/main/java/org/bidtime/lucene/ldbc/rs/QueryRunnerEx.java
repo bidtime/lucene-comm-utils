@@ -146,7 +146,7 @@ public class QueryRunnerEx {
     
     public <T> T query(IndexSearcher searcher, Analyzer analyzer, String words, LuceneSetHandler<T> rsh,
     		Integer pageIdx, Integer pageSize) throws Exception {
-    	return this.query(searcher, analyzer, words, rsh, pageIdx, pageSize);
+    	return this.query(searcher, analyzer, words, rsh, pageIdx, pageSize, null);
     }
     
     /**
