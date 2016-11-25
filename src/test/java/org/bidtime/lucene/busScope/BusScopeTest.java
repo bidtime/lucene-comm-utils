@@ -63,8 +63,8 @@ public class BusScopeTest extends BasicTest {
 			//sc.setpName(tmp[1]);
 			//sc.setBsId(Integer.parseInt(tmp[2]));
 			//sc.setBsName(tmp[3]);
-			sc.setpId(Integer.parseInt(tmp[0]));
-			sc.setCode(tmp[1]);
+			sc.setPid(Integer.parseInt(tmp[0]));
+			//sc.setPname(tmp[1]);
 			sc.setName(tmp[3]);
 			print(sc);
 			//
@@ -82,16 +82,16 @@ public class BusScopeTest extends BasicTest {
 		print("ok：" + list.size());
 	}
 	
-	@Test
-	public void test_insert() throws Exception {
-		for (int i=0; i<50; i++) {
-			BusScope b = new BusScope();
-			b.setId(i);
-			b.setName("江少山_" + i);
-			b.setCode("jss_" + i);
-			dao.insert(b);
-		}
-		print("ok");
-	}
+//	@Test
+//	public void test_insert() throws Exception {
+//		for (int i=0; i<50; i++) {
+//			BusScope b = new BusScope();
+//			b.setId(i);
+//			b.setName("江少山_" + i);
+//			b.setCode("jss_" + i);
+//			dao.insert(b);
+//		}
+//		print("ok");
+//	}
 	
 }

@@ -5,6 +5,7 @@ import java.io.Serializable;
 @SuppressWarnings("serial")
 public class Duty implements Serializable {
 	private Integer id;
+	
 	private String name;
 	public Integer getId() {
 		return id;

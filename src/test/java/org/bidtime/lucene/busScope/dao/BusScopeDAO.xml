@@ -5,9 +5,11 @@
 <class package="" name="User" table="u_user">
 	<id name="id" column="id" type="int" length="10" not-null="true" generator="none-identity" store="true" index="DOCS" tokenized="true"/>
 	<property name="pid" column="pid" type="int" length="10" not-null="true" store="true" index="DOCS" tokenized="true"/>
-	<property name="code" column="code" type="text" length="20" not-null="true" store="true" index="DOCS" tokenized="true"/>
-	<property name="name" column="name" type="text" length="96" not-null="true" store="true" index="DOCS" tokenized="true"/>
+	<property name="name" column="name" type="string" length="30" not-null="true" store="true" index="DOCS" tokenized="true"/>
 	<!--
+	<property name="pname" column="pname" type="text" length="30" not-null="true" store="true" index="DOCS" tokenized="true"/>
+	<property name="bsid" column="bsid" type="int" length="10" not-null="true" store="true" index="DOCS" tokenized="true"/>
+
 	<property name="name_pinyin" column="name_pinyin" type="string" length="96" not-null="true"
 		store="true" index="DOCS" tokenized="true" wordType="pinyin" wordName="name"/>
 	<property name="name_szm" column="name_szm" type="text" length="96" not-null="true"

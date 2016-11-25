@@ -26,6 +26,7 @@ import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.Sort;
 import org.apache.lucene.search.TopDocs;
+import org.bidtime.dbutils.gson.ResultDTO;
 import org.bidtime.lucene.ldbc.rs.handler.LuceneSetHandler;
 
 /**
@@ -109,15 +110,21 @@ public class QueryRunnerEx {
      * 
      * 
      */
-    public <T> T query(IndexSearcher searcher, Analyzer analyzer, String field, String words, LuceneSetHandler<T> rsh,
+    @SuppressWarnings("rawtypes")
+	public <T> T query(IndexSearcher searcher, Analyzer analyzer, String field, String words, LuceneSetHandler<T> rsh,
     		Integer pageIdx, Integer pageSize, Sort sort) throws Exception {
    		QueryParser parser = new QueryParser(field,	analyzer);
    		Query query = parser.parse(words);
    		//
-   		T result = null;
    		TopDocs topDocs = getTopDocs(searcher, query, pageIdx, pageSize, sort);
-   		result = rsh.handle(searcher, topDocs);
-   		return result;
+   		T t = null;
+   		t = rsh.handle(searcher, topDocs);
+		if (t != null) {
+			if (t instanceof ResultDTO) {
+				((ResultDTO) t).setLen(topDocs.totalHits);
+			}
+		}
+   		return t;
     }
 
     /**
@@ -133,15 +140,21 @@ public class QueryRunnerEx {
      * 
      * 
      */
-    public <T> T query(IndexSearcher searcher, Analyzer analyzer, String words, LuceneSetHandler<T> rsh,
+    @SuppressWarnings("rawtypes")
+	public <T> T query(IndexSearcher searcher, Analyzer analyzer, String words, LuceneSetHandler<T> rsh,
     		Integer pageIdx, Integer pageSize, Sort sort) throws Exception {
    		QueryParser parser = new QueryParser(null, analyzer);
    		Query query = parser.parse(words);
    		//
-   		T result = null;
    		TopDocs topDocs = getTopDocs(searcher, query, pageIdx, pageSize, sort);
-   		result = rsh.handle(searcher, topDocs);
-   		return result;
+   		T t = null;
+   		t = rsh.handle(searcher, topDocs);
+		if (t != null) {
+			if (t instanceof ResultDTO) {
+				((ResultDTO) t).setLen(topDocs.totalHits);
+			}
+		}
+   		return t;
     }
     
     public <T> T query(IndexSearcher searcher, Analyzer analyzer, String words, LuceneSetHandler<T> rsh,

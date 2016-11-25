@@ -10,8 +10,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "classpath:spring-config.xml",
-		"classpath:spring-dataSource.xml",
-		"classpath:IKAnalyzer.cfg.xml"
+		"classpath:spring-lucene.xml"
 	})
 
 @Ignore
