@@ -4,6 +4,7 @@
 
 <class package="" name="User" table="u_user">
 	<id name="id" column="id" type="int" length="10" not-null="true" generator="none-identity" store="true" index="DOCS" tokenized="true"/>
+	<property name="pid" column="pid" type="int" length="10" not-null="true" store="true" index="DOCS" tokenized="true"/>
 	<property name="code" column="code" type="text" length="20" not-null="true" store="true" index="DOCS" tokenized="true"/>
 	<property name="name" column="name" type="text" length="96" not-null="true" store="true" index="DOCS" tokenized="true"/>
 	<!--

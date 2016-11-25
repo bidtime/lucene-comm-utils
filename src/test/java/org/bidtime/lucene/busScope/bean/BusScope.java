@@ -1,10 +1,17 @@
-package org.bidtime.lucene.duty.bean;
+package org.bidtime.lucene.busScope.bean;
 
 import java.io.Serializable;
 
 @SuppressWarnings("serial")
-public class Duty implements Serializable {
+public class BusScope implements Serializable {
 	private Integer id;
+	private Integer pid;
+	public Integer getpid() {
+		return pid;
+	}
+	public void setpId(Integer pid) {
+		this.pid = pid;
+	}
 	private String name;
 	public Integer getId() {
 		return id;

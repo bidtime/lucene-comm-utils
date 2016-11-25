@@ -1,6 +1,5 @@
 package org.bidtime.lucene.ldbc.rs.handler;
 
-import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -50,7 +49,7 @@ public abstract class AbstractSetDTOHandler<T> extends
 	 * @param rs
 	 *            <code>ResultSet</code> to process.
 	 * @return row processing result
-	 * @throws SQLException
+	 * @throws Exception
 	 *             error occurs
 	 */
 	protected abstract T handleRow(IndexSearcher searcher, ScoreDoc topDoc) throws Exception;

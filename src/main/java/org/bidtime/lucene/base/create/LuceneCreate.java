@@ -52,9 +52,12 @@ public class LuceneCreate {
 //			FSDirectory.open(new File(idxPath)), false);
 //	}
 
-	public LuceneCreate(Analyzer analyzer, 
-			String idxPath) throws Exception {
+	public LuceneCreate(Analyzer analyzer, String idxPath) throws Exception {
 		setProp(analyzer, FSDirectory.open(Paths.get(idxPath)), false);
+	}
+
+	public LuceneCreate(Analyzer analyzer, String idxPath, Boolean openMode) throws Exception {
+		setProp(analyzer, FSDirectory.open(Paths.get(idxPath)), openMode);
 	}
 
 //	public LuceneCreate(String idxPath) throws Exception {
@@ -78,8 +81,8 @@ public class LuceneCreate {
 	protected void setProp(Analyzer analyzer, 
 			Directory dir, Boolean openMode) throws Exception {
 		this.analyzer = analyzer;
-		this.openMode = openMode;
 		this.dir = dir;
+		this.openMode = openMode;
 	}
 
 	public PerFieldAnalyzerWrapper getPinYinAnalyzer(Map<String, EnumWord> mapEnumWord) throws Exception {

@@ -72,7 +72,7 @@ public class LuceneIndexAndSearchDemo {
 	 * 创建一个单条记录的索引，并对其进行搜索
 	 * @param args
 	 */
-	public static void main(String[] args){
+	public static void main(String[] args) {
 		//Lucene Document的域名
         String fieldName = "hanzi";
         String quanpin = "pinyin";
@@ -93,7 +93,7 @@ public class LuceneIndexAndSearchDemo {
 		IndexSearcher isearcher = null;
 		try {
 			//建立内存索引对象
-			directory = new RAMDirectory();	 
+			directory = new RAMDirectory();
 			
 			//配置IndexWriterConfig
 			IndexWriterConfig iwConfig = new IndexWriterConfig(wrapper);

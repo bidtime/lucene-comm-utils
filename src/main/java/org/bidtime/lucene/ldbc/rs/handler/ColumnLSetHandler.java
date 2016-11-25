@@ -17,7 +17,6 @@
 package org.bidtime.lucene.ldbc.rs.handler;
 
 import java.sql.ResultSet;
-import java.sql.SQLException;
 
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexableField;
@@ -37,8 +36,6 @@ import org.bidtime.lucene.ldbc.rs.BeanProcessorEx;
  */
 public class ColumnLSetHandler<T> extends AbstractSetHandler<T> {
 	
-	protected Class<T> type;
-
     /**
      * The column number to retrieve.
      */
@@ -54,13 +51,13 @@ public class ColumnLSetHandler<T> extends AbstractSetHandler<T> {
      * Creates a new instance of ColumnListHandler.  The first column of each
      * row will be returned from <code>handle()</code>.
      */
-    public ColumnLSetHandler(SetCallback<T> ccb) {
-        this(1, null);
+    public ColumnLSetHandler(Class<T> type, SetCallback<T> ccb) {
+        this(type, 1, null);
     	this.ccb = ccb;
     }
 
-    public ColumnLSetHandler() {
-        this(1, null);
+    public ColumnLSetHandler(Class<T> type) {
+        this(type, 1, null);
     }
 
     /**
@@ -69,8 +66,8 @@ public class ColumnLSetHandler<T> extends AbstractSetHandler<T> {
      * @param columnIndex The index of the column to retrieve from the
      * <code>ResultSet</code>.
      */
-    public ColumnLSetHandler(int columnIndex) {
-        this(columnIndex, null);
+    public ColumnLSetHandler(Class<T> type, int columnIndex) {
+        this(type, columnIndex, null);
     }
 
     /**
@@ -79,8 +76,8 @@ public class ColumnLSetHandler<T> extends AbstractSetHandler<T> {
      * @param columnName The name of the column to retrieve from the
      * <code>ResultSet</code>.
      */
-    public ColumnLSetHandler(String columnName) {
-        this(1, columnName);
+    public ColumnLSetHandler(Class<T> type, String columnName) {
+        this(type, 1, columnName);
     }
 
     /** Private Helper
@@ -89,18 +86,25 @@ public class ColumnLSetHandler<T> extends AbstractSetHandler<T> {
      * @param columnName The name of the column to retrieve from the
      * <code>ResultSet</code>.
      */
-    private ColumnLSetHandler(int columnIndex, String columnName) {
+    private ColumnLSetHandler(Class<T> type, int columnIndex, String columnName) {
         super();
+        this.type = type;
         this.columnIndex = columnIndex;
         this.columnName = columnName;
     }
-
+    
+//    private Class getActualTypeClass(Class entity) {
+//    	ParameterizedType type = (ParameterizedType) entity.getGenericSuperclass();
+//    	Class entityClass = (Class) type.getActualTypeArguments()[0];
+//    	return entityClass;
+//    }
+    
     /**
      * Returns one <code>ResultSet</code> column value as <code>Object</code>.
      * @param rs <code>ResultSet</code> to process.
      * @return <code>Object</code>, never <code>null</code>.
      *
-     * @throws SQLException if a database access error occurs
+     * @throws Exception if a database access error occurs
      * @throws ClassCastException if the class datatype does not match the column type
      *
      * @see org.apache.commons.dbutils.handlers.AbstractListHandler#handle(ResultSet)

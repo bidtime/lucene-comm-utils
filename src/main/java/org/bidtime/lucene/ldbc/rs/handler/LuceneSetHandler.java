@@ -1,7 +1,5 @@
 package org.bidtime.lucene.ldbc.rs.handler;
 
-import java.sql.SQLException;
-
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.TopDocs;
 
@@ -17,7 +15,7 @@ public interface LuceneSetHandler<T> {
      * legal for implementations to return <code>null</code> if the
      * <code>ResultSet</code> contained 0 rows.
      *
-     * @throws SQLException if a database access error occurs
+     * @throws Exception if a database access error occurs
      */
     T handle(IndexSearcher searcher, TopDocs topDocs) throws Exception;
 

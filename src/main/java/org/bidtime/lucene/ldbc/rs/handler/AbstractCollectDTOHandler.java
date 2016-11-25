@@ -1,6 +1,5 @@
 package org.bidtime.lucene.ldbc.rs.handler;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 

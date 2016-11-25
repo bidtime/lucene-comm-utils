@@ -53,14 +53,15 @@ public class ColumnLSetDTOHandler<T> extends AbstractSetDTOHandler<T> {
      * Creates a new instance of ColumnListHandler.  The first column of each
      * row will be returned from <code>handle()</code>.
      */
-
-    public ColumnLSetDTOHandler(SetCallback<T> ccb) {
-        this(1, null);
+    @SuppressWarnings("rawtypes")
+	public ColumnLSetDTOHandler(Class type, SetCallback<T> ccb) {
+        this(type, 1, null);
     	this.ccb = ccb;
     }
 
-    public ColumnLSetDTOHandler() {
-        this(1, null);
+    @SuppressWarnings("rawtypes")
+	public ColumnLSetDTOHandler(Class type) {
+        this(type, 1, null);
     }
 
     /**
@@ -69,8 +70,9 @@ public class ColumnLSetDTOHandler<T> extends AbstractSetDTOHandler<T> {
      * @param columnIndex The index of the column to retrieve from the
      * <code>ResultSet</code>.
      */
-    public ColumnLSetDTOHandler(int columnIndex) {
-        this(columnIndex, null);
+    @SuppressWarnings("rawtypes")
+	public ColumnLSetDTOHandler(Class type, int columnIndex) {
+        this(type, columnIndex, null);
     }
 
     /**
@@ -79,8 +81,9 @@ public class ColumnLSetDTOHandler<T> extends AbstractSetDTOHandler<T> {
      * @param columnName The name of the column to retrieve from the
      * <code>ResultSet</code>.
      */
-    public ColumnLSetDTOHandler(String columnName) {
-        this(1, columnName);
+    @SuppressWarnings("rawtypes")
+	public ColumnLSetDTOHandler(Class type, String columnName) {
+        this(type, 1, columnName);
     }
 
     /** Private Helper
@@ -89,8 +92,10 @@ public class ColumnLSetDTOHandler<T> extends AbstractSetDTOHandler<T> {
      * @param columnName The name of the column to retrieve from the
      * <code>ResultSet</code>.
      */
-    private ColumnLSetDTOHandler(int columnIndex, String columnName) {
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+	private ColumnLSetDTOHandler(Class type, int columnIndex, String columnName) {
         super();
+        super.type = type;
         this.columnIndex = columnIndex;
         this.columnName = columnName;
     }
@@ -100,7 +105,7 @@ public class ColumnLSetDTOHandler<T> extends AbstractSetDTOHandler<T> {
      * @param rs <code>ResultSet</code> to process.
      * @return <code>Object</code>, never <code>null</code>.
      *
-     * @throws SQLException if a database access error occurs
+     * @throws Exception if a database access error occurs
      * @throws ClassCastException if the class datatype does not match the column type
      *
      * @see org.apache.commons.dbutils.handlers.AbstractListHandler#handle(ResultSet)

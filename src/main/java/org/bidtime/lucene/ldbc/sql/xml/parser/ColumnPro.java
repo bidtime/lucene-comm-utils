@@ -173,30 +173,9 @@ public class ColumnPro {
 		this.pk = pk;
 	}
 
-//	public ColumnPro() {
-//		//initial();
-//	}
-
 	public ColumnPro(Boolean pk) {
 		this.pk=pk;
 	}
-	
-//	public void initial() {
-//		name="";
-//		column="";
-//		length=0;
-//		generator=null;
-//		notNull=true;
-//		pk=false;
-//		defaultValue=null;
-//		identity=true;
-//		dataType="string";
-//		//numberType = null;
-//		//
-//		store = false;
-//		index = false;
-//		tokenized=false;
-//	}
 	
 	public void doFinished() {
 		this.fieldType = propToFieldType();

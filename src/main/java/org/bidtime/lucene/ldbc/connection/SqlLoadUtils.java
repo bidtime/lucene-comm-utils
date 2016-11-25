@@ -35,6 +35,11 @@ public class SqlLoadUtils {
 	@SuppressWarnings("rawtypes")
 	public static void insert(Class clazz, Object object) throws Exception {
 		TTableProps tp = JsonFieldXmlsLoader.getTableProps(clazz);
+		insert(clazz, object, tp);
+	}
+	
+	@SuppressWarnings("rawtypes")
+	public static void insert(Class clazz, Object object, TTableProps tp) throws Exception {
 		Long start = null;
 		if (logger.isDebugEnabled()) {
 			start = System.currentTimeMillis();
@@ -46,6 +51,22 @@ public class SqlLoadUtils {
 		}
 		if (logger.isDebugEnabled()) {
 			logger.debug(LogTimeUtil.getFmtDiffNowMs("insert:" + map + ", span ", start));
+		}
+	}
+	
+	@SuppressWarnings("rawtypes")
+	public static void insert(Class clazz, List list) throws Exception {
+		TTableProps tp = JsonFieldXmlsLoader.getTableProps(clazz);
+		Long start = null;
+		if (logger.isDebugEnabled()) {
+			start = System.currentTimeMillis();
+		}
+		for (int i=0; i<list.size(); i++) {
+			Object object = list.get(i);
+			insert(clazz, object, tp);
+		}
+		if (logger.isDebugEnabled()) {
+			logger.debug(LogTimeUtil.getFmtDiffNowMs("insert:" + list + ", span ", start));
 		}
 	}
 	

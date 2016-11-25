@@ -1,7 +1,6 @@
 package org.bidtime.lucene.ldbc.rs.handler;
 
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -18,6 +17,8 @@ import org.bidtime.dbutils.jdbc.rs.handle.cb.SetCallback;
  */
 public abstract class AbstractSetHandler<T> implements LuceneSetHandler<Set<T>> {
 	
+	protected Class<T> type;
+
 	protected SetCallback<T> ccb;
 	
 	protected Set<T> newCollect() {
@@ -32,7 +33,7 @@ public abstract class AbstractSetHandler<T> implements LuceneSetHandler<Set<T>> 
      * @see #handleRow(ResultSet)
      * @param rs <code>ResultSet</code> to process.
      * @return a list of all rows in the result set
-     * @throws SQLException error occurs
+     * @throws Exception error occurs
      */
     @Override
     public Set<T> handle(IndexSearcher searcher, TopDocs topDocs) throws Exception {
@@ -57,7 +58,7 @@ public abstract class AbstractSetHandler<T> implements LuceneSetHandler<Set<T>> 
      *
      * @param rs <code>ResultSet</code> to process.
      * @return row processing result
-     * @throws SQLException error occurs
+     * @throws Exception error occurs
      */
     protected abstract T handleRow(IndexSearcher searcher, ScoreDoc topDoc) throws Exception;
 

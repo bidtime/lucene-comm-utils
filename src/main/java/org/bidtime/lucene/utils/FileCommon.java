@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.List;
 
 public class FileCommon {
@@ -28,7 +29,7 @@ public class FileCommon {
 		BufferedReader bufferedReader = new BufferedReader(
 				new InputStreamReader(new FileInputStream(filePath), encoding));
 		try {
-			StringBuffer content = new StringBuffer();
+			StringBuilder content = new StringBuilder();
 			String str = null;
 			while ((str = bufferedReader.readLine()) != null) {
 				content.append(str).append("\n");
@@ -38,6 +39,26 @@ public class FileCommon {
 			if (bufferedReader != null) {
 				bufferedReader.close();
 			}
+		}
+	}
+	
+	public static List<String> getFileCtxList(String filePath, String encoding) throws Exception {
+		List<String> list = new ArrayList<>();
+		BufferedReader bufferedReader = new BufferedReader(
+				new InputStreamReader(new FileInputStream(filePath), encoding));
+		try {
+			String str = null;
+			while ((str = bufferedReader.readLine()) != null) {
+				list.add(str);
+				System.out.println(str);
+			}
+			return list;
+		} finally {
+			if (bufferedReader != null) {
+				bufferedReader.close();
+			}
+//			list.clear();
+//			list = null;
 		}
 	}
 

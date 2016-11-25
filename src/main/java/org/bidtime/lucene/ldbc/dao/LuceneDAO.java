@@ -1,5 +1,6 @@
 package org.bidtime.lucene.ldbc.dao;
 
+import java.util.List;
 import java.util.Map;
 
 import org.bidtime.lucene.ldbc.connection.SqlLoadUtils;
@@ -26,6 +27,11 @@ public class LuceneDAO {
 
 	public void insert(Object o) throws Exception {
 		SqlLoadUtils.insert(this.getClass(), o);
+	}
+
+	@SuppressWarnings("rawtypes")
+	public void insert(List list) throws Exception {
+		SqlLoadUtils.insert(this.getClass(), list);
 	}
 
 	public void insert(Map<String, Object> map) throws Exception {

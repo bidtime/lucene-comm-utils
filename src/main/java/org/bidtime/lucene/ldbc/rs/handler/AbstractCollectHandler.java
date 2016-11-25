@@ -1,7 +1,5 @@
 package org.bidtime.lucene.ldbc.rs.handler;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Collection;
 
 import org.apache.lucene.search.IndexSearcher;
@@ -29,7 +27,7 @@ public abstract class AbstractCollectHandler<T> implements LuceneSetHandler<Coll
      * @see #handleRow(ResultSet)
      * @param rs <code>ResultSet</code> to process.
      * @return a list of all rows in the result set
-     * @throws SQLException error occurs
+     * @throws Exception error occurs
      */
     @Override
     public Collection<T> handle(IndexSearcher searcher, TopDocs topDocs) throws Exception {
@@ -54,7 +52,7 @@ public abstract class AbstractCollectHandler<T> implements LuceneSetHandler<Coll
      *
      * @param rs <code>ResultSet</code> to process.
      * @return row processing result
-     * @throws SQLException error occurs
+     * @throws Exception error occurs
      */
     protected abstract T handleRow(IndexSearcher searcher, ScoreDoc scoreDoc) throws Exception;
 
