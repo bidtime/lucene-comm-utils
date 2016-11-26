@@ -12,7 +12,7 @@
 	<groupId>org.bidtime.utils</groupId>
 	<artifactId>lucene-comm-utils</artifactId>
 	<packaging>jar</packaging>
-	<version>1.0.0-release</version>
+	<version>1.0.0</version>
 	<name>lucene-comm-utils</name>
 
 	<dependencies>
@@ -20,14 +20,14 @@
 		<dependency>
 			<groupId>org.wltea.ik-analyzer.4PinYin</groupId>
 			<artifactId>ik-analyzer-4PinYin</artifactId>
-			<version>5.5.0-release</version>
+			<version>5.5.0</version>
 		</dependency>
 
 		<!-- bidtime -->
 		<dependency>
 			<groupId>org.bidtime.utils</groupId>
 			<artifactId>idbutils</artifactId>
-			<version>1.0.15-release</version>
+			<version>1.0.15</version>
 		</dependency>
 
 		<!--
