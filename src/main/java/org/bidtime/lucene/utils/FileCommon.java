@@ -50,7 +50,6 @@ public class FileCommon {
 			String str = null;
 			while ((str = bufferedReader.readLine()) != null) {
 				list.add(str);
-				System.out.println(str);
 			}
 			return list;
 		} finally {

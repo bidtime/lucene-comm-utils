@@ -9,7 +9,7 @@ import org.bidtime.lucene.base.search.AbstractIndexSearch;
 import org.bidtime.lucene.ldbc.connection.log.LogSelectSql;
 import org.bidtime.lucene.ldbc.rs.QueryRunnerEx;
 import org.bidtime.lucene.ldbc.rs.handler.LuceneSetHandler;
-import org.bidtime.lucene.ldbc.sql.xml.JsonFieldXmlsLoader;
+import org.bidtime.lucene.ldbc.sql.xml.LJsonFieldXmlsLoader;
 import org.bidtime.lucene.ldbc.sql.xml.parser.EnumWord;
 
 /**
@@ -85,13 +85,13 @@ public class DbConnection {
 //	}
 	
 	protected static LuceneCreate getIndexWriter(Map<String, EnumWord> mapEnumWord) throws Exception {
-		LuceneCreate idx = (LuceneCreate)JsonFieldXmlsLoader.getBean("luceneCreate");
+		LuceneCreate idx = (LuceneCreate)LJsonFieldXmlsLoader.getBean("luceneCreate");
 		idx.initConfig(mapEnumWord);
 		return idx;
 	}
 	
 	protected static AbstractIndexSearch getIndexReader() throws Exception {
-		AbstractIndexSearch idx = (AbstractIndexSearch)JsonFieldXmlsLoader.getBean("luceneSearch");
+		AbstractIndexSearch idx = (AbstractIndexSearch)LJsonFieldXmlsLoader.getBean("luceneSearch");
 		return idx;
 	}
 	

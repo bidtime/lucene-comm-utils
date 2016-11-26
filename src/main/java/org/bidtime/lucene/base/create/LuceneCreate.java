@@ -86,6 +86,7 @@ public class LuceneCreate {
 	}
 
 	public PerFieldAnalyzerWrapper getPinYinAnalyzer(Map<String, EnumWord> mapEnumWord) throws Exception {
+		
 		Map<String, Analyzer> analyzerMap = null;
 		for (Entry<String, EnumWord> entry : mapEnumWord.entrySet()) {
 			String head = entry.getKey();

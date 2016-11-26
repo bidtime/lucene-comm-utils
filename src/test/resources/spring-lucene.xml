@@ -7,13 +7,10 @@
            http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
            http://www.springframework.org/schema/context
            http://www.springframework.org/schema/context/spring-context-3.0.xsd">
-	   
-    <bean id="ljsonFieldXmlsLoader" class="org.bidtime.lucene.ldbc.sql.xml.JsonFieldXmlsLoader"
-          init-method="init" lazy-init="false">
-        <property name="packageRoot" value="org.bidtime.lucene"/>
-        <property name="extName" value=".xml"/>
-        <property name="recursive" value="true"/>
-    </bean>
+     
+    <bean id="ljsonFieldXmlsLoader" class="org.bidtime.lucene.ldbc.sql.xml.LJsonFieldXmlsLoader" >
+		<constructor-arg type="java.lang.String" value="org.bidtime.lucene"/>
+	</bean>
 
     <bean id="luceneAnalyzer" class="org.wltea4pinyin.analyzer.lucene.IKAnalyzer4PinYin">
         <constructor-arg index="0" value="true"/>

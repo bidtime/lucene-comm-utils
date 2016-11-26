@@ -24,10 +24,10 @@ import org.springframework.context.ApplicationContextAware;
  * loads properties files filled with query name to SQL mappings. This class is
  * thread safe.
  */
-public class TableFieldXmlsParser implements ApplicationContextAware {  
+public class LTableFieldXmlsParser implements ApplicationContextAware {  
     
 	private static final Logger logger = LoggerFactory
-			.getLogger(TableFieldXmlsParser.class);
+			.getLogger(LTableFieldXmlsParser.class);
     
 	private static ApplicationContext ctx;  
     
@@ -57,8 +57,23 @@ public class TableFieldXmlsParser implements ApplicationContextAware {
 	/**
 	 * TableFieldXmlsParser constructor.
 	 */
-	protected TableFieldXmlsParser() {
+	protected LTableFieldXmlsParser() {
 		super();
+	}
+	
+	public LTableFieldXmlsParser(String path) {
+		this(path, ".xml", true);
+	}
+
+	public LTableFieldXmlsParser(String path, String ext) {
+		this(path, ext, true);
+	}
+	
+	public LTableFieldXmlsParser(String path, String ext, Boolean recu) {
+		packageRoot = path;
+		extName = ext;
+		recursive = recu;
+		init();
 	}
 
 	private String packageRoot;

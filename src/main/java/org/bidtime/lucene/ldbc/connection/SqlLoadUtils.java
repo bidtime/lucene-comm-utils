@@ -8,7 +8,7 @@ import org.apache.lucene.document.Field;
 import org.apache.lucene.index.Term;
 import org.bidtime.dbutils.gson.PropAdapt;
 import org.bidtime.lucene.ldbc.rs.handler.LuceneSetHandler;
-import org.bidtime.lucene.ldbc.sql.xml.JsonFieldXmlsLoader;
+import org.bidtime.lucene.ldbc.sql.xml.LJsonFieldXmlsLoader;
 import org.bidtime.lucene.ldbc.sql.xml.parser.TTableProps;
 import org.bidtime.lucene.utils.LogTimeUtil;
 import org.slf4j.Logger;
@@ -34,7 +34,7 @@ public class SqlLoadUtils {
 	
 	@SuppressWarnings("rawtypes")
 	public static void insert(Class clazz, Object object) throws Exception {
-		TTableProps tp = JsonFieldXmlsLoader.getTableProps(clazz);
+		TTableProps tp = LJsonFieldXmlsLoader.getTableProps(clazz);
 		insert(clazz, object, tp);
 	}
 	
@@ -56,7 +56,7 @@ public class SqlLoadUtils {
 	
 	@SuppressWarnings("rawtypes")
 	public static void insert(Class clazz, List list) throws Exception {
-		TTableProps tp = JsonFieldXmlsLoader.getTableProps(clazz);
+		TTableProps tp = LJsonFieldXmlsLoader.getTableProps(clazz);
 		Long start = null;
 		if (logger.isDebugEnabled()) {
 			start = System.currentTimeMillis();
@@ -72,7 +72,7 @@ public class SqlLoadUtils {
 	
 	@SuppressWarnings("rawtypes")
 	public static void insert(Class clazz, Map map) throws Exception {
-		TTableProps tp = JsonFieldXmlsLoader.getTableProps(clazz);
+		TTableProps tp = LJsonFieldXmlsLoader.getTableProps(clazz);
 		Long start = null;
 		if (logger.isDebugEnabled()) {
 			start = System.currentTimeMillis();
@@ -98,7 +98,7 @@ public class SqlLoadUtils {
 	
 	@SuppressWarnings("rawtypes")
 	public static void delete(Class clazz, String value) throws Exception {
-		TTableProps tp = JsonFieldXmlsLoader.getTableProps(clazz);
+		TTableProps tp = LJsonFieldXmlsLoader.getTableProps(clazz);
 		Long start = null;
 		if (logger.isDebugEnabled()) {
 			start = System.currentTimeMillis();
@@ -115,7 +115,7 @@ public class SqlLoadUtils {
 	
 	@SuppressWarnings("rawtypes")
 	public static void delete(Class clazz, Object object) throws Exception {
-		TTableProps tp = JsonFieldXmlsLoader.getTableProps(clazz);
+		TTableProps tp = LJsonFieldXmlsLoader.getTableProps(clazz);
 		Long start = null;
 		if (logger.isDebugEnabled()) {
 			start = System.currentTimeMillis();
@@ -133,7 +133,7 @@ public class SqlLoadUtils {
 	
 	@SuppressWarnings("rawtypes")
 	public static void delete(Class clazz, Map map) throws Exception {
-		TTableProps tp = JsonFieldXmlsLoader.getTableProps(clazz);
+		TTableProps tp = LJsonFieldXmlsLoader.getTableProps(clazz);
 		Long start = null;
 		if (logger.isDebugEnabled()) {
 			start = System.currentTimeMillis();
@@ -150,7 +150,7 @@ public class SqlLoadUtils {
 	
 	@SuppressWarnings("rawtypes")
 	public static void update(Class clazz, Object object) throws Exception {
-		TTableProps tp = JsonFieldXmlsLoader.getTableProps(clazz);
+		TTableProps tp = LJsonFieldXmlsLoader.getTableProps(clazz);
 		Long start = null;
 		if (logger.isDebugEnabled()) {
 			start = System.currentTimeMillis();
@@ -171,7 +171,7 @@ public class SqlLoadUtils {
 	
 	@SuppressWarnings("rawtypes")
 	public static void update(Class clazz, Map map) throws Exception {
-		TTableProps tp = JsonFieldXmlsLoader.getTableProps(clazz);
+		TTableProps tp = LJsonFieldXmlsLoader.getTableProps(clazz);
 		Long start = null;
 		if (logger.isDebugEnabled()) {
 			start = System.currentTimeMillis();

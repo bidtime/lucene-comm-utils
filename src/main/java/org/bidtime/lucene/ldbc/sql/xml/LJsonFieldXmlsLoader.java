@@ -26,19 +26,19 @@ import org.bidtime.lucene.ldbc.sql.xml.parser.TTableProps;
  * loads properties files filled with query name to SQL mappings. This class is
  * thread safe.
  */
-public class JsonFieldXmlsLoader extends TableFieldXmlsParser {
+public class LJsonFieldXmlsLoader extends LTableFieldXmlsParser {
 
 	/**
 	 * The Singleton instance of this class.
 	 */
-	private volatile static JsonFieldXmlsLoader instance = null;
+	private volatile static LJsonFieldXmlsLoader instance = null;
 
 	/**
 	 * Return an instance of this class.
 	 * 
 	 * @return The Singleton instance.
 	 */
-	public synchronized static JsonFieldXmlsLoader getInstance() {
+	public synchronized static LJsonFieldXmlsLoader getInstance() {
 //		if (instance == null) {
 //			synchronized (JsonFieldXmlsLoader.class) {
 //				if (instance == null) {
@@ -47,6 +47,22 @@ public class JsonFieldXmlsLoader extends TableFieldXmlsParser {
 //			}
 //		}
 		return instance;
+	}
+
+	public LJsonFieldXmlsLoader() {
+		super();
+	}
+	
+	public LJsonFieldXmlsLoader(String path) {
+		super(path);
+	}
+
+	public LJsonFieldXmlsLoader(String path, String ext) {
+		super(path, ext);
+	}
+
+	public LJsonFieldXmlsLoader(String path, String ext, Boolean recu) {
+		super(path, ext, recu);
 	}
 	
 	@Override

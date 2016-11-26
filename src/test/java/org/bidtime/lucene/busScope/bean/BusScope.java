@@ -5,6 +5,13 @@ import java.io.Serializable;
 @SuppressWarnings("serial")
 public class BusScope implements Serializable {
 	private Integer id;
+	private Integer bsid;
+	public Integer getBsid() {
+		return bsid;
+	}
+	public void setBsid(Integer bsid) {
+		this.bsid = bsid;
+	}
 	private Integer pid;
 	public Integer getPid() {
 		return pid;
