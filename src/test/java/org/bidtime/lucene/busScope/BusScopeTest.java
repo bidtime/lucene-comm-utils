@@ -12,6 +12,7 @@ import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.miscellaneous.PerFieldAnalyzerWrapper;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
+import org.apache.lucene.document.IntField;
 import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.CorruptIndexException;
@@ -31,7 +32,6 @@ import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.store.LockObtainFailedException;
-import org.apache.lucene.store.RAMDirectory;
 import org.bidtime.dbutils.gson.ResultDTO;
 import org.bidtime.lucene.BasicTest;
 import org.bidtime.lucene.busScope.bean.BusScope;
@@ -88,10 +88,10 @@ public class BusScopeTest extends BasicTest {
 			//
 			BusScope sc = new BusScope();
 			sc.setId(i);
-			sc.setPid(Integer.parseInt(tmp[0]));
-			sc.setPname(tmp[1]);
-			sc.setBsid(Integer.parseInt(tmp[2]));
-			sc.setName(tmp[3]);
+			sc.setpId(Integer.parseInt(tmp[0]));
+			sc.setpName(tmp[1]);
+			sc.setBsId(Integer.parseInt(tmp[2]));
+			sc.setBsName(tmp[3]);
 			//print(sc);
 			//
 			list.add(sc);
@@ -114,7 +114,7 @@ public class BusScopeTest extends BasicTest {
 		int n=0;
 		BeanLDTOHandler<BusScope> h = new BeanLDTOHandler<>(BusScope.class);
 		for (BusScope p : list) {
-			String words = "name:" + p.getName();
+			String words = "name:" + p.getBsName();
 			ResultDTO<BusScope> dto = dao.query(words, 0, 10, h);
 			if (dto != null && dto.getData() != null) {
 				//System.out.println("search hit: " + dto.getLen() + " -> " + words);
@@ -147,38 +147,23 @@ public class BusScopeTest extends BasicTest {
 		print("fail：" + j + "/" + list.size());
 	}
 	
-//	@Test
-//	public void test_insert() throws Exception {
-//		for (int i=0; i<50; i++) {
-//			BusScope b = new BusScope();
-//			b.setId(i);
-//			b.setName("江少山_" + i);
-//			b.setCode("jss_" + i);
-//			dao.insert(b);
-//		}
-//		print("ok");
-//	}
-	
-	private static final String INDEX_PATH = "D:/data/lucene/index/cargoods/";
+	private static final String INDEX_PATH = "D:/data/lucene/index/parts/";
 	
 	//Lucene Document的域名
-		private static final String name = "name";
-		private static final String bsid = "bsid";
-		private static final String pid = "pid";
-		private static final String quanpin = "pinyin";
-		private static final String shouzimu = "shouzimu";
+	private static final String BSNAME = "bsName";
+	private static final String BSID = "bsId";
+	private static final String PID = "pId";
+	private static final String PNAME = "pName";
+	private static final String BSNAME_FULL = "bsNameFull";
+	private static final String BSNAME_FIRST = "bsNameFirst";
 		
 	@Test
-	public void test_create(){
-		 //检索内容
-		//String text = "IK Analyzer是一个结合词典分词和文法分词的中文分词开源工具包。它使用了全新的正向迭代最细粒度切分算法。中国人会中文";
-		String text = "灯具";
-		
+	public void test_create(){		
 		//实例化IKAnalyzer分词器
         //使用PerFieldAnalyzerWrapper可以对不同的field使用不同的分词器
         Map<String, Analyzer> analyzerMap = new HashMap<String, Analyzer>();
-        analyzerMap.put(quanpin, new IKAnalyzer4PinYin(false, IKAnalyzer4PinYin.PINYIN));
-        analyzerMap.put(shouzimu, new IKAnalyzer4PinYin(false, IKAnalyzer4PinYin.PINYIN_SHOUZIMU));
+        analyzerMap.put(BSNAME_FULL, new IKAnalyzer4PinYin(false, IKAnalyzer4PinYin.PINYIN));
+        analyzerMap.put(BSNAME_FIRST, new IKAnalyzer4PinYin(false, IKAnalyzer4PinYin.PINYIN_SHOUZIMU));
         PerFieldAnalyzerWrapper wrapper = new PerFieldAnalyzerWrapper(new IKAnalyzer4PinYin(false), analyzerMap);
         
 		Directory directory = null;
@@ -196,16 +181,18 @@ public class BusScopeTest extends BasicTest {
 			List<BusScope> list = readIt();
 			int i=0;
 			for (BusScope u : list) {
-				text = u.getName();
 				Document doc = new Document();
 				doc.add(new StringField("id", String.valueOf(i), Field.Store.YES));
-	            doc.add(new TextField(name, text, Field.Store.YES));
-	            doc.add(new TextField(quanpin,  text, Field.Store.YES));
-	            doc.add(new TextField(shouzimu, text, Field.Store.YES));
-	
-	            doc.add(new TextField(pid, u.getPid().toString(), Field.Store.YES));
-	            doc.add(new TextField(bsid, u.getBsid().toString(), Field.Store.YES));
-
+				//
+	            doc.add(new IntField(BSID, u.getBsId(), Field.Store.YES));
+	            doc.add(new TextField(BSNAME, u.getBsName(), Field.Store.YES));
+	            //pinyin
+	            doc.add(new TextField(BSNAME_FULL,  u.getBsName(), Field.Store.YES));
+	            doc.add(new TextField(BSNAME_FIRST, u.getBsName(), Field.Store.YES));
+	            //pid
+	            doc.add(new IntField(PID, u.getpId(), Field.Store.YES));
+	            doc.add(new TextField(PNAME, u.getpName(), Field.Store.YES));
+	            // doc
 	            iwriter.addDocument(doc);
 				i ++;
 			}
@@ -253,21 +240,25 @@ public class BusScopeTest extends BasicTest {
 			ireader = DirectoryReader.open(directory);
 			isearcher = new IndexSearcher(ireader);
 			
-			String keyword = "灯";			
+			String word = "bsName:灯 OR bsNameFirst:h";			
+			//String word = "bsNameFirst:d";			
 			//使用QueryParser查询分析器构造Query对象
 			Analyzer analyzer = new IKAnalyzer4PinYin(true);
-	        QueryParser qp = new QueryParser(name,  analyzer);
+	        QueryParser qp = new QueryParser(null,  analyzer);
 	      
-	        Query query = qp.parse(keyword);
-	//        
-	        BooleanQuery bq=new BooleanQuery();
-	        BooleanQuery innerbq=new BooleanQuery();
-	//        
-	        bq.add(query, BooleanClause.Occur.SHOULD);
-	        innerbq.add(bq, BooleanClause.Occur.MUST);
+	        Query query = qp.parse(word);
+//    
+//	        BooleanQuery bq=new BooleanQuery();
+//	        BooleanQuery innerbq=new BooleanQuery();
+//
+//	        bq.add(query, BooleanClause.Occur.SHOULD);
+//	        innerbq.add(bq, BooleanClause.Occur.MUST);
 	
 			//搜索相似度最高的5条记录
-			TopDocs topDocs = isearcher.search(innerbq, 5);
+			//TopDocs topDocs = isearcher.search(innerbq, 5);
+	       // QueryParser parser = new QueryParser(null, analyzer);
+	   		//
+	   		TopDocs topDocs = isearcher.search(query, 5);
 			System.out.println("命中：" + topDocs.totalHits);
 			//输出结果
 			ScoreDoc[] scoreDocs = topDocs.scoreDocs;
