@@ -19,15 +19,12 @@ public class KeyWordsUtils {
 	
 	public static String bracketEscWords(String[] fields, String key,
 			String logic) {
-		String keyEsc = QueryParser.escape(key);
+		String keyEsc = QueryParser.escape(key).replaceAll(" +", " ");
 		String keys[] = keyEsc.split(" ");
+		StringBuilder sb = new StringBuilder();
 		if (keys.length<2) {
-			StringBuilder sb = new StringBuilder();
 			KeyWordsUtils.bracketKey(fields, key, logic, sb);
-			return sb.toString();
 		} else {
-			StringBuilder sb = new StringBuilder();
-			//sb.append("(");
 			for (int i = 0; i < keys.length; i++) {
 				if (i == 0) {
 					KeyWordsUtils.bracketKey(fields, keys[i], logic, sb);
@@ -38,10 +35,8 @@ public class KeyWordsUtils {
 					KeyWordsUtils.bracketKey(fields, keys[i], logic, sb);
 				}
 			}
-			//sb.insert(0, "(");
-			//sb.append(")");
-			return sb.toString();
 		}
+		return sb.toString();
 	}
 
 	public static String bracketWords(String fields, String key) {
@@ -50,8 +45,8 @@ public class KeyWordsUtils {
 	
 	public static String bracketWords(String fields, String key,
 			String logic) {
-		StringBuilder sb = new StringBuilder();
 		String[] arFields = fields.split(";");
+		StringBuilder sb = new StringBuilder();
 		if (arFields.length<2) {
 			bracketKey(new String[]{fields}, key, logic, sb);
 		} else {
@@ -62,7 +57,6 @@ public class KeyWordsUtils {
 
 	public static void bracketKey(String[] fields, String key,
 			String logic, StringBuilder sb) {
-		//StringBuilder sb = new StringBuilder();
 		sb.append("(");
 		for (int i = 0; i < fields.length; i++) {
 			if (i == 0) {
@@ -80,9 +74,7 @@ public class KeyWordsUtils {
 				sb.append(key);
 			}
 		}
-		//sb.insert(0, "(");
 		sb.append(")");
-		//return sb.toString();
 	}
 
 }
