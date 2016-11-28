@@ -114,7 +114,7 @@ public class QueryRunnerEx {
 	public <T> T query(IndexSearcher searcher, Analyzer analyzer, String field, String words, LuceneSetHandler<T> rsh,
     		Integer pageIdx, Integer pageSize, Sort sort) throws Exception {
    		QueryParser parser = new QueryParser(field,	analyzer);
-   		Query query = parser.parse(QueryParser.escape(words));
+   		Query query = parser.parse(words);
    		//
    		TopDocs topDocs = getTopDocs(searcher, query, pageIdx, pageSize, sort);
    		T t = null;
@@ -144,7 +144,7 @@ public class QueryRunnerEx {
 	public <T> T query(IndexSearcher searcher, Analyzer analyzer, String words, LuceneSetHandler<T> rsh,
     		Integer pageIdx, Integer pageSize, Sort sort) throws Exception {
    		QueryParser parser = new QueryParser(null, analyzer);
-   		Query query = parser.parse(QueryParser.escape(words));
+   		Query query = parser.parse(words);
    		//
    		TopDocs topDocs = getTopDocs(searcher, query, pageIdx, pageSize, sort);
    		T t = null;

@@ -22,21 +22,24 @@ public class KeyWordsUtils {
 		String keyEsc = QueryParser.escape(key);
 		String keys[] = keyEsc.split(" ");
 		if (keys.length<2) {
-			return KeyWordsUtils.bracketKey(fields, key, logic);
+			StringBuilder sb = new StringBuilder();
+			KeyWordsUtils.bracketKey(fields, key, logic, sb);
+			return sb.toString();
 		} else {
 			StringBuilder sb = new StringBuilder();
+			//sb.append("(");
 			for (int i = 0; i < keys.length; i++) {
 				if (i == 0) {
-					sb.append(KeyWordsUtils.bracketKey(fields, keys[i], logic));
+					KeyWordsUtils.bracketKey(fields, keys[i], logic, sb);
 				} else {
 					sb.append(" ");
 					sb.append(KeyWordsUtils.OR);
 					sb.append(" ");
-					sb.append(KeyWordsUtils.bracketKey(fields, keys[i], logic));					
+					KeyWordsUtils.bracketKey(fields, keys[i], logic, sb);
 				}
 			}
-			sb.insert(0, "(");
-			sb.append(")");
+			//sb.insert(0, "(");
+			//sb.append(")");
 			return sb.toString();
 		}
 	}
@@ -47,17 +50,20 @@ public class KeyWordsUtils {
 	
 	public static String bracketWords(String fields, String key,
 			String logic) {
+		StringBuilder sb = new StringBuilder();
 		String[] arFields = fields.split(";");
 		if (arFields.length<2) {
-			return bracketKey(new String[]{fields}, key, logic);
+			bracketKey(new String[]{fields}, key, logic, sb);
 		} else {
-			return bracketKey(arFields, key, logic);
+			bracketKey(arFields, key, logic, sb);
 		}
+		return sb.toString();
 	}
 
-	public static String bracketKey(String[] fields, String key,
-			String logic) {
-		StringBuilder sb = new StringBuilder();
+	public static void bracketKey(String[] fields, String key,
+			String logic, StringBuilder sb) {
+		//StringBuilder sb = new StringBuilder();
+		sb.append("(");
 		for (int i = 0; i < fields.length; i++) {
 			if (i == 0) {
 				sb.append(fields[i]);
@@ -74,9 +80,9 @@ public class KeyWordsUtils {
 				sb.append(key);
 			}
 		}
-		sb.insert(0, "(");
+		//sb.insert(0, "(");
 		sb.append(")");
-		return sb.toString();
+		//return sb.toString();
 	}
 
 }

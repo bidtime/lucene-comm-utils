@@ -38,6 +38,7 @@ import org.bidtime.lucene.ldbc.rs.handler.BeanLDTOHandler;
 import org.bidtime.lucene.ldbc.rs.handler.BeanListLDTOHandler;
 import org.bidtime.lucene.ldbc.rs.handler.ColumnLSetHandler;
 import org.bidtime.lucene.utils.FileCommon;
+import org.bidtime.lucene.utils.KeyWordsUtils;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.wltea4pinyin.analyzer.lucene.IKAnalyzer4PinYin;
@@ -54,7 +55,7 @@ public class BusScopeTest extends BasicTest {
 	public void test_search_bean() throws Exception {
 		BeanLDTOHandler<BusScope> h = new BeanLDTOHandler<>(BusScope.class);
 //		String words = "code:jss_0";
-		String words = "name:灯";
+		String words = "name:灯 刹 中关村";
 		ResultDTO<BusScope> dto = dao.query(words, h);
 		System.out.println("search_bean: " + dto.getLen() + " -> " + dto.toString());
 	}
@@ -234,7 +235,10 @@ public class BusScopeTest extends BasicTest {
 			ireader = DirectoryReader.open(directory);
 			isearcher = new IndexSearcher(ireader);
 			
-			String word = "bsName:芯";			
+			//String word = "bsName:芯 灯 刹 中关村";
+			String[] fields = new String[]{BSNAME, BSNAME_FULL, BSNAME_FIRST};
+			String word = KeyWordsUtils.bracketEscWords(fields, "芯 灯 刹 中关村", KeyWordsUtils.OR);
+			
 			//String word = "bsName:灯 OR bsNameFirst:h";			
 			//String word = "bsNameFirst:d";			
 			//使用QueryParser查询分析器构造Query对象
