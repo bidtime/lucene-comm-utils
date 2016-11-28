@@ -23,8 +23,6 @@ import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.IndexWriterConfig.OpenMode;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.queryparser.classic.QueryParser;
-import org.apache.lucene.search.BooleanClause;
-import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
@@ -82,15 +80,15 @@ public class BusScopeTest extends BasicTest {
 		List<BusScope> list = new ArrayList<>();
 		//
 		List<String> listCtx = FileCommon.getFileCtxList("D:/data/lucene/index/raw/business.txt", "UTF-8");
-		for (int i=1; i<listCtx.size(); i++) {
+		for (int i=0; i<listCtx.size(); i++) {
 			String s = listCtx.get(i);
 			String[] tmp = s.split("\t");
 			//
 			BusScope sc = new BusScope();
 			sc.setId(i);
-			sc.setpId(Integer.parseInt(tmp[0]));
+			sc.setpId(Integer.parseInt(tmp[0].trim()));
 			sc.setpName(tmp[1]);
-			sc.setBsId(Integer.parseInt(tmp[2]));
+			sc.setBsId(Integer.parseInt(tmp[2].trim()));
 			sc.setBsName(tmp[3]);
 			//print(sc);
 			//
@@ -158,7 +156,7 @@ public class BusScopeTest extends BasicTest {
 	private static final String BSNAME_FIRST = "bsNameFirst";
 		
 	@Test
-	public void test_create(){		
+	public void test_lucene_create(){		
 		//实例化IKAnalyzer分词器
         //使用PerFieldAnalyzerWrapper可以对不同的field使用不同的分词器
         Map<String, Analyzer> analyzerMap = new HashMap<String, Analyzer>();
@@ -171,8 +169,7 @@ public class BusScopeTest extends BasicTest {
 		IndexReader ireader = null;
 		try {
 			//建立内存索引对象
-			directory = FSDirectory.open(Paths.get(INDEX_PATH));	 
-			
+			directory = FSDirectory.open(Paths.get(INDEX_PATH));
 			//配置IndexWriterConfig
 			IndexWriterConfig iwConfig = new IndexWriterConfig(wrapper);
 			iwConfig.setOpenMode(OpenMode.CREATE);
@@ -197,7 +194,7 @@ public class BusScopeTest extends BasicTest {
 				i ++;
 			}
 			iwriter.close();
-			System.out.println("create ok.");
+			System.out.println("create " + list.size() + ", ok.");
 		} catch (CorruptIndexException e) {
 			e.printStackTrace();
 		} catch (LockObtainFailedException e) {
@@ -223,24 +220,22 @@ public class BusScopeTest extends BasicTest {
 	}
 	
 	@Test
-	public void test_search(){
-		
+	public void test_lucene_search(){
 		//实例化IKAnalyzer分词器
 	    //使用PerFieldAnalyzerWrapper可以对不同的field使用不同的分词器
-	    
 		Directory directory = null;
 		IndexReader ireader = null;
 		IndexSearcher isearcher = null;
 		try {
 			//建立内存索引对象
 			directory = FSDirectory.open(Paths.get(INDEX_PATH));	 
-						
 			//搜索过程**********************************
 		    //实例化搜索器   
 			ireader = DirectoryReader.open(directory);
 			isearcher = new IndexSearcher(ireader);
 			
-			String word = "bsName:灯 OR bsNameFirst:h";			
+			String word = "bsName:芯";			
+			//String word = "bsName:灯 OR bsNameFirst:h";			
 			//String word = "bsNameFirst:d";			
 			//使用QueryParser查询分析器构造Query对象
 			Analyzer analyzer = new IKAnalyzer4PinYin(true);
@@ -265,8 +260,7 @@ public class BusScopeTest extends BasicTest {
 			for (int i = 0; i < topDocs.totalHits; i++){
 				Document targetDoc = isearcher.doc(scoreDocs[i].doc);
 				System.out.println("内容：" + targetDoc.toString());
-			}			
-			
+			}
 		} catch (CorruptIndexException e) {
 			e.printStackTrace();
 		} catch (LockObtainFailedException e) {
@@ -293,5 +287,4 @@ public class BusScopeTest extends BasicTest {
 		}
 	}
 
-	
 }
