@@ -216,12 +216,12 @@ public class BeanProcessorEx implements Serializable {
     }
 
 	@SuppressWarnings("rawtypes")
-	public void toBeanList(IndexSearcher search, TopDocs rs, Class type, List results) throws Exception {
+	public void toBeanList(IndexSearcher search, TopDocs rs, Class type, Collection results) throws Exception {
         toBeanList(search, rs, type, results, this.columnToPropertyOverrides);
 	}
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public void toBeanList(IndexSearcher search, TopDocs rs, Class type, List results, Map<String,String> mapBeanProps) throws Exception {
+	public void toBeanList(IndexSearcher search, TopDocs rs, Class type, Collection results, Map<String,String> mapBeanProps) throws Exception {
 		PropertyDescriptor[] props = this.propertyDescriptors(type);
 		List<IndexableField> rsmd = null;//rs.getFields();
 		int[] columnToProperty = null;	//this.mapColumnsToProperties(rsmd, props, mapBeanProps);
@@ -596,37 +596,5 @@ public class BeanProcessorEx implements Serializable {
         }
         return propertyName;
 	}
-	
-//	public GsonRows toGsonRows(Document rs) throws Exception {
-//		ResultSetMetaData meta = rs.getMetaData();
-//        int nCols = meta.getColumnCount();
-//        String[] cols = new String[nCols];
-//        for (int i = 0; i < nCols; i++) {
-//        	cols[i] = meta.getColumnName(i + 1);
-//        }
-//        List<Object[]> list = new ArrayList<Object[]>();
-//        do {
-//        	Object[] val = new Object[nCols];
-//	        for (int i = 0; i < nCols; i++) {
-//	        	val[i] = rs.getObject(i + 1);
-//	        }
-//	        list.add(val);
-//	    } while (rs.next());
-//        return new GsonRows(cols, list);
-//	}
-//	
-//	public GsonRow toGsonRow(Document rs) throws Exception {
-//		ResultSetMetaData meta = rs.getMetaData();
-//        int nCols = meta.getColumnCount();
-//        String[] cols = new String[nCols];
-//        for (int i = 0; i < nCols; i++) {
-//        	cols[i] = meta.getColumnName(i + 1);
-//        }
-//        Object[] vals = new Object[nCols];
-//        for (int i = 0; i < nCols; i++) {
-//        	vals[i] = rs.getObject(i + 1);
-//        }
-//		return new GsonRow(cols, vals);
-//	}
 	
 }
