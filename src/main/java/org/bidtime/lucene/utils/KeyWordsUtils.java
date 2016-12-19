@@ -20,7 +20,8 @@ public class KeyWordsUtils {
 	public static String bracketEscWords(String[] fields, String key,
 			String logic) {
 		String keyEsc = QueryParser.escape(key);
-		keyEsc = keyEsc.replace("\n", " ");	//回车，替换成空格
+		keyEsc = keyEsc.replace("\n", " ");			//回车，替换成空格
+		keyEsc = keyEsc.replaceAll("\\pP", " ");	//各种符号
 		keyEsc = keyEsc.replaceAll(" +", " ");
 		String keys[] = keyEsc.split(" ");
 		StringBuilder sb = new StringBuilder();
